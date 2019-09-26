@@ -21,13 +21,13 @@ console.log("websocket server created")
 */
 wss.on("connection", function(ws) {
   
-  ws.send('hello from the server!');
-  
   var id = setInterval(function() {
     ws.send(JSON.stringify(new Date()), function() {  })
   }, 1000)
-
-  console.log("websocket connection open")
+  
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
 
   ws.on("close", function() {
     console.log("websocket connection close")
