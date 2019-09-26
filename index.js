@@ -21,6 +21,8 @@ console.log("websocket server created")
 */
 wss.on("connection", function(ws) {
   
+  ws.id = uuid.v4();
+  
   players[ws.id] = {
 	x: 300,
 	y: 50,
