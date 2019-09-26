@@ -25,9 +25,9 @@ wss.on("connection", function(ws) {
     ws.send(JSON.stringify(new Date()), function() {  })
   }, 1000)
   
-  ws.on('message', function incoming(message) {
-    ws.send('received: %s', message);
-  });
+  ws.onmessage = function(event){
+	ws.send(event.data);
+  }
 
   ws.on("close", function() {
     console.log("websocket connection close")
