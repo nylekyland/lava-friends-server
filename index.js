@@ -5,7 +5,7 @@ var app = express()
 var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
-var uuid = require('uuid/v4');
+var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
 
