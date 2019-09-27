@@ -28,7 +28,7 @@ wss.on("connection", function(ws) {
   players[ws.id] = {
 	x: 300,
 	y: 50,
-	playerId: socket.Id
+	id: ws.id
   }
   ws.send(players[ws.id])
   
