@@ -30,7 +30,7 @@ wss.on("connection", function(ws) {
 	y: 50,
 	id: ws.id
   }
-  ws.send(players[ws.id])
+  ws.send(JSON.stringify(players[ws.id]))
   
   var id = setInterval(function() {
     ws.send(JSON.stringify(new Date()), function() {  })
