@@ -22,23 +22,22 @@ console.log("websocket server created")
 wss.on("connection", function(ws) {
   
   ws.id = uuid.v4();
+  ws.send(ws.id);
   
   players[ws.id] = {
 	x: 300,
 	y: 50,
 	playerId: socket.Id
   }
+  ws.send(players[ws.id])
   
   var id = setInterval(function() {
     ws.send(JSON.stringify(new Date()), function() {  })
   }, 1000)
   
   ws.onmessage = function(event){
-	if (event.data == "1")
-	  players[ws.id].x -= 0.25;
+	
   }
-  
-  ws.send(players[ws.id]);
 
   ws.on("close", function() {
     console.log("websocket connection close")
