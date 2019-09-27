@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "^4.17.1",
+    "uuid": "^3.3.3",
     "ws": "^0.4.32"
   },
   "scripts": {

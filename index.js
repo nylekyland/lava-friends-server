@@ -5,6 +5,7 @@ var app = express()
 var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
+var uuid = require('uuidv4').default;
 
 app.use(express.static(__dirname + "/"))
 
@@ -21,7 +22,7 @@ console.log("websocket server created")
 */
 wss.on("connection", function(ws) {
   
-  ws.id = uuid.v4();
+  ws.id = uuid();
   ws.send(ws.id);
   
   players[ws.id] = {
