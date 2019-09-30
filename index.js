@@ -38,7 +38,7 @@ wss.on("connection", function(ws) {
   
   ws.on('message', function incoming(data) {
 	ws.send('message function entered!: ' + data);
-  }
+  });
 
   ws.on("close", function() {
     console.log("websocket connection close")
