@@ -39,18 +39,28 @@ wss.on("connection", function(ws) {
   ws.on('message', function incoming(data) {
 	
 	var leftPressed = false,
-	rightPressed = false;
+	rightPressed = false,
+	upPressed = false,
+	downPressed = false;
 	
 	//Position 1: Left is pressed
 	leftPressed = !!(data & 1);
 	//Position 2: Right is pressed
 	rightPressed = !!(data & 2);
+	//Position 3: Up is pressed
+	upPressed = !!(data & 4);
+	//Position 4: Down is pressed
+	downPressed = !! (data & 8);
 	
 	//Player logic
 	if (leftPressed)
 		players[ws.id].x -= 2;
 	if (rightPressed)
 		players[ws.id].x += 2;
+	if (upPressed)
+		players[ws.id].y -= 2;
+	if (downPressed)
+		players[ws.id].y += 2;
 	
 	//Send the updated data back to the client
 	var sendObject = {
