@@ -48,9 +48,9 @@ wss.on("connection", function(ws) {
 	
 	//Player logic
 	if (leftPressed)
-		players[ws.id].x -= 0.5;
+		players[ws.id].x -= 2;
 	if (rightPressed)
-		players[ws.id].x += 0.5;
+		players[ws.id].x += 2;
 	
 	//Send the updated data back to the client
 	var sendObject = {
