@@ -37,7 +37,7 @@ wss.on("connection", function(ws) {
   }, 1000)
   
   ws.onmessage = function(event){
-	
+	ws.send('entered onmessage!')
   }
 
   ws.on("close", function() {
