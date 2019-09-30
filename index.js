@@ -37,7 +37,7 @@ wss.on("connection", function(ws) {
   }, 1000)
   
   ws.on('message', function incoming(data) {
-	handlePlayerMovement(data);
+	handlePlayerMovement(data, ws);
   });
 
   ws.on("close", function() {
@@ -45,7 +45,7 @@ wss.on("connection", function(ws) {
     clearInterval(id)
   });
   
-  var handlePlayerMovement = function(data){
+  var handlePlayerMovement = function(data, ws){
 	var leftPressed = false,
 	rightPressed = false;
 	//Position 1: Left is pressed
