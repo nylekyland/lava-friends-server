@@ -53,7 +53,7 @@ wss.on("connection", function(ws) {
 		players[ws.id] += 0.5;
 	
 	//Send the updated data back to the client
-	ws.send(JSON.stringify(player[ws.id]));
+	ws.send(JSON.stringify(players[ws.id]));
 	
   });
 
