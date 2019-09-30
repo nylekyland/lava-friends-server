@@ -53,7 +53,11 @@ wss.on("connection", function(ws) {
 		players[ws.id].x += 0.5;
 	
 	//Send the updated data back to the client
-	ws.send(JSON.stringify(players[ws.id]));
+	var sendObject = {
+		"c2dictionary": true,
+		"data": players[ws.id]
+	}
+	ws.send(JSON.stringify(sendObject));
 	
   });
 
