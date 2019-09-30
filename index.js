@@ -43,10 +43,9 @@ wss.on("connection", function(ws) {
   ws.on("close", function() {
     console.log("websocket connection close")
     clearInterval(id)
-  })
-});
-
-var handlePlayerMovement = function(data){
+  });
+  
+  var handlePlayerMovement = function(data){
 	var leftPressed = false,
 	rightPressed = false;
 	//Position 1: Left is pressed
@@ -62,4 +61,5 @@ var handlePlayerMovement = function(data){
 	
 	//Send the updated data back to the client
 	ws.send(JSON.stringify(player[ws.id]));
-}
+} 
+});
