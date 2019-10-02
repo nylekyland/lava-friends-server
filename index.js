@@ -23,7 +23,6 @@ console.log("websocket server created")
 wss.on("connection", function(ws) {
   
   ws.id = uuidv4();
-  ws.send(ws.id);
   
   players[ws.id] = {
 	x: 300,
@@ -31,6 +30,17 @@ wss.on("connection", function(ws) {
 	id: ws.id,
 	clientId: null
   }
+  
+  //Update every player position - 60 times per second
+  setInterval(function(){
+	for (var i = 0; i < players.length; i++){
+		var sendObject = {
+			"c2dictionary": true,
+			"data": players[i]
+		}
+		ws.send(JSON.stringify(sendObject));
+	}
+  }, 1000 / 60);
   
   ws.on('message', function incoming(json) {
 	
@@ -61,15 +71,7 @@ wss.on("connection", function(ws) {
 	if (upPressed)
 		players[ws.id].y -= 2;
 	if (downPressed)
-		players[ws.id].y += 2;
-	
-	//Send the updated data back to the client
-	var sendObject = {
-		"c2dictionary": true,
-		"data": players[ws.id]
-	}
-	ws.send(JSON.stringify(sendObject));
-	
+		players[ws.id].y += 2;	
   });
 
   ws.on("close", function() {
