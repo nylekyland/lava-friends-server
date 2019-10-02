@@ -28,10 +28,16 @@ wss.on("connection", function(ws) {
   players[ws.id] = {
 	x: 300,
 	y: 50,
-	id: ws.id
+	id: ws.id,
+	clientId: null
   }
   
-  ws.on('message', function incoming(data) {
+  ws.on('message', function incoming(json) {
+	
+	var data = JSON.parse(json);
+	
+	if (players[ws.id].clientId == null)
+		players[ws.id].clientId = data.clientId;
 	
 	var leftPressed = false,
 	rightPressed = false,
@@ -39,13 +45,13 @@ wss.on("connection", function(ws) {
 	downPressed = false;
 	
 	//Position 1: Left is pressed
-	leftPressed = !!(data & 1);
+	leftPressed = !!(data.state & 1);
 	//Position 2: Right is pressed
-	rightPressed = !!(data & 2);
+	rightPressed = !!(data.state & 2);
 	//Position 3: Up is pressed
-	upPressed = !!(data & 4);
+	upPressed = !!(data.state & 4);
 	//Position 4: Down is pressed
-	downPressed = !! (data & 8);
+	downPressed = !! (data.state & 8);
 	
 	//Player logic
 	if (leftPressed)
