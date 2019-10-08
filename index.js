@@ -31,6 +31,8 @@ wss.on("connection", function(ws) {
 	clientId: null
   }
   
+  console.log(JSON.stringify(players));
+  
   //Update every player position - 60 times per second
   setInterval(function(){
 	for (var i = 0; i < players.length; i++){
