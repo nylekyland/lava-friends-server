@@ -32,7 +32,8 @@ wss.on("connection", function(ws) {
   }
   
   //Update every player position - 60 times per second
-  setInterval(function update(){
+  setInterval(function(){
+	console.log('entered set interval function');
 	for (var i = 0; i < players.length; i++){
 		var sendObject = {
 			"c2dictionary": true,
