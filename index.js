@@ -31,20 +31,6 @@ wss.on("connection", function(ws) {
 	clientId: null
   }
   
-  console.log(JSON.stringify(players));
-  
-  //Update every player position - 60 times per second
-  setInterval(function(){
-	for (var i = 0; i < players.length; i++){
-		var sendObject = {
-			"c2dictionary": true,
-			"data": players[i]
-		}
-		ws.send(JSON.stringify(sendObject));
-		console.log(JSON.stringify(sendObject));
-	}
-  }, 1000 / 60);
-  
   ws.on('message', function incoming(json) {
 	
 	var data = JSON.parse(json);
@@ -82,3 +68,16 @@ wss.on("connection", function(ws) {
     clearInterval(ws.id)
   });
 });
+
+//Update every player position - 60 times per second
+const iterval = setInterval(function(){
+	wss.clients.forEach(function each(ws){
+		for (var i = 0; i < players.length; i++){
+			var sendObject = {
+			"c2dictionary": true,
+			"data": players[i]
+			}
+			ws.send(JSON.stringify(sendObject));
+			}
+	});
+}, 1000 / 60);
