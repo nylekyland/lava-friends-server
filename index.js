@@ -61,7 +61,7 @@ wss.on("connection", function(ws) {
 	if (downPressed)
 		players[ws.id].y += 2;
 
-	console.logf(players.length);
+	console.log(players.length);
 	for (var i = 0; i < players.length; i++){
 		var sendObject = {
 		"c2dictionary": true,
