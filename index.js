@@ -62,23 +62,18 @@ wss.on("connection", function(ws) {
 	if (downPressed)
 		players[ws.id].y += 2;	
   });
+  
+  //
+  for (var i = 0; i < players.length; i++){
+	var sendObject = {
+	"c2dictionary": true,
+	"data": players[i]
+	}
+	ws.send(JSON.stringify(sendObject));
+  }
 
   ws.on("close", function() {
     console.log("websocket connection close")
     clearInterval(ws.id)
   });
 });
-
-//Update every player position - 60 times per second
-const iterval = setInterval(function(){
-	wss.clients.forEach(function each(ws){
-		console.log("entered foreach");
-		for (var i = 0; i < players.length; i++){
-			var sendObject = {
-			"c2dictionary": true,
-			"data": players[i]
-			}
-			ws.send(JSON.stringify(sendObject));
-			}
-	});
-}, 1000 / 60);
