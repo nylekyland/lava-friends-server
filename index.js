@@ -3,7 +3,7 @@ var http = require("http")
 var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
-var players = {};
+var players = [];
 var colors = ['red', 'yellow', 'green', 'blue'];
 var uuidv4 = require('uuid/v4');
 
