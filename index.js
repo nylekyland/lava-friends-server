@@ -32,8 +32,6 @@ wss.on("connection", function(ws) {
   }
   
   ws.on('message', function incoming(json) {
-	
-	console.log(json);
 	var data = JSON.parse(json);
 	
 	if (players[ws.id].clientId == null)
@@ -68,6 +66,7 @@ wss.on("connection", function(ws) {
 		"c2dictionary": true,
 		"data": players[i]
 		}
+		console.log(sendObject);
 		ws.send(JSON.stringify(sendObject));
 	  }
   });
