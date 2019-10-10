@@ -3,7 +3,7 @@ var http = require("http")
 var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
-var players = [];
+var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var uuidv4 = require('uuid/v4');
 
@@ -64,10 +64,10 @@ wss.on("connection", function(ws) {
 	if (downPressed)
 		players[ws.id].y += 2;
 
-	for (var i = 0; i < players.length; i++){
+	for (var obj in players){
 		var sendObject = {
 		"c2dictionary": true,
-		"data": players[i]
+		"data": obj
 		}
 		console.log(sendObject);
 		ws.send(JSON.stringify(sendObject));
