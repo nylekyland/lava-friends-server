@@ -61,17 +61,16 @@ wss.on("connection", function(ws) {
 	if (upPressed)
 		players[ws.id].y -= 2;
 	if (downPressed)
-		players[ws.id].y += 2;	
+		players[ws.id].y += 2;
+
+	for (var i = 0; i < players.length; i++){
+		var sendObject = {
+		"c2dictionary": true,
+		"data": players[i]
+		}
+		ws.send(JSON.stringify(sendObject));
+	  }
   });
-  
-  //
-  for (var i = 0; i < players.length; i++){
-	var sendObject = {
-	"c2dictionary": true,
-	"data": players[i]
-	}
-	ws.send(JSON.stringify(sendObject));
-  }
 
   ws.on("close", function() {
     console.log("websocket connection close")
