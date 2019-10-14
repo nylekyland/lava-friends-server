@@ -6,12 +6,13 @@ var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
+var gravity = 0.45;
 blocks[0] = {
 	object: "block",
 	id: 0,
 	x: 0,
 	y: 600,
-	width: 500,
+	width: 1000,
 	height: 50
 }
 var uuidv4 = require('uuid/v4');
@@ -71,8 +72,15 @@ wss.on("connection", function(ws) {
 	if (upPressed)
 		players[ws.id].y -= 2;
 
-	players[ws.id].yVelocity += 0.45;
-	players[ws.id].y += players[ws.id].yVelocity;
+	players[ws.id].yVelocity += gravity;
+	var objectBeneath = null;
+	for (var block in blocks){
+		
+	}
+	if (objectBeneath == null)
+		players[ws.id].y += players[ws.id].yVelocity;
+	else
+		players[ws.id].yVelocity = 0;
 	
 
 	for (var obj in players){
@@ -96,3 +104,7 @@ wss.on("connection", function(ws) {
 	delete players[ws.id];
   });
 });
+
+function overlap(a,b,x,y){
+	return Math.max(a,x) < Math.min(b,y)
+}
