@@ -7,10 +7,10 @@ var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {
 	object: "block",
-	id: 0
-	x: 0
+	id: 0,
+	x: 0,
 	y: 600,
-	width: 500
+	width: 500,
 	height: 50
 };
 var uuidv4 = require('uuid/v4');
