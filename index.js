@@ -29,8 +29,8 @@ wss.on("connection", function(ws) {
 	y: 50,
 	id: ws.id,
 	clientId: null,
-	yVelocity = 0,
-	jumps = 0
+	yVelocity: 0,
+	jumps: 0
   }
   console.log(players);
   console.log(players[ws.id]);
