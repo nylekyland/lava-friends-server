@@ -71,7 +71,7 @@ wss.on("connection", function(ws) {
 	if (upPressed)
 		players[ws.id].y -= 2;
 
-	players[ws.id].yVelocity += 0.98;
+	players[ws.id].yVelocity += 0.45;
 	players[ws.id].y += players[ws.id].yVelocity;
 	
 
