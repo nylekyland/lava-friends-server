@@ -84,6 +84,7 @@ wss.on("connection", function(ws) {
 			height: players[ws.id].y + players[ws.id].yVelocity
 		}
 		if (rectangleOverlap(block, newObj)){
+			console.log(block);
 			objectBeneath = block;
 			break;
 		}
@@ -118,10 +119,9 @@ wss.on("connection", function(ws) {
   });
 });
 
-function rectangleOverlap(a, b){
-	return overlap(a.x,a.x + a.width,b.x,b.x + b.width) && overlap(a.y,a.y + a.height,b.y,b.y + b.height)
-}
-
-function overlap(a,b,x,y){
-	return Math.max(a,x) < Math.min(b,y)
+function rectangleOverlap(rect1, rect2){
+	return (rect1.x < rect2.x + rect2.width &&
+   rect1.x + rect1.width > rect2.x &&
+   rect1.y < rect2.y + rect2.height &&
+   rect1.y + rect1.height > rect2.y);
 }
