@@ -5,14 +5,15 @@ var app = express()
 var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
-var blocks = {
+var blocks = {};
+blocks[0] = {
 	object: "block",
 	id: 0,
 	x: 0,
 	y: 600,
 	width: 500,
 	height: 50
-};
+}
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
