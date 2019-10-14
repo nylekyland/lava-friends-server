@@ -5,6 +5,14 @@ var app = express()
 var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
+var blocks = {
+	object: "block",
+	id: 0
+	x: 0
+	y: 600,
+	width: 500
+	height: 50
+};
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
@@ -30,11 +38,9 @@ wss.on("connection", function(ws) {
 	id: ws.id,
 	clientId: null,
 	yVelocity: 0,
-	jumps: 0
+	jumps: 1,
+	object: "player"
   }
-  console.log(players);
-  console.log(players[ws.id]);
-  console.log(players.length);
   
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
@@ -73,9 +79,15 @@ wss.on("connection", function(ws) {
 		"c2dictionary": true,
 		"data": players[obj]
 		}
-		console.log(sendObject);
 		ws.send(JSON.stringify(sendObject));
-	  }
+	}
+	for (var obj in blocks){
+		var sendObject = {
+			"c2dictionary": true,
+			"data": blocks[obj]
+		}
+		ws.send(JSON.stringify(sendObject));
+	}
   });
 
   ws.on("close", function() {
