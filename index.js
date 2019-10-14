@@ -28,7 +28,9 @@ wss.on("connection", function(ws) {
 	x: 300,
 	y: 50,
 	id: ws.id,
-	clientId: null
+	clientId: null,
+	yVelocity = 0,
+	jumps = 0
   }
   console.log(players);
   console.log(players[ws.id]);
@@ -61,8 +63,10 @@ wss.on("connection", function(ws) {
 		players[ws.id].x += 2;
 	if (upPressed)
 		players[ws.id].y -= 2;
-	if (downPressed)
-		players[ws.id].y += 2;
+
+	players[ws.id].yVelocity += 0.98;
+	players[ws.id].y += players[ws.id].yVelocity;
+	
 
 	for (var obj in players){
 		var sendObject = {
