@@ -81,7 +81,7 @@ wss.on("connection", function(ws) {
 			x: players[ws.id].x,
 			y: players[ws.id].y,
 			width: players[ws.id].width,
-			height: players[ws.id].y + players[ws.id].yVelocity
+			height: players[ws.id].height + players[ws.id].yVelocity
 		}
 		if (rectangleOverlap(block, newObj)){
 			console.log(block);
