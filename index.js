@@ -37,6 +37,8 @@ wss.on("connection", function(ws) {
   players[ws.id] = {
 	x: 300,
 	y: 50,
+	width: 50,
+	height: 50,
 	id: ws.id,
 	clientId: null,
 	yVelocity: 0,
@@ -75,12 +77,23 @@ wss.on("connection", function(ws) {
 	players[ws.id].yVelocity += gravity;
 	var objectBeneath = null;
 	for (var block in blocks){
-		
+		var newObj = {
+			x: players[ws.id].x,
+			y: players[ws.id].y,
+			width: players[ws.id].width,
+			height: players[ws.id].y + players[ws.id].yVelocity
+		}
+		if (rectangleOverlap(block, newObj)){
+			objectBeneath = block;
+			break;
+		}
 	}
 	if (objectBeneath == null)
 		players[ws.id].y += players[ws.id].yVelocity;
-	else
+	else{
+		players[ws.id].y = objectBeneath.y - players[ws.id].height;
 		players[ws.id].yVelocity = 0;
+	}
 	
 
 	for (var obj in players){
@@ -104,6 +117,10 @@ wss.on("connection", function(ws) {
 	delete players[ws.id];
   });
 });
+
+function rectangleOverlap(a, b){
+	return overlap(a.x,a.x + a.width,b.x,b.x + b.width) && overlap(a.y,a.y + a.height,b.y,b.y + b.height)
+}
 
 function overlap(a,b,x,y){
 	return Math.max(a,x) < Math.min(b,y)
