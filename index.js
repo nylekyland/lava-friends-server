@@ -76,7 +76,7 @@ wss.on("connection", function(ws) {
 	if (downPressed)
 		players[ws.id].y += 2;
 
-	//players[ws.id].yVelocity += gravity;
+	players[ws.id].yVelocity += gravity;
 	var objectBeneath = null;
 	for (var block in blocks){
 		var newObj = {
@@ -85,16 +85,13 @@ wss.on("connection", function(ws) {
 			width: players[ws.id].width,
 			height: players[ws.id].height
 		}
-		console.log(block);
-		console.log(newObj);
-		if (rectangleOverlap(block, newObj)){
-			console.log(block);
-			objectBeneath = block;
+		if (rectangleOverlap(blocks[block], newObj)){
+			objectBeneath = blocks[block];
 			break;
 		}
 	}
-	//if (objectBeneath == null)
-		//players[ws.id].y += players[ws.id].yVelocity;
+	if (objectBeneath == null)
+		players[ws.id].y += players[ws.id].yVelocity;
 	if (objectBeneath != null){
 		players[ws.id].y = objectBeneath.y - players[ws.id].height;
 		players[ws.id].yVelocity = 0;
