@@ -120,6 +120,7 @@ wss.on("connection", function(ws) {
 });
 
 function rectangleOverlap(rect1, rect2){
+	console.log("entered rectangleOverlap")
 	return (rect1.x < rect2.x + rect2.width &&
    rect1.x + rect1.width > rect2.x &&
    rect1.y < rect2.y + rect2.height &&
