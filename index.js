@@ -79,9 +79,9 @@ wss.on("connection", function(ws) {
 	for (var block in blocks){
 		var newObj = {
 			x: players[ws.id].x,
-			y: players[ws.id].y,
+			y: players[ws.id].y + players[ws.id].yVelocity,
 			width: players[ws.id].width,
-			height: players[ws.id].height + players[ws.id].yVelocity
+			height: players[ws.id].height
 		}
 		if (rectangleOverlap(block, newObj)){
 			console.log(block);
@@ -120,7 +120,6 @@ wss.on("connection", function(ws) {
 });
 
 function rectangleOverlap(rect1, rect2){
-	console.log("entered rectangleOverlap")
 	return (rect1.x < rect2.x + rect2.width &&
    rect1.x + rect1.width > rect2.x &&
    rect1.y < rect2.y + rect2.height &&
