@@ -73,6 +73,8 @@ wss.on("connection", function(ws) {
 		players[ws.id].x += 2;
 	if (upPressed)
 		players[ws.id].y -= 2;
+	if (downPressed)
+		players[ws.id].y += 2;
 
 	//players[ws.id].yVelocity += gravity;
 	var objectBeneath = null;
