@@ -6,7 +6,7 @@ var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
-var gravity = 0.45;
+var gravity = 0.045;
 blocks[0] = {
 	object: "block",
 	id: 0,
