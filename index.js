@@ -85,6 +85,8 @@ wss.on("connection", function(ws) {
 			width: players[ws.id].width,
 			height: players[ws.id].height
 		}
+		console.log(block);
+		console.log(newObj);
 		if (rectangleOverlap(block, newObj)){
 			console.log(block);
 			objectBeneath = block;
