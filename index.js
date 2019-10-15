@@ -74,7 +74,7 @@ wss.on("connection", function(ws) {
 	if (upPressed)
 		players[ws.id].y -= 2;
 
-	players[ws.id].yVelocity += gravity;
+	//players[ws.id].yVelocity += gravity;
 	var objectBeneath = null;
 	for (var block in blocks){
 		var newObj = {
@@ -89,9 +89,9 @@ wss.on("connection", function(ws) {
 			break;
 		}
 	}
-	if (objectBeneath == null)
-		players[ws.id].y += players[ws.id].yVelocity;
-	else{
+	//if (objectBeneath == null)
+		//players[ws.id].y += players[ws.id].yVelocity;
+	if (objectBeneath != null){
 		players[ws.id].y = objectBeneath.y - players[ws.id].height;
 		players[ws.id].yVelocity = 0;
 	}
