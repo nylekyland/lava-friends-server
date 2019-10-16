@@ -101,14 +101,10 @@ wss.on("connection", function(ws) {
 	for (var obj in players){
 		var sendObject = {
 		"c2dictionary": true,
-		"data": players[obj]
-		}
-		ws.send(JSON.stringify(sendObject));
-	}
-	for (var obj in blocks){
-		var sendObject = {
-			"c2dictionary": true,
-			"data": blocks[obj]
+		"data": {
+				"players": JSON.stringify(players),
+				"blocks": JSON.stringify(blocks)
+			}
 		}
 		ws.send(JSON.stringify(sendObject));
 	}
