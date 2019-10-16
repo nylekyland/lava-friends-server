@@ -99,19 +99,18 @@ wss.on("connection", function(ws) {
 	
 
 	for (var obj in players){
-		var dataObj = {
-			"players": {
-				"c2dictionary": true,
-				"data": JSON.stringify(players)
-			},
-			"blocks": {
-				"c2dictionary": true,
-				"data": JSON.stringify(blocks)
-			}
-		};
 		var sendObject = {
 		"c2dictionary": true,
-		"data": dataObj
+		"data": {
+				"players": JSON.stringify({
+					"c2dictionary": true,
+					"data": JSON.stringify(players)
+				}),
+				"blocks": JSON.stringify({
+					"c2dictionary": true,
+					"data": JSON.stringify(blocks)
+				})
+			}
 		}
 		ws.send(JSON.stringify(sendObject));
 	}
