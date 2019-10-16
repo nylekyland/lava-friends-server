@@ -111,7 +111,7 @@ wss.on("connection", function(ws) {
 		};
 		var sendObject = {
 		"c2dictionary": true,
-		"data": JSON.stringify(dataObj)
+		"data": dataObj
 		}
 		ws.send(JSON.stringify(sendObject));
 	}
