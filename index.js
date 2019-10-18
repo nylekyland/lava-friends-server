@@ -77,7 +77,7 @@ wss.on("connection", function(ws) {
 		players[ws.id].onGround = false;
 	}
 
-	if (players[ws.id].onGround)
+	if (!players[ws.id].onGround)
 		players[ws.id].yVelocity += gravity;
 	var objectBeneath = null;
 	for (var block in blocks){
