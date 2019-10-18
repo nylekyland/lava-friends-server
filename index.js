@@ -6,7 +6,7 @@ var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
-var gravity = 0.045;
+var gravity = 0.098;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -72,7 +72,7 @@ wss.on("connection", function(ws) {
 	if (rightPressed)
 		players[ws.id].x += 2;
 	if (upPressed)
-		players[ws.id].y -= 2;
+		players[ws.id].yVelocity = -15;
 	if (downPressed)
 		players[ws.id].y += 2;
 
