@@ -43,7 +43,8 @@ wss.on("connection", function(ws) {
 	clientId: null,
 	yVelocity: 0,
 	jumps: 1,
-	object: "player"
+	object: "player",
+	onGround: false
   }
   
   ws.on('message', function incoming(json) {
@@ -71,12 +72,13 @@ wss.on("connection", function(ws) {
 		players[ws.id].x -= 2;
 	if (rightPressed)
 		players[ws.id].x += 2;
-	if (upPressed)
+	if (upPressed && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
-	if (downPressed)
-		players[ws.id].y += 2;
+		players[ws.id].onGround = false;
+	}
 
-	players[ws.id].yVelocity += gravity;
+	if (players[ws.id].onGround)
+		players[ws.id].yVelocity += gravity;
 	var objectBeneath = null;
 	for (var block in blocks){
 		var newObj = {
@@ -90,11 +92,14 @@ wss.on("connection", function(ws) {
 			break;
 		}
 	}
-	if (objectBeneath == null)
+	if (objectBeneath == null){
+		players[ws.id].onGround = false;
 		players[ws.id].y += players[ws.id].yVelocity;
+	}
 	if (objectBeneath != null){
 		players[ws.id].y = objectBeneath.y - players[ws.id].height;
 		players[ws.id].yVelocity = 0;
+		players[ws.id].onGround = true;
 	}
 	
 
