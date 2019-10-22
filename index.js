@@ -27,7 +27,7 @@ blocks[2] = {
 	object: "block",
 	id: 2,
 	x: 950,
-	y: -600
+	y: -600,
 	width: 50,
 	height: 600
 }
