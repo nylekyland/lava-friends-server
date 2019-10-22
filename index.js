@@ -73,7 +73,7 @@ wss.on("connection", function(ws) {
 	if (rightPressed)
 		players[ws.id].x += 2;
 	if (upPressed && players[ws.id].onGround){
-		players[ws.id].yVelocity = -50;
+		players[ws.id].yVelocity = -20;
 		players[ws.id].onGround = false;
 	}
 
