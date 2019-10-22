@@ -85,10 +85,40 @@ wss.on("connection", function(ws) {
 	downPressed = !! (data.state & 8);
 	
 	//Player logic
-	if (leftPressed)
-		players[ws.id].x -= 2;
-	if (rightPressed)
-		players[ws.id].x += 2;
+	if (leftPressed){
+		var objectLeft = null;
+		for (var block in blocks){
+			var newObj = {
+				x: players[ws.id].x - 2,
+				y: players[ws.id].y,
+				width: players[ws.id].width,
+				height: players[ws.id].height
+			}
+			if (rectangleOverlap(blocks[block], newObj)){
+				objectLeft = blocks[block];
+				break;
+			}
+		}
+		if (objectLeft == null)
+			players[ws.id].x -= 2;
+	}
+	if (rightPressed) {
+		var objectRight = null;
+		for (var block in blocks){
+			var newObj = {
+				x: players[ws.id].x + 2,
+				y: players[ws.id].y,
+				width: players[ws.id].width,
+				height: players[ws.id].height
+			}
+			if (rectangleOverlap(blocks[block], newObj)){
+				objectRight = blocks[block];
+				break;
+			}
+		}
+		if (objectRight == null)
+			players[ws.id].x += 2;
+	}
 	if (upPressed && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
 		players[ws.id].onGround = false;
