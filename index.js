@@ -57,6 +57,7 @@ wss.on("connection", function(ws) {
 	height: 50,
 	id: ws.id,
 	clientId: null,
+	xVelocity: 0,
 	yVelocity: 0,
 	jumps: 1,
 	object: "player",
@@ -86,10 +87,13 @@ wss.on("connection", function(ws) {
 	
 	//Player logic
 	if (leftPressed){
+		players[ws.id].xVelocity -= gravity;
+		if (players[ws.id].xVelocity > -10)
+			players[ws.id].xVelocity = -10;
 		var objectLeft = null;
 		for (var block in blocks){
 			var newObj = {
-				x: players[ws.id].x - 2,
+				x: players[ws.id].x - players[wsi.id].xVelocity,
 				y: players[ws.id].y,
 				width: players[ws.id].width,
 				height: players[ws.id].height
@@ -100,13 +104,20 @@ wss.on("connection", function(ws) {
 			}
 		}
 		if (objectLeft == null)
-			players[ws.id].x -= 2;
+			players[ws.id].x -= players[ws.id].xVelocity;
+		else{
+			players[ws.id].x = objectLeft.x + objectLeft.width;
+			players[ws.id].xVelocity = 0;
+		}
 	}
 	if (rightPressed) {
+		players[ws.id].xVelocity += gravity;
+		if (players[ws.id].xVelocity > 10)
+			players[ws.id].xVelocity = 10;
 		var objectRight = null;
 		for (var block in blocks){
 			var newObj = {
-				x: players[ws.id].x + 2,
+				x: players[ws.id].x + players[ws.id].xVelocity,
 				y: players[ws.id].y,
 				width: players[ws.id].width,
 				height: players[ws.id].height
@@ -117,7 +128,11 @@ wss.on("connection", function(ws) {
 			}
 		}
 		if (objectRight == null)
-			players[ws.id].x += 2;
+			players[ws.id].x += xVelocity;
+		else{
+			players[ws.id].x = objectRight.x - players[ws.id].width;
+			players[ws.id].xVelocity = 0;
+		}
 	}
 	if (upPressed && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
