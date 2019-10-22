@@ -44,7 +44,8 @@ wss.on("connection", function(ws) {
 	yVelocity: 0,
 	jumps: 1,
 	object: "player",
-	onGround: false
+	onGround: false,
+	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
   ws.on('message', function incoming(json) {
