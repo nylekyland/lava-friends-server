@@ -128,7 +128,7 @@ wss.on("connection", function(ws) {
 			}
 		}
 		if (objectRight == null)
-			players[ws.id].x += xVelocity;
+			players[ws.id].x += players[ws.id].xVelocity;
 		else{
 			players[ws.id].x = objectRight.x - players[ws.id].width;
 			players[ws.id].xVelocity = 0;
