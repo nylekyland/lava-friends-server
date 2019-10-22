@@ -93,7 +93,7 @@ wss.on("connection", function(ws) {
 		var objectLeft = null;
 		for (var block in blocks){
 			var newObj = {
-				x: players[ws.id].x - players[wsi.id].xVelocity,
+				x: players[ws.id].x - players[ws.id].xVelocity,
 				y: players[ws.id].y,
 				width: players[ws.id].width,
 				height: players[ws.id].height
