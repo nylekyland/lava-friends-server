@@ -7,6 +7,7 @@ var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
 var gravity = 0.67;
+var xSpeed = 0.48;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -87,9 +88,9 @@ wss.on("connection", function(ws) {
 	
 	//Player logic
 	if (leftPressed){
-		players[ws.id].xVelocity -= gravity;
-		if (players[ws.id].xVelocity > -10)
-			players[ws.id].xVelocity = -10;
+		players[ws.id].xVelocity -= xSpeed;
+		if (players[ws.id].xVelocity > -4)
+			players[ws.id].xVelocity = -4;
 		var objectLeft = null;
 		for (var block in blocks){
 			var newObj = {
@@ -111,9 +112,9 @@ wss.on("connection", function(ws) {
 		}
 	}
 	if (rightPressed) {
-		players[ws.id].xVelocity += gravity;
-		if (players[ws.id].xVelocity > 10)
-			players[ws.id].xVelocity = 10;
+		players[ws.id].xVelocity += xSpeed;
+		if (players[ws.id].xVelocity > 4)
+			players[ws.id].xVelocity = 4;
 		var objectRight = null;
 		for (var block in blocks){
 			var newObj = {
