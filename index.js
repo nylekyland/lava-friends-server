@@ -14,6 +14,22 @@ blocks[0] = {
 	y: 600,
 	width: 1000,
 	height: 50
+};
+blocks[1] = {
+	object: "block",
+	id: 1,
+	x: 0,
+	y: -600,
+	width: 50,
+	height: 600
+}
+blocks[2] = {
+	object: "block",
+	id: 2,
+	x: 950,
+	y: -600
+	width: 50,
+	height: 600
 }
 var uuidv4 = require('uuid/v4');
 
