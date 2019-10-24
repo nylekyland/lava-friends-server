@@ -65,6 +65,7 @@ wss.on("connection", function(ws) {
 	yVelocity: 0,
 	jumps: 1,
 	object: "player",
+	wallJump: false,
 	onGround: false,
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
@@ -112,11 +113,17 @@ wss.on("connection", function(ws) {
 				break;
 			}
 		}
-		if (objectLeft == null)
+		if (objectLeft == null){
 			players[ws.id].x -= players[ws.id].xVelocity;
+			players[ws.id].wallJump = false;
+		}
 		else{
+			if (players[ws.id].wallJump){
+				players[ws.id].yVelocity = 1;
+			}
 			players[ws.id].x = objectLeft.x + objectLeft.width;
 			players[ws.id].xVelocity = 0;
+			players[ws.id].wallJump = true;
 		}
 	}
 	if (rightPressed) {
@@ -136,16 +143,27 @@ wss.on("connection", function(ws) {
 				break;
 			}
 		}
-		if (objectRight == null)
+		if (objectRight == null){
 			players[ws.id].x += players[ws.id].xVelocity;
+			players[ws.id].wallJump = false;
+		}
 		else{
+			if (players[ws.id].wallJump){
+				players[ws.id].yVelocity = 1;
+			}
 			players[ws.id].x = objectRight.x - players[ws.id].width;
 			players[ws.id].xVelocity = 0;
+			players[ws.id].wallJump = true;
 		}
 	}
 	if (upPressed && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
 		players[ws.id].onGround = false;
+	}
+	if (upPressed && players[ws.id].wallJump){
+		players[ws.id].yVelocity = -12;
+		players[ws.id].onGround = false;
+		players[ws.id].wallJump = false;
 	}
 
 	if (!players[ws.id].onGround)
