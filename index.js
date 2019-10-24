@@ -65,7 +65,8 @@ wss.on("connection", function(ws) {
 	yVelocity: 0,
 	jumps: 1,
 	object: "player",
-	wallJump: false,
+	wallJumpLeft: false,
+	wallJumpRight: false,
 	onGround: false,
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
@@ -97,13 +98,13 @@ wss.on("connection", function(ws) {
 	
 	//Player logic
 	if (leftPressed){
-		players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity > 4)
-			players[ws.id].xVelocity = 4;
+		players[ws.id].xVelocity -= xSpeed;
+		if (players[ws.id].xVelocity < -4)
+			players[ws.id].xVelocity = -4;
 		var objectLeft = null;
 		for (var block in blocks){
 			var newObj = {
-				x: players[ws.id].x - players[ws.id].xVelocity,
+				x: players[ws.id].x + players[ws.id].xVelocity,
 				y: players[ws.id].y,
 				width: players[ws.id].width,
 				height: players[ws.id].height
@@ -114,16 +115,16 @@ wss.on("connection", function(ws) {
 			}
 		}
 		if (objectLeft == null){
-			players[ws.id].x -= players[ws.id].xVelocity;
-			players[ws.id].wallJump = false;
+			players[ws.id].x += players[ws.id].xVelocity;
+			players[ws.id].wallJumpLeft = false;
 		}
 		else{
-			if (players[ws.id].wallJump){
+			if (players[ws.id].wallJumpLeft){
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].x = objectLeft.x + objectLeft.width;
 			players[ws.id].xVelocity = 0;
-			players[ws.id].wallJump = true;
+			players[ws.id].wallJumpLeft = true;
 		}
 	}
 	if (rightPressed) {
@@ -145,25 +146,32 @@ wss.on("connection", function(ws) {
 		}
 		if (objectRight == null){
 			players[ws.id].x += players[ws.id].xVelocity;
-			players[ws.id].wallJump = false;
+			players[ws.id].wallJumpRight = false;
 		}
 		else{
-			if (players[ws.id].wallJump){
+			if (players[ws.id].wallJumpRight){
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].x = objectRight.x - players[ws.id].width;
 			players[ws.id].xVelocity = 0;
-			players[ws.id].wallJump = true;
+			players[ws.id].wallJumpRight = true;
 		}
 	}
 	if (upPressed && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
 		players[ws.id].onGround = false;
 	}
-	if (upPressed && players[ws.id].wallJump){
-		players[ws.id].yVelocity = -12;
+	if (upPressed && players[ws.id].wallJumpLeft){
+		players[ws.id].yVelocity = -10;
+		players[ws.id].xVelocity = 4;
 		players[ws.id].onGround = false;
-		players[ws.id].wallJump = false;
+		players[ws.id].wallJumpLeft = false;
+	}
+	if (upPressed && players[ws.id].wallJumpRight){
+		players[ws.id].yVelocity = -10;
+		players[ws.id].xVelocity = -4;
+		players[ws.id].onGround = false;
+		players[ws.id].wallJumpRight = false;
 	}
 
 	if (!players[ws.id].onGround)
