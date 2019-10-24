@@ -9,6 +9,7 @@ var blocks = {};
 var gravity = 0.67;
 var xSpeed = 0.48;
 var timer = 30;
+var timerStarted = false;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -67,7 +68,8 @@ wss.on("connection", function(ws) {
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
-  if (Object.keys(players).length){
+  if (Object.keys(players).length >= 2 && !timerStarted){
+	timerStarted = true;
 	setInterval(countdown, 1000);
   }
   
@@ -173,7 +175,7 @@ wss.on("connection", function(ws) {
 
 	for (var obj in players){
 		var sendObject = {
-		"timer": timer,
+		"timer": timerStarted ? timer : "",
 		"players": JSON.stringify(players),
 		"blocks": JSON.stringify(blocks)
 		}
