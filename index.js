@@ -99,8 +99,8 @@ wss.on("connection", function(ws) {
 	//Player logic
 	if (leftPressed){
 		players[ws.id].xVelocity -= xSpeed;
-		if (players[ws.id].xVelocity < -4)
-			players[ws.id].xVelocity = -4;
+		if (players[ws.id].xVelocity < -6)
+			players[ws.id].xVelocity = -6;
 		var objectLeft = null;
 		for (var block in blocks){
 			var newObj = {
@@ -129,8 +129,8 @@ wss.on("connection", function(ws) {
 	}
 	if (rightPressed) {
 		players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity > 4)
-			players[ws.id].xVelocity = 4;
+		if (players[ws.id].xVelocity > 6)
+			players[ws.id].xVelocity = 6;
 		var objectRight = null;
 		for (var block in blocks){
 			var newObj = {
@@ -156,6 +156,13 @@ wss.on("connection", function(ws) {
 			players[ws.id].xVelocity = 0;
 			players[ws.id].wallJumpRight = true;
 		}
+	}
+	if (!rightPressed && !leftPressed){
+		if (players[ws.id].xVelocity > 0)
+			players[ws.id].xVelocity -= xSpeed;
+		if (players[ws.id].xVelocity < 0)
+			players[ws.id].xVelocity += xSpeed;
+		players[ws.id].xVelocity = Math.round(players[ws.id].xVelocity);
 	}
 	if (upPressed && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
