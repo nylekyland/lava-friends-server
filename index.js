@@ -157,7 +157,7 @@ wss.on("connection", function(ws) {
 			players[ws.id].wallJumpRight = true;
 		}
 	}
-	if (!rightPressed && !leftPressed){
+	if (leftPressed == false && rightPressed == false){
 		if (players[ws.id].xVelocity > 0)
 			players[ws.id].xVelocity -= xSpeed;
 		if (players[ws.id].xVelocity < 0)
