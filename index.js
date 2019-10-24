@@ -170,13 +170,13 @@ wss.on("connection", function(ws) {
 	}
 	if (upPressed && players[ws.id].wallJumpLeft){
 		players[ws.id].yVelocity = -10;
-		players[ws.id].xVelocity = 4;
+		players[ws.id].xVelocity = 6;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpLeft = false;
 	}
 	if (upPressed && players[ws.id].wallJumpRight){
 		players[ws.id].yVelocity = -10;
-		players[ws.id].xVelocity = -4;
+		players[ws.id].xVelocity = -6;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpRight = false;
 	}
