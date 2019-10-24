@@ -187,6 +187,11 @@ wss.on("connection", function(ws) {
   ws.on("close", function() {
     console.log("websocket connection close")
 	delete players[ws.id];
+	if (Object.keys(players).length < 2 && timerStarted){
+		timerStarted = false;
+		timer = 30;
+		clearInterval(timerRef);
+	}
   });
 });
 
