@@ -10,6 +10,7 @@ var gravity = 0.67;
 var xSpeed = 0.48;
 var timer = 30;
 var timerStarted = false;
+var timerRef;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -70,7 +71,7 @@ wss.on("connection", function(ws) {
   
   if (Object.keys(players).length >= 2 && !timerStarted){
 	timerStarted = true;
-	setInterval(countdown, 1000);
+	timerRef = setInterval(countdown, 1000);
   }
   
   ws.on('message', function incoming(json) {
@@ -197,5 +198,12 @@ function rectangleOverlap(rect1, rect2){
 }
 
 function countdown(){
-	timer--;
+	if (timer == 0){
+		timer = 30;
+		timerStarted = false;
+		clearInterval(timerRef);
+	}
+	else{
+		timer--;
+	}
 }
