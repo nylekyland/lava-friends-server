@@ -8,6 +8,7 @@ var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
 var gravity = 0.67;
 var xSpeed = 0.48;
+var timer = 30;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -64,6 +65,10 @@ wss.on("connection", function(ws) {
 	object: "player",
 	onGround: false,
 	color: colors[Math.floor(Math.random() * colors.length)]
+  }
+  
+  if (players.length >= 2){
+	setInterval(countdown, 1000);
   }
   
   ws.on('message', function incoming(json) {
@@ -168,6 +173,7 @@ wss.on("connection", function(ws) {
 
 	for (var obj in players){
 		var sendObject = {
+		"timer": timer,
 		"players": JSON.stringify(players),
 		"blocks": JSON.stringify(blocks)
 		}
@@ -186,4 +192,8 @@ function rectangleOverlap(rect1, rect2){
    rect1.x + rect1.width > rect2.x &&
    rect1.y < rect2.y + rect2.height &&
    rect1.y + rect1.height > rect2.y);
+}
+
+function countdown(){
+	timer--;
 }
