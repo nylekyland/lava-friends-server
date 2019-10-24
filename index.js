@@ -67,7 +67,7 @@ wss.on("connection", function(ws) {
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
-  if (players.length >= 2){
+  if (Object.keys(players).length){
 	setInterval(countdown, 1000);
   }
   
