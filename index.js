@@ -180,9 +180,9 @@ wss.on("connection", function(ws) {
 	
 	if (players[ws.id].xVelocity != 0){
 		if (players[ws.id].xVelocity > 0)
-			players[ws.id].xVelocity -= 1.25;
+			players[ws.id].xVelocity -= 0.25;
 		if (players[ws.id].xVelocity < 0)
-			players[ws.id].xVelocity += 1.25;
+			players[ws.id].xVelocity += 0.25;
 		players[ws.id].xVelocity = Math.round(players[ws.id].xVelocity);
 	}
 	
