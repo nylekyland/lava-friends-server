@@ -174,8 +174,18 @@ wss.on("connection", function(ws) {
 		players[ws.id].wallJumpRight = false;
 	}
 
-	if (!players[ws.id].onGround)
+	if (!players[ws.id].onGround) {
 		players[ws.id].yVelocity += gravity;
+	}
+	
+	if (players[ws.id].xVelocity != 0){
+		if (players[ws.id].xVelocity > 0)
+			players[ws.id].xVelocity -= 1.25;
+		if (players[ws.id].xVelocity < 0)
+			players[ws.id].xVelocity += 1.25;
+		players[ws.id].xVelocity = Math.round(players[ws.id].xVelocity);
+	}
+	
 	var objectBeneath = null;
 	for (var block in blocks){
 		var newObj = {
@@ -197,6 +207,8 @@ wss.on("connection", function(ws) {
 		players[ws.id].y = objectBeneath.y - players[ws.id].height;
 		players[ws.id].yVelocity = 0;
 		players[ws.id].onGround = true;
+		players[ws.id].wallJumpLeft = false;
+		players[ws.id].wallJumpRight = false;
 	}
 	
 
