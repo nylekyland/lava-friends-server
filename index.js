@@ -99,7 +99,7 @@ wss.on("connection", function(ws) {
 	//Player logic
 	if (leftPressed){
 		players[ws.id].xVelocity -= xSpeed;
-		if (players[ws.id].xVelocity < -6 && players[ws.id].onGround)
+		if (players[ws.id].xVelocity < -6)
 			players[ws.id].xVelocity = -6;
 		var objectLeft = null;
 		for (var block in blocks){
@@ -129,7 +129,7 @@ wss.on("connection", function(ws) {
 	}
 	if (rightPressed) {
 		players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity > 6 && players[ws.id].onGround)
+		if (players[ws.id].xVelocity > 6)
 			players[ws.id].xVelocity = 6;
 		var objectRight = null;
 		for (var block in blocks){
