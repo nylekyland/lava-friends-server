@@ -6,7 +6,7 @@ var port = process.env.PORT || 5000
 var players = {};
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
-var gravity = 0.67;
+var gravity = 0.51;
 var xSpeed = 0.48;
 var timer = 30;
 var timerStarted = false;
@@ -99,7 +99,7 @@ wss.on("connection", function(ws) {
 	//Player logic
 	if (leftPressed){
 		players[ws.id].xVelocity -= xSpeed;
-		if (players[ws.id].xVelocity < -6)
+		if (players[ws.id].xVelocity < -6 && players[ws.id].onGround)
 			players[ws.id].xVelocity = -6;
 		var objectLeft = null;
 		for (var block in blocks){
@@ -129,7 +129,7 @@ wss.on("connection", function(ws) {
 	}
 	if (rightPressed) {
 		players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity > 6)
+		if (players[ws.id].xVelocity > 6 && players[ws.id].onGround)
 			players[ws.id].xVelocity = 6;
 		var objectRight = null;
 		for (var block in blocks){
@@ -163,13 +163,13 @@ wss.on("connection", function(ws) {
 	}
 	if (upPressed && players[ws.id].wallJumpLeft){
 		players[ws.id].yVelocity = -10;
-		players[ws.id].xVelocity = 6;
+		players[ws.id].xVelocity = 12;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpLeft = false;
 	}
 	if (upPressed && players[ws.id].wallJumpRight){
 		players[ws.id].yVelocity = -10;
-		players[ws.id].xVelocity = -6;
+		players[ws.id].xVelocity = -12;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpRight = false;
 	}
@@ -180,9 +180,9 @@ wss.on("connection", function(ws) {
 	
 	if (players[ws.id].xVelocity != 0 && (!leftPressed && !rightPressed)){
 		if (players[ws.id].xVelocity > 0)
-			players[ws.id].xVelocity -= 0.25;
+			players[ws.id].xVelocity -= xSpeed;
 		if (players[ws.id].xVelocity < 0)
-			players[ws.id].xVelocity += 0.25;
+			players[ws.id].xVelocity += xSpeed;
 		if (players[ws.id].xVelocity < 1 && players[ws.id].xVelocity > -1)
 			players[ws.id].xVelocity = 0;
 	}
