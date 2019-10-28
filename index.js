@@ -35,6 +35,14 @@ blocks[2] = {
 	width: 50,
 	height: 600
 }
+blocks[3] = {
+	object: "block",
+	id: 3,
+	x: 0,
+	y: 450,
+	width: 150,
+	height: 150
+}
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
