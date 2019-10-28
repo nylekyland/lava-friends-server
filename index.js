@@ -178,7 +178,7 @@ wss.on("connection", function(ws) {
 		players[ws.id].yVelocity += gravity;
 	}
 	
-	if (players[ws.id].xVelocity != 0 && (!leftPressed || !rightPressed)){
+	if (players[ws.id].xVelocity != 0 && (!leftPressed && !rightPressed)){
 		if (players[ws.id].xVelocity > 0)
 			players[ws.id].xVelocity -= 0.25;
 		if (players[ws.id].xVelocity < 0)
