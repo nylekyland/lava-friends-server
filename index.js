@@ -205,9 +205,9 @@ wss.on("connection", function(ws) {
 			height: players[ws.id].height + players[ws.id].yVelocity + gravity
 		}
 		if (rectangleOverlap(blocks[block], newObj)){
-			if (block.y > player[ws.id].y)
+			if (block.y > players[ws.id].y)
 				objectBeneath = blocks[block];
-			else if (block.y < player[ws.id].y)
+			else if (block.y < players[ws.id].y)
 				objectAbove = blocks[block];
 			break;
 		}
