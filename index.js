@@ -76,6 +76,7 @@ wss.on("connection", function(ws) {
 	wallJumpLeft: false,
 	wallJumpRight: false,
 	onGround: false,
+	lastUp: false,
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
@@ -165,22 +166,27 @@ wss.on("connection", function(ws) {
 			players[ws.id].wallJumpRight = true;
 		}
 	}
-	if (upPressed && players[ws.id].onGround){
+	if (upPressed && !players[ws.id].lastUp && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
 		players[ws.id].onGround = false;
 	}
-	if (upPressed && players[ws.id].wallJumpLeft){
+	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpLeft){
 		players[ws.id].yVelocity = -12;
 		players[ws.id].xVelocity = 12;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpLeft = false;
 	}
-	if (upPressed && players[ws.id].wallJumpRight){
+	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpRight){
 		players[ws.id].yVelocity = -12;
 		players[ws.id].xVelocity = -12;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpRight = false;
 	}
+	
+	if (upPressed)
+		players[ws.id].lastUp = true;
+	else
+		players[ws.id].lastUp = false;
 
 	if (!players[ws.id].onGround) {
 		players[ws.id].yVelocity += gravity;
