@@ -162,13 +162,13 @@ wss.on("connection", function(ws) {
 		players[ws.id].onGround = false;
 	}
 	if (upPressed && players[ws.id].wallJumpLeft){
-		players[ws.id].yVelocity = -15;
+		players[ws.id].yVelocity = -12;
 		players[ws.id].xVelocity = 12;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpLeft = false;
 	}
 	if (upPressed && players[ws.id].wallJumpRight){
-		players[ws.id].yVelocity = -15;
+		players[ws.id].yVelocity = -12;
 		players[ws.id].xVelocity = -12;
 		players[ws.id].onGround = false;
 		players[ws.id].wallJumpRight = false;
