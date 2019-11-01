@@ -136,7 +136,7 @@ wss.on("connection", function(ws) {
 			players[ws.id].wallJumpLeft = true;
 		}
 	}
-	if (rightPressed) {
+	else if (rightPressed) {
 		players[ws.id].xVelocity += xSpeed;
 		if (players[ws.id].xVelocity > 6)
 			players[ws.id].xVelocity = 6;
