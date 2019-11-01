@@ -200,7 +200,6 @@ wss.on("connection", function(ws) {
 			if (players[ws.id].wallJumpLeft){
 				players[ws.id].yVelocity = 1;
 			}
-			players[ws.id].x = objectLeft.x + objectLeft.width;
 			players[ws.id].xVelocity = 0;
 			players[ws.id].wallJumpLeft = true;
 		}
@@ -230,7 +229,6 @@ wss.on("connection", function(ws) {
 			if (players[ws.id].wallJumpRight){
 				players[ws.id].yVelocity = 1;
 			}
-			players[ws.id].x = objectRight.x - players[ws.id].width;
 			players[ws.id].xVelocity = 0;
 			players[ws.id].wallJumpRight = true;
 		}
