@@ -106,6 +106,40 @@ wss.on("connection", function(ws) {
 	downPressed = !! (data.state & 8);
 	
 	//Player logic
+	
+	var objectBeneath = null;
+	var objectAbove = null;
+	for (var block in blocks){
+		var newObj = {
+			x: players[ws.id].x,
+			y: players[ws.id].y,
+			width: players[ws.id].width,
+			height: players[ws.id].height + players[ws.id].yVelocity + gravity
+		}
+		if (rectangleOverlap(blocks[block], newObj)){
+			if (blocks[block].y > players[ws.id].y)
+				objectBeneath = blocks[block];
+			else if (blocks[block].y < players[ws.id].y)
+				objectAbove = blocks[block];
+			break;
+		}
+	}
+	if (objectBeneath == null){
+		players[ws.id].onGround = false;
+		players[ws.id].y += players[ws.id].yVelocity;
+	}
+	if (objectBeneath != null){
+		players[ws.id].y = objectBeneath.y - players[ws.id].height;
+		players[ws.id].yVelocity = 0;
+		players[ws.id].onGround = true;
+		players[ws.id].wallJumpLeft = false;
+		players[ws.id].wallJumpRight = false;
+	}
+	if (objectAbove != null){
+		players[ws.id].y = objectAbove.y + objectAbove.height;
+		players[ws.id].yVelocity = 0;
+	}
+	
 	if (leftPressed){
 		players[ws.id].xVelocity -= xSpeed;
 		if (players[ws.id].xVelocity < -6)
@@ -199,39 +233,6 @@ wss.on("connection", function(ws) {
 			players[ws.id].xVelocity += xSpeed;
 		if (players[ws.id].xVelocity < 1 && players[ws.id].xVelocity > -1)
 			players[ws.id].xVelocity = 0;
-	}
-	
-	var objectBeneath = null;
-	var objectAbove = null;
-	for (var block in blocks){
-		var newObj = {
-			x: players[ws.id].x,
-			y: players[ws.id].y,
-			width: players[ws.id].width,
-			height: players[ws.id].height + players[ws.id].yVelocity + gravity
-		}
-		if (rectangleOverlap(blocks[block], newObj)){
-			if (blocks[block].y > players[ws.id].y)
-				objectBeneath = blocks[block];
-			else if (blocks[block].y < players[ws.id].y)
-				objectAbove = blocks[block];
-			break;
-		}
-	}
-	if (objectBeneath == null){
-		players[ws.id].onGround = false;
-		players[ws.id].y += players[ws.id].yVelocity;
-	}
-	if (objectBeneath != null){
-		players[ws.id].y = objectBeneath.y - players[ws.id].height;
-		players[ws.id].yVelocity = 0;
-		players[ws.id].onGround = true;
-		players[ws.id].wallJumpLeft = false;
-		players[ws.id].wallJumpRight = false;
-	}
-	if (objectAbove != null){
-		players[ws.id].y = objectAbove.y + objectAbove.height;
-		players[ws.id].yVelocity = 0;
 	}
 	
 
