@@ -17,7 +17,8 @@ blocks[0] = {
 	x: 0,
 	y: 600,
 	width: 1000,
-	height: 50
+	height: 50,
+	gravity: false
 };
 blocks[1] = {
 	object: "block",
@@ -25,7 +26,8 @@ blocks[1] = {
 	x: 0,
 	y: 0,
 	width: 50,
-	height: 600
+	height: 600,
+	gravity: false
 }
 blocks[2] = {
 	object: "block",
@@ -33,7 +35,8 @@ blocks[2] = {
 	x: 950,
 	y: 0,
 	width: 50,
-	height: 600
+	height: 600,
+	gravity: false
 }
 blocks[3] = {
 	object: "block",
@@ -41,7 +44,8 @@ blocks[3] = {
 	x: 50,
 	y: 350,
 	width: 150,
-	height: 150
+	height: 150,
+	gravity: true
 }
 var uuidv4 = require('uuid/v4');
 
@@ -232,7 +236,33 @@ wss.on("connection", function(ws) {
 			players[ws.id].xVelocity = 0;
 			players[ws.id].wallJumpRight = true;
 		}
-	}	
+	}
+
+		
+	/*
+		Update block positions
+	*/
+	for (var block in blocks){
+		var blockUnderneath = null;
+		if (blocks[block].gravity){
+			var newObj = {
+				x: blocks[block].x,
+				y: blocks[block].y + 1,
+				width: blocks[block].width,
+				height: blocks[block].height
+			}
+			for (var block2 in blocks){
+				if (block2 != block && rectangleOverlap(newObj, blocks[block2])){
+					blockUnderneath = blocks[block2];
+					break;
+				}
+			}
+			if (blockUnderneath != null)
+				blocks[block].y += 1;
+			else
+				blocks[block].y = blockUnderneath.y - blocks[block].height;
+		}
+	}
 
 	for (var obj in players){
 		var sendObject = {
