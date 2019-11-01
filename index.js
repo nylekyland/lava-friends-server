@@ -184,7 +184,7 @@ wss.on("connection", function(ws) {
 			var newObj = {
 				x: players[ws.id].x + players[ws.id].xVelocity,
 				y: players[ws.id].y,
-				width: players[ws.id].width,
+				width: players[ws.id].width + players[ws.id].xVelocity,
 				height: players[ws.id].height
 			}
 			if (rectangleOverlap(blocks[block], newObj)){
@@ -214,7 +214,7 @@ wss.on("connection", function(ws) {
 			var newObj = {
 				x: players[ws.id].x + players[ws.id].xVelocity,
 				y: players[ws.id].y,
-				width: players[ws.id].width,
+				width: players[ws.id].width + players[ws.id].xVelocity,
 				height: players[ws.id].height
 			}
 			if (rectangleOverlap(blocks[block], newObj)){
