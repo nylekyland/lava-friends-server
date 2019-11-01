@@ -257,7 +257,7 @@ wss.on("connection", function(ws) {
 					break;
 				}
 			}
-			if (blockUnderneath != null)
+			if (blockUnderneath == null)
 				blocks[block].y += 1;
 			else
 				blocks[block].y = blockUnderneath.y - blocks[block].height;
