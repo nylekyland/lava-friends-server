@@ -39,7 +39,7 @@ blocks[3] = {
 	object: "block",
 	id: 3,
 	x: 50,
-	y: 400,
+	y: 350,
 	width: 150,
 	height: 150
 }
