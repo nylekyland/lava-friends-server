@@ -45,7 +45,7 @@ blocks[3] = {
 	y: 350,
 	width: 150,
 	height: 150,
-	gravity: true
+	gravity: false
 }
 var uuidv4 = require('uuid/v4');
 
