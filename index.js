@@ -107,6 +107,41 @@ wss.on("connection", function(ws) {
 	
 	//Player logic
 	
+	if (upPressed && !players[ws.id].lastUp && players[ws.id].onGround){
+		players[ws.id].yVelocity = -15;
+		players[ws.id].onGround = false;
+	}
+	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpLeft){
+		players[ws.id].yVelocity = -12;
+		players[ws.id].xVelocity = 12;
+		players[ws.id].onGround = false;
+		players[ws.id].wallJumpLeft = false;
+	}
+	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpRight){
+		players[ws.id].yVelocity = -12;
+		players[ws.id].xVelocity = -12;
+		players[ws.id].onGround = false;
+		players[ws.id].wallJumpRight = false;
+	}
+	
+	if (upPressed)
+		players[ws.id].lastUp = true;
+	else
+		players[ws.id].lastUp = false;
+
+	if (!players[ws.id].onGround) {
+		players[ws.id].yVelocity += gravity;
+	}
+	
+	if (players[ws.id].xVelocity != 0 && (!leftPressed && !rightPressed)){
+		if (players[ws.id].xVelocity > 0)
+			players[ws.id].xVelocity -= xSpeed;
+		if (players[ws.id].xVelocity < 0)
+			players[ws.id].xVelocity += xSpeed;
+		if (players[ws.id].xVelocity < 1 && players[ws.id].xVelocity > -1)
+			players[ws.id].xVelocity = 0;
+	}
+	
 	var objectBeneath = null;
 	var objectAbove = null;
 	for (var block in blocks){
@@ -199,42 +234,7 @@ wss.on("connection", function(ws) {
 			players[ws.id].xVelocity = 0;
 			players[ws.id].wallJumpRight = true;
 		}
-	}
-	if (upPressed && !players[ws.id].lastUp && players[ws.id].onGround){
-		players[ws.id].yVelocity = -15;
-		players[ws.id].onGround = false;
-	}
-	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpLeft){
-		players[ws.id].yVelocity = -12;
-		players[ws.id].xVelocity = 12;
-		players[ws.id].onGround = false;
-		players[ws.id].wallJumpLeft = false;
-	}
-	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpRight){
-		players[ws.id].yVelocity = -12;
-		players[ws.id].xVelocity = -12;
-		players[ws.id].onGround = false;
-		players[ws.id].wallJumpRight = false;
-	}
-	
-	if (upPressed)
-		players[ws.id].lastUp = true;
-	else
-		players[ws.id].lastUp = false;
-
-	if (!players[ws.id].onGround) {
-		players[ws.id].yVelocity += gravity;
-	}
-	
-	if (players[ws.id].xVelocity != 0 && (!leftPressed && !rightPressed)){
-		if (players[ws.id].xVelocity > 0)
-			players[ws.id].xVelocity -= xSpeed;
-		if (players[ws.id].xVelocity < 0)
-			players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity < 1 && players[ws.id].xVelocity > -1)
-			players[ws.id].xVelocity = 0;
-	}
-	
+	}	
 
 	for (var obj in players){
 		var sendObject = {
