@@ -205,10 +205,8 @@ wss.on("connection", function(ws) {
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].xVelocity = 0;
-			if (players[ws.id].y > objectLeft.y && players[ws.id].y < objectLeft.y + objectLeft.height){
-				players[ws.id].wallJumpLeft = true;	
-				//players[ws.id].x = objectLeft.x + objectLeft.width;
-			}
+			if (objectAbove == null)
+				players[ws.id].x = objectLeft.x + objectLeft.width;
 		}
 	}
 	else if (rightPressed) {
@@ -237,11 +235,8 @@ wss.on("connection", function(ws) {
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].xVelocity = 0;
-			if (players[ws.id].y > objectRight.y && players[ws.id].y < objectRight.y + objectRight.height)
-			{
-				players[ws.id].wallJumpRight = true;
-				//players[ws.id].x = objectRight.x - players[ws.id].width;
-			}
+			if (objectAbove == null)
+				players[ws.id].x = objectRight.x - players[ws.id].width;
 		}
 	}
 
