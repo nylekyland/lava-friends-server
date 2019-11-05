@@ -205,8 +205,10 @@ wss.on("connection", function(ws) {
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].xVelocity = 0;
-			if (objectAbove == null)
+			if (objectAbove == null){
 				players[ws.id].x = objectLeft.x + objectLeft.width;
+				players[ws.id].wallJumpLeft = true;
+			}
 		}
 	}
 	else if (rightPressed) {
@@ -235,8 +237,10 @@ wss.on("connection", function(ws) {
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].xVelocity = 0;
-			if (objectAbove == null)
+			if (objectAbove == null){
 				players[ws.id].x = objectRight.x - players[ws.id].width;
+				players[ws.id].wallJumpRight = true;
+			}
 		}
 	}
 
