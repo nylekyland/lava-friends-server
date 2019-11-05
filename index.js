@@ -178,8 +178,9 @@ wss.on("connection", function(ws) {
 		players[ws.id].wallJumpRight = false;
 	}
 	if (objectAbove != null){
-		players[ws.id].y = objectAbove.y + objectAbove.height + 0.5;
+		players[ws.id].y = objectAbove.y + objectAbove.height;
 		players[ws.id].yVelocity = 0;
+		players[ws.id].xVelocity = 0;
 	}
 	
 	if (leftPressed){
