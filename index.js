@@ -207,7 +207,7 @@ wss.on("connection", function(ws) {
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].xVelocity = 0;
-			if (players[ws.id].y > objectLeft.y && players[ws.id].y < objectLeft.y + objectLeft.height){
+			if (objectAbove == null){
 				players[ws.id].wallJumpLeft = true;	
 				players[ws.id].x = objectLeft.x + objectLeft.width;
 			}
@@ -238,7 +238,7 @@ wss.on("connection", function(ws) {
 				players[ws.id].yVelocity = 1;
 			}
 			players[ws.id].xVelocity = 0;
-			if (players[ws.id].y > objectRight.y && players[ws.id].y < objectRight.y + objectRight.height)
+			if (objectAbove == null)
 			{
 				players[ws.id].wallJumpRight = true;
 				players[ws.id].x = objectRight.x - players[ws.id].width;
