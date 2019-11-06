@@ -133,6 +133,7 @@ wss.on("connection", function(ws) {
 
   ws.on("close", function() {
     console.log("websocket connection close")
+	clearInterval(updateRef);
 	delete players[ws.id];
 	if (Object.keys(players).length < 2 && timerStarted){
 		timerStarted = false;
