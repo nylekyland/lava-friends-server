@@ -89,7 +89,7 @@ wss.on("connection", function(ws) {
 	timerRef = setInterval(countdown, 1000);
   }
   
-  updateRef = setInterval(function() {updatePositions(ws)}, 0.03);
+  updateRef = setInterval(function() {updatePositions(ws)}, 0.01);
   
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
