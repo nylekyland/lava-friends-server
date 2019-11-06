@@ -77,6 +77,10 @@ wss.on("connection", function(ws) {
 	yVelocity: 0,
 	jumps: 1,
 	object: "player",
+	leftPressed: false,
+	rightPressed: false,
+	upPressed: false,
+	downPressed: false,
 	wallJumpLeft: false,
 	wallJumpRight: false,
 	onGround: false,
@@ -89,7 +93,7 @@ wss.on("connection", function(ws) {
 	timerRef = setInterval(countdown, 1000);
   }
   
-  updateRef = setInterval(function() {updatePositions(ws)}, 0.01);
+  updateRef = setInterval(function(){updatePositions(players[ws.id])}, 0.03);
   
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
@@ -97,21 +101,70 @@ wss.on("connection", function(ws) {
 	if (players[ws.id].clientId == null)
 		players[ws.id].clientId = data.clientId;
 	
-	var leftPressed = false,
-	rightPressed = false,
-	upPressed = false,
-	downPressed = false;
-	
 	//Position 1: Left is pressed
-	leftPressed = !!(data.state & 1);
+	players[ws.id].leftPressed = !!(data.state & 1);
 	//Position 2: Right is pressed
-	rightPressed = !!(data.state & 2);
+	players[ws.id].rightPressed = !!(data.state & 2);
 	//Position 3: Up is pressed
-	upPressed = !!(data.state & 4);
+	players[ws.id].upPressed = !!(data.state & 4);
 	//Position 4: Down is pressed
-	downPressed = !! (data.state & 8);
+	players[ws.id].downPressed = !! (data.state & 8);
 	
+	var condensedPlayers = [];
+	
+	for (var obj in players){
+		var playerObj = {
+			x: players[obj].x,
+			y: players[obj].y,
+			width: players[obj].width,
+			height: players[obj].height,
+			clientId: players[obj].clientId
+		}
+		condensedPlayers.push(playerObj);
+	}
+	var sendObject = {
+		"timer": timerStarted ? timer : "",
+		"players": JSON.stringify(condensedPlayers),
+		"blocks": JSON.stringify(blocks)
+		}
+	ws.send(JSON.stringify(sendObject));
+  });
+
+  ws.on("close", function() {
+    console.log("websocket connection close")
+	delete players[ws.id];
+	if (Object.keys(players).length < 2 && timerStarted){
+		timerStarted = false;
+		timer = 30;
+		clearInterval(timerRef);
+	}
+  });
+});
+
+function rectangleOverlap(rect1, rect2){
+	return (rect1.x < rect2.x + rect2.width &&
+   rect1.x + rect1.width > rect2.x &&
+   rect1.y < rect2.y + rect2.height &&
+   rect1.y + rect1.height > rect2.y);
+}
+
+function countdown(){
+	if (timer == 0){
+		timer = 30;
+		timerStarted = false;
+		clearInterval(timerRef);
+	}
+	else{
+		timer--;
+	}
+}
+
+function updatePositions(player){
 	//Player logic
+	var upPressed = player.upPressed;
+	var downPressed = player.downPressed;
+	var leftPressed = player.leftPressed;
+	var rightPressed = player.rightPressed;
 	//The player pressed up and is on the ground
 	if (upPressed && !players[ws.id].lastUp && players[ws.id].onGround){
 		players[ws.id].yVelocity = -15;
@@ -273,45 +326,5 @@ wss.on("connection", function(ws) {
 			else
 				blocks[block].y = blockUnderneath.y - blocks[block].height;
 		}
-	}
-  });
-
-  ws.on("close", function() {
-    console.log("websocket connection close")
-	delete players[ws.id];
-	if (Object.keys(players).length < 2 && timerStarted){
-		timerStarted = false;
-		timer = 30;
-		clearInterval(timerRef);
-	}
-  });
-});
-
-function rectangleOverlap(rect1, rect2){
-	return (rect1.x < rect2.x + rect2.width &&
-   rect1.x + rect1.width > rect2.x &&
-   rect1.y < rect2.y + rect2.height &&
-   rect1.y + rect1.height > rect2.y);
-}
-
-function countdown(){
-	if (timer == 0){
-		timer = 30;
-		timerStarted = false;
-		clearInterval(timerRef);
-	}
-	else{
-		timer--;
-	}
-}
-
-function updatePositions(ws){
-	for (var obj in players){
-		var sendObject = {
-		"timer": timerStarted ? timer : "",
-		"players": JSON.stringify(players),
-		"blocks": JSON.stringify(blocks)
-		}
-		ws.send(JSON.stringify(sendObject));
 	}
 }
