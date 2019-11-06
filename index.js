@@ -166,41 +166,41 @@ function updatePositions(player){
 	var leftPressed = player.leftPressed;
 	var rightPressed = player.rightPressed;
 	//The player pressed up and is on the ground
-	if (upPressed && !players[ws.id].lastUp && players[ws.id].onGround){
-		players[ws.id].yVelocity = -15;
-		players[ws.id].onGround = false;
+	if (upPressed && !player.lastUp && player.onGround){
+		player.yVelocity = -15;
+		player.onGround = false;
 	}
 	//The player pressed up and is already on the left wall -> wall jump to the right
-	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpLeft){
-		players[ws.id].yVelocity = -12;
-		players[ws.id].xVelocity = 12;
-		players[ws.id].onGround = false;
-		players[ws.id].wallJumpLeft = false;
+	if (upPressed && !player.lastUp && player.wallJumpLeft){
+		player.yVelocity = -12;
+		player.xVelocity = 12;
+		player.onGround = false;
+		player.wallJumpLeft = false;
 	}
 	//The player pressed up and is already on the right wall -> wall jump to the left
-	if (upPressed && !players[ws.id].lastUp && players[ws.id].wallJumpRight){
-		players[ws.id].yVelocity = -12;
-		players[ws.id].xVelocity = -12;
-		players[ws.id].onGround = false;
-		players[ws.id].wallJumpRight = false;
+	if (upPressed && !player.lastUp && player.wallJumpRight){
+		player.yVelocity = -12;
+		player.xVelocity = -12;
+		player.onGround = false;
+		player.wallJumpRight = false;
 	}
 	//For the next call, determine if up button is down.
 	if (upPressed)
-		players[ws.id].lastUp = true;
+		player.lastUp = true;
 	else
-		players[ws.id].lastUp = false;
+		player.lastUp = false;
 	
 	//If the player is not on the ground, affect their yVelocity by adding gravity
-	players[ws.id].yVelocity += gravity;
+	player.yVelocity += gravity;
 	
 	//If player is idle, slow down their xVelocity to 0.
-	if (players[ws.id].xVelocity != 0 && (!leftPressed && !rightPressed)){
-		if (players[ws.id].xVelocity > 0)
-			players[ws.id].xVelocity -= xSpeed;
-		if (players[ws.id].xVelocity < 0)
-			players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity < 1 && players[ws.id].xVelocity > -1)
-			players[ws.id].xVelocity = 0;
+	if (player.xVelocity != 0 && (!leftPressed && !rightPressed)){
+		if (player.xVelocity > 0)
+			player.xVelocity -= xSpeed;
+		if (player.xVelocity < 0)
+			player.xVelocity += xSpeed;
+		if (player.xVelocity < 1 && player.xVelocity > -1)
+			player.xVelocity = 0;
 	}
 	
 	var objectBeneath = null;
@@ -212,94 +212,94 @@ function updatePositions(player){
 	//Check their next y coordinate to see if it overlaps any blocks
 	for (var block in blocks){
 		var newObj = {
-			x: players[ws.id].x,
-			y: players[ws.id].y + players[ws.id].yVelocity,
-			width: players[ws.id].width,
-			height: players[ws.id].height
+			x: player.x,
+			y: player.y + player.yVelocity,
+			width: player.width,
+			height: player.height
 		}
 		if (rectangleOverlap(blocks[block], newObj)){
-			if (blocks[block].y > players[ws.id].y)
+			if (blocks[block].y > player.y)
 				objectBeneath = blocks[block];
-			else if (blocks[block].y < players[ws.id].y)
+			else if (blocks[block].y < player.y)
 				objectAbove = blocks[block];
 			break;
 		}
 	}
 	//Nothing is underneath the player, so keep falling
 	if (objectBeneath == null){
-		players[ws.id].onGround = false;
-		players[ws.id].y += players[ws.id].yVelocity;
+		player.onGround = false;
+		player.y += player.yVelocity;
 	}
 	//The next y coordinate overlaps a block that's underneath the player.
 	//They are now on the ground and stop falling.
 	if (objectBeneath != null){
-		players[ws.id].y = objectBeneath.y - players[ws.id].height;
-		players[ws.id].yVelocity = 0;
-		players[ws.id].onGround = true;
-		players[ws.id].wallJumpLeft = false;
-		players[ws.id].wallJumpRight = false;
+		player.y = objectBeneath.y - player.height;
+		player.yVelocity = 0;
+		player.onGround = true;
+		player.wallJumpLeft = false;
+		player.wallJumpRight = false;
 	}
 	//There's a block above the player.
 	//The object blocks their path. Stop their yVelocity and they start falling.
 	if (objectAbove != null){
-		players[ws.id].y = objectAbove.y + objectAbove.height;
-		players[ws.id].yVelocity = 0;
+		player.y = objectAbove.y + objectAbove.height;
+		player.yVelocity = 0;
 	}
 	
 	//X VELOCITY
 	//The player is pressing left so we need to move them with their xVelocity
 	if (leftPressed){
-		players[ws.id].xVelocity -= xSpeed;
-		if (players[ws.id].xVelocity < -6)
-			players[ws.id].xVelocity = -6;
+		player.xVelocity -= xSpeed;
+		if (player.xVelocity < -6)
+			player.xVelocity = -6;
 	}
 	if (rightPressed) {
-		players[ws.id].xVelocity += xSpeed;
-		if (players[ws.id].xVelocity > 6)
-			players[ws.id].xVelocity = 6;
+		player.xVelocity += xSpeed;
+		if (player.xVelocity > 6)
+			player.xVelocity = 6;
 	}
 	//Check if there are any blocks in the way
 	for (var block in blocks){
 			var newObj = {
-				x: players[ws.id].x + players[ws.id].xVelocity,
-				y: players[ws.id].y,
-				width: players[ws.id].width,
-				height: players[ws.id].height
+				x: player.x + player.xVelocity,
+				y: player.y,
+				width: player.width,
+				height: player.height
 			}
 			if (rectangleOverlap(blocks[block], newObj)){
-				if (blocks[block].x > players[ws.id].x)
+				if (blocks[block].x > player.x)
 					objectRight = blocks[block];
-				else if (blocks[block].x < players[ws.id].x)
+				else if (blocks[block].x < player.x)
 					objectLeft = blocks[block];
 				break;
 			}
 		}
 	//Nothing is stopping the player from moving left so, move at xVelocity
 	if (objectLeft == null && objectRight == null){
-		players[ws.id].x += players[ws.id].xVelocity;
-		players[ws.id].wallJumpLeft = false;
-		players[ws.id].wallJumpRight = false;
+		player.x += player.xVelocity;
+		player.wallJumpLeft = false;
+		player.wallJumpRight = false;
 	}
 	//There's a block to the left of the player. Stop the xVelocity and set
 	//the position to be to the right of the object.
 	if (objectLeft != null){
-		if (players[ws.id].wallJumpLeft){
-			players[ws.id].yVelocity = 1;
+		if (player.wallJumpLeft){
+			player.yVelocity = 1;
 		}
-		players[ws.id].xVelocity = 0;
-		players[ws.id].wallJumpLeft = true;	
-		players[ws.id].x = objectLeft.x + objectLeft.width;
+		player.xVelocity = 0;
+		player.wallJumpLeft = true;	
+		player.x = objectLeft.x + objectLeft.width;
 
 	}
 	//There's a block to the right of the player. Stop the xVelocity and set
 	//the position to the left of the object.
 	if (objectRight != null){
-		if (players[ws.id].wallJumpRight){
-			players[ws.id].yVelocity = 1;
+		if (player.wallJumpRight){
+			player.yVelocity = 1;
 		}
-		players[ws.id].xVelocity = 0;
-		players[ws.id].wallJumpRight = true;
-		players[ws.id].x = objectRight.x - players[ws.id].width;
+		player.xVelocity = 0;
+		player.wallJumpRight = true;
+		player.x = objectRight.x - player.width;
 	}
 
 		
