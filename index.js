@@ -158,9 +158,9 @@ wss.on("connection", function(ws) {
 	for (var block in blocks){
 		var newObj = {
 			x: players[ws.id].x,
-			y: players[ws.id].y,
+			y: players[ws.id].y + players[ws.id].yVelocity,
 			width: players[ws.id].width,
-			height: players[ws.id].height + players[ws.id].yVelocity
+			height: players[ws.id].height
 		}
 		if (rectangleOverlap(blocks[block], newObj)){
 			if (blocks[block].y > players[ws.id].y)
