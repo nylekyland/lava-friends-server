@@ -136,9 +136,7 @@ wss.on("connection", function(ws) {
 		players[ws.id].lastUp = false;
 	
 	//If the player is not on the ground, affect their yVelocity by adding gravity
-	if (!players[ws.id].onGround) {
-		players[ws.id].yVelocity += gravity;
-	}
+	players[ws.id].yVelocity += gravity;
 	
 	//If player is idle, slow down their xVelocity to 0.
 	if (players[ws.id].xVelocity != 0 && (!leftPressed && !rightPressed)){
