@@ -4,6 +4,7 @@ var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
 var players = {};
+var updateRefs = [];
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
 var gravity = 0.51;
@@ -85,6 +86,7 @@ wss.on("connection", function(ws) {
 	wallJumpRight: false,
 	onGround: false,
 	lastUp: false,
+	updateRef: 0,
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
@@ -94,6 +96,8 @@ wss.on("connection", function(ws) {
   }
   
   updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
+  updateRefs.push(updateRef);
+  players[ws.id].updateRef = updateRef;
   
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
@@ -133,7 +137,7 @@ wss.on("connection", function(ws) {
 
   ws.on("close", function() {
     console.log("websocket connection close")
-	clearInterval(updateRef);
+	clearInterval(updateRefs[player[ws.id].updateRef]);
 	delete players[ws.id];
 	if (Object.keys(players).length < 2 && timerStarted){
 		timerStarted = false;
