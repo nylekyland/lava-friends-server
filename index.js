@@ -140,7 +140,9 @@ wss.on("connection", function(ws) {
 		gameStarted = false;
 		timerStarted = false;
 		timer = 30;
-		blocks = originalBlocks;
+		for (var i = 3; i < Object.keys(blocks).length; i++){
+			delete blocks[i];
+		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
 	}
