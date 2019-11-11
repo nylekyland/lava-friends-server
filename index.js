@@ -7,11 +7,14 @@ var players = {};
 var updateRefs = [];
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
+var originalBlocks = {};
 var gravity = 0.51;
 var xSpeed = 0.48;
 var timer = 30;
 var timerStarted = false;
 var timerRef;
+var gameStarted = false;
+var newBlockRef;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -39,15 +42,9 @@ blocks[2] = {
 	height: 600,
 	gravity: false
 }
-blocks[3] = {
-	object: "block",
-	id: 3,
-	x: 50,
-	y: 350,
-	width: 150,
-	height: 150,
-	gravity: false
-}
+originalBlocks.push(blocks[0]);
+originalBlocks.push(blocks[1]);
+originalBlocks.push(blocks[2]);
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
@@ -139,10 +136,13 @@ wss.on("connection", function(ws) {
     console.log("websocket connection close")
 	clearInterval(updateRefs[players[ws.id].updateRef]);
 	delete players[ws.id];
-	if (Object.keys(players).length < 2 && timerStarted){
+	if (Object.keys(players).length < 2 && (timerStarted || gameStarted)){
+		gameStarted = false;
 		timerStarted = false;
 		timer = 30;
+		blocks = originalBlocks;
 		clearInterval(timerRef);
+		clearInterval(newBlockRef);
 	}
   });
 });
@@ -154,11 +154,26 @@ function rectangleOverlap(rect1, rect2){
    rect1.y + rect1.height > rect2.y);
 }
 
+function createNewBlock(){
+	var newBlock = {
+		object: "block",
+		id: Object.keys(blocks).length + 1,
+		x: Math.floor(Math.random() * 900),
+		y: 0,
+		width: 100,
+		height: 100,
+		gravity: true
+	};
+	blocks.push(newBlock);
+}
+
 function countdown(){
 	if (timer == 0){
 		timer = 30;
 		timerStarted = false;
 		clearInterval(timerRef);
+		gameStarted = true;
+		newBlockRef = setInterval(createNewBlock(), 2000);
 	}
 	else{
 		timer--;
