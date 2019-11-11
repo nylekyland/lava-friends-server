@@ -173,7 +173,7 @@ function countdown(){
 		timerStarted = false;
 		clearInterval(timerRef);
 		gameStarted = true;
-		newBlockRef = setInterval(createNewBlock(), 2000);
+		newBlockRef = setInterval(createNewBlock, 1800);
 	}
 	else{
 		timer--;
