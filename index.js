@@ -42,9 +42,9 @@ blocks[2] = {
 	height: 600,
 	gravity: false
 }
-originalBlocks.push(blocks[0]);
-originalBlocks.push(blocks[1]);
-originalBlocks.push(blocks[2]);
+originalBlocks[0] = blocks[0];
+originalBlocks[1] = blocks[1];
+originalBlocks[2] = blocks[2];
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
