@@ -164,7 +164,7 @@ function createNewBlock(){
 		height: 100,
 		gravity: true
 	};
-	blocks.push(newBlock);
+	blocks[Object.keys(blocks).length + 1] = newBlock;
 }
 
 function countdown(){
