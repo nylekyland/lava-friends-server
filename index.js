@@ -162,13 +162,24 @@ function createNewBlock(){
 		object: "block",
 		id: Object.keys(blocks).length + 1,
 		x: Math.floor(Math.random() * 900),
-		y: 0,
+		y: getHighestBlockY() - 1600,
 		width: 100,
 		height: 100,
-		speed: Math.random() * 2,
+		speed: 1 + Math.floor(Math.random() * 4),
 		gravity: true
 	};
 	blocks[Object.keys(blocks).length + 1] = newBlock;
+}
+
+function getHighestBlockY(){
+	var highest = 600;
+	for (var block in blocks){
+		if (blocks[block].gravity){
+			if (blocks[block].y <= highest)
+				highest = blocks[block].y
+		}
+	}
+	return highest;
 }
 
 function countdown(){
