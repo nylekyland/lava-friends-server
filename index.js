@@ -28,23 +28,24 @@ blocks[1] = {
 	object: "block",
 	id: 1,
 	x: 0,
-	y: 0,
+	y: -1000,
 	width: 50,
-	height: 600,
+	height: 1600,
 	gravity: false
 }
 blocks[2] = {
 	object: "block",
 	id: 2,
 	x: 950,
-	y: 0,
+	y: -1000,
 	width: 50,
-	height: 600,
+	height: 1600,
 	gravity: false
 }
 originalBlocks[0] = blocks[0];
 originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
+var updateBlocksRef = setInterval(updateBlocks, 14);
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
@@ -164,6 +165,7 @@ function createNewBlock(){
 		y: 0,
 		width: 100,
 		height: 100,
+		speed: Math.random() * 2,
 		gravity: true
 	};
 	blocks[Object.keys(blocks).length + 1] = newBlock;
@@ -325,31 +327,32 @@ function updatePositions(player){
 			player.wallJumpRight = true;
 			player.x = objectRight.x - player.width;
 		}
+	}
+}
 
-			
-		/*
-			Update block positions
-		*/
-		for (var block in blocks){
-			var blockUnderneath = null;
-			if (blocks[block].gravity){
-				var newObj = {
-					x: blocks[block].x,
-					y: blocks[block].y + 1,
-					width: blocks[block].width,
-					height: blocks[block].height
-				}
-				for (var block2 in blocks){
-					if (block2 != block && rectangleOverlap(newObj, blocks[block2])){
-						blockUnderneath = blocks[block2];
-						break;
-					}
-				}
-				if (blockUnderneath == null)
-					blocks[block].y += 1;
-				else
-					blocks[block].y = blockUnderneath.y - blocks[block].height;
+updateBlocks(){
+	/*
+		Update block positions
+	*/
+	for (var block in blocks){
+		var blockUnderneath = null;
+		if (blocks[block].gravity){
+			var newObj = {
+				x: blocks[block].x,
+				y: blocks[block].y + blocks[block].speed,
+				width: blocks[block].width,
+				height: blocks[block].height
 			}
+			for (var block2 in blocks){
+				if (block2 != block && rectangleOverlap(newObj, blocks[block2])){
+					blockUnderneath = blocks[block2];
+					break;
+				}
+			}
+			if (blockUnderneath == null)
+				blocks[block].y += blocks[block].speed;
+			else
+				blocks[block].y = blockUnderneath.y - blocks[block].height;
 		}
 	}
 }
