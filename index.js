@@ -330,7 +330,7 @@ function updatePositions(player){
 	}
 }
 
-updateBlocks(){
+function updateBlocks(){
 	/*
 		Update block positions
 	*/
