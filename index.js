@@ -152,6 +152,9 @@ wss.on("connection", function(ws) {
 		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
+		clearInterval(updateLavaRef);
+		lava.y = 1000;
+		lava.height = 500;
 	}
   });
 });
