@@ -158,7 +158,7 @@ function rectangleOverlap(rect1, rect2){
 }
 
 function createNewBlock(){
-	var size = 250 + Math.floor(Math.random() * 100);
+	var size = 150 + Math.floor(Math.random() * 100);
 	var newBlock = {
 		object: "block",
 		id: Object.keys(blocks).length + 1,
@@ -166,7 +166,7 @@ function createNewBlock(){
 		y: getHighestBlockY(),
 		width: size,
 		height: size,
-		speed: 1 + Math.floor(Math.random() * 4),
+		speed: 2 + Math.floor(Math.random() * 4),
 		gravity: true
 	};
 	blocks[Object.keys(blocks).length + 1] = newBlock;
