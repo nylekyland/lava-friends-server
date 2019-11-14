@@ -95,6 +95,7 @@ wss.on("connection", function(ws) {
   if (Object.keys(players).length >= 2 && !timerStarted){
 	timerStarted = true;
 	timerRef = setInterval(countdown, 1000);
+	updateLavaRef = setInterval(updateLava, 14);
   }
   
   updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
