@@ -95,7 +95,6 @@ wss.on("connection", function(ws) {
   if (Object.keys(players).length >= 2 && !timerStarted){
 	timerStarted = true;
 	timerRef = setInterval(countdown, 1000);
-	updateLavaRef = setInterval(updateLava, 14);
   }
   
   updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
@@ -153,7 +152,6 @@ wss.on("connection", function(ws) {
 		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
-		clearInterval(updateLavaRef);
 		lava.y = 1000;
 		lava.height = 500;
 	}
@@ -380,6 +378,12 @@ function updateBlocks(){
 }
 
 function updateLava(){
-	lava.y -= 0.1;
-	lava.height += 0.1;
+	if (gameStarted){
+		lava.y -= 0.1;
+		lava.height += 0.1;
+	}
+	else{
+		lava.y = 1000;
+		lava.height = 500;
+	}
 }
