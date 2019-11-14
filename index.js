@@ -380,6 +380,6 @@ function updateBlocks(){
 }
 
 function updateLava(){
-	lava.y--;
-	lava.height++;
+	lava.y -= 0.1;
+	lava.height += 0.1;
 }
