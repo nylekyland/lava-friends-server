@@ -42,10 +42,14 @@ blocks[2] = {
 	height: 1600,
 	gravity: false
 }
+lava = {
+	y: 1000, height: 500
+}
 originalBlocks[0] = blocks[0];
 originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
 var updateBlocksRef = setInterval(updateBlocks, 14);
+var updateLavaRef = setInterval(updateLava, 14);
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
@@ -128,7 +132,9 @@ wss.on("connection", function(ws) {
 	var sendObject = {
 		"timer": timerStarted ? timer : "",
 		"players": JSON.stringify(condensedPlayers),
-		"blocks": JSON.stringify(blocks)
+		"blocks": JSON.stringify(blocks),
+		"lavaY": lava.y,
+		"lavaH": lava.height
 		}
 	ws.send(JSON.stringify(sendObject));
   });
@@ -158,7 +164,7 @@ function rectangleOverlap(rect1, rect2){
 }
 
 function createNewBlock(){
-	var size = 100 + Math.floor(Math.random() * 100);
+	var size = 150 + Math.floor(Math.random() * 50);
 	var newBlock = {
 		object: "block",
 		id: Object.keys(blocks).length + 1,
@@ -367,4 +373,9 @@ function updateBlocks(){
 				blocks[block].y = blockUnderneath.y - blocks[block].height;
 		}
 	}
+}
+
+function updateLava(){
+	lava.y--;
+	lava.height++;
 }
