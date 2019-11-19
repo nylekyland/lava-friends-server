@@ -126,7 +126,7 @@ wss.on("connection", function(ws) {
 			width: players[obj].width,
 			height: players[obj].height,
 			clientId: players[obj].clientId,
-			color: players[obj].color
+			color: players[obj].dead ? "dead" : players[obj].color
 		}
 		condensedPlayers.push(playerObj);
 	}
@@ -298,6 +298,11 @@ function updatePositions(player){
 			if (objectAbove != null && !player.dead){
 				player.y = objectAbove.y + objectAbove.height;
 				player.yVelocity = 0;
+			}
+			
+			//Check if player has entered the lava
+			if (player.y >= lava.y){
+				player.dead = true;
 			}
 			
 			//X VELOCITY
