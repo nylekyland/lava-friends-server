@@ -272,14 +272,21 @@ function updatePositions(player){
 						objectAbove = blocks[block];
 				}
 			}
+			
+			//There's an object directly above and directly below the player
+			//The player is squished.
+			if (objectAbove != null && objectBeneath != null){
+				player.dead = true;
+			}
+			
 			//Nothing is underneath the player, so keep falling
-			if (objectBeneath == null){
+			if (objectBeneath == null && !player.dead){
 				player.onGround = false;
 				player.y += player.yVelocity;
 			}
 			//The next y coordinate overlaps a block that's underneath the player.
 			//They are now on the ground and stop falling.
-			if (objectBeneath != null){
+			if (objectBeneath != null && !player.dead){
 				player.y = objectBeneath.y - player.height;
 				player.yVelocity = 0;
 				player.onGround = true;
@@ -288,14 +295,9 @@ function updatePositions(player){
 			}
 			//There's a block above the player.
 			//The object blocks their path. Stop their yVelocity and they start falling.
-			if (objectAbove != null){
+			if (objectAbove != null && !player.dead){
 				player.y = objectAbove.y + objectAbove.height;
 				player.yVelocity = 0;
-			}
-			//There's an object directly above and directly below the player
-			//The player is squished.
-			if (objectAbove != null && objectBeneath != null){
-				player.dead = true;
 			}
 			
 			//X VELOCITY
@@ -327,14 +329,14 @@ function updatePositions(player){
 					}
 				}
 			//Nothing is stopping the player from moving left so, move at xVelocity
-			if (objectLeft == null && objectRight == null){
+			if (objectLeft == null && objectRight == null && !player.dead){
 				player.x += player.xVelocity;
 				player.wallJumpLeft = false;
 				player.wallJumpRight = false;
 			}
 			//There's a block to the left of the player. Stop the xVelocity and set
 			//the position to be to the right of the object.
-			if (objectLeft != null){
+			if (objectLeft != null && !player.dead){
 				if (player.wallJumpLeft){
 					player.yVelocity = 1;
 				}
@@ -345,7 +347,7 @@ function updatePositions(player){
 			}
 			//There's a block to the right of the player. Stop the xVelocity and set
 			//the position to the left of the object.
-			if (objectRight != null){
+			if (objectRight != null && !player.dead){
 				if (player.wallJumpRight){
 					player.yVelocity = 1;
 				}
