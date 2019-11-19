@@ -50,6 +50,7 @@ originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
 var updateBlocksRef = setInterval(updateBlocks, 14);
 var updateLavaRef = setInterval(updateLava, 14);
+var updateGameRef = setInterval(updateGame, 14);
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"))
@@ -396,10 +397,39 @@ function updateBlocks(){
 
 function updateLava(){
 	if (gameStarted){
-		lava.y -= 0.5;
-		lava.height += 0.5;
+		lava.y -= 0.4;
+		lava.height += 0.4;
 	}
 	else{
+		lava.y = 1000;
+		lava.height = 500;
+	}
+}
+
+function updateGame(){
+	var aliveCount;
+	if (gameStarted){
+		var tmpCount = 0;
+		for (var obj in players){
+			if (!players[obj].dead)
+				aliveCount++;
+		}
+	}
+	else{
+		aliveCount = Object.keys(players).length;
+	}
+	if (gameStarted && aliveCount == 1){
+		gameStarted = false;
+		timerStarted = false;
+		timer = 30;
+		for (var i = Object.keys(blocks).length; i > 2; i--){
+			delete blocks[i];
+		}
+		for (var obj in players){
+			players[obj].dead = false;
+		}
+		clearInterval(timerRef);
+		clearInterval(newBlockRef);
 		lava.y = 1000;
 		lava.height = 500;
 	}
