@@ -412,8 +412,9 @@ function updateGame(){
 		var tmpCount = 0;
 		for (var obj in players){
 			if (!players[obj].dead)
-				aliveCount++;
+				tmpCount++;
 		}
+		aliveCount = tmpCount;
 	}
 	else{
 		aliveCount = Object.keys(players).length;
