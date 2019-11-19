@@ -294,7 +294,7 @@ function updatePositions(player){
 			}
 			//There's an object directly above and directly below the player
 			//The player is squished.
-			if (objectAbove != null && objectBelow != null){
+			if (objectAbove != null && objectBeneath != null){
 				player.dead = true;
 			}
 			
