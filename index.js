@@ -151,6 +151,9 @@ wss.on("connection", function(ws) {
 		for (var i = Object.keys(blocks).length; i > 2; i--){
 			delete blocks[i];
 		}
+		for (var obj in players){
+			players[obj].dead = false;
+		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
 		lava.y = 1000;
@@ -393,8 +396,8 @@ function updateBlocks(){
 
 function updateLava(){
 	if (gameStarted){
-		lava.y -= 0.1;
-		lava.height += 0.1;
+		lava.y -= 0.5;
+		lava.height += 0.5;
 	}
 	else{
 		lava.y = 1000;
