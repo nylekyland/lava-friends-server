@@ -153,6 +153,8 @@ wss.on("connection", function(ws) {
 	players[ws.id].dead = true;
 	players[ws.id].rank = aliveCount;
 	aliveCount--;
+	if (!gameStarted)
+		delete players[ws.id];
 	if (Object.keys(players).length < 2 && (timerStarted || gameStarted)){
 		gameStarted = false;
 		timerStarted = false;
