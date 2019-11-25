@@ -45,6 +45,8 @@ blocks[2] = {
 lava = {
 	y: 1000, height: 500
 }
+aliveCount = 0;
+totalCount = 0;
 originalBlocks[0] = blocks[0];
 originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
@@ -91,6 +93,8 @@ wss.on("connection", function(ws) {
 	lastUp: false,
 	updateRef: 0,
 	dead: false,
+	connected: true,
+	rank: null,
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
@@ -127,7 +131,8 @@ wss.on("connection", function(ws) {
 			width: players[obj].width,
 			height: players[obj].height,
 			clientId: players[obj].clientId,
-			color: players[obj].dead ? "dead" : players[obj].color
+			color: players[obj].dead ? "dead" : players[obj].color,
+			rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : null
 		}
 		condensedPlayers.push(playerObj);
 	}
@@ -144,7 +149,10 @@ wss.on("connection", function(ws) {
   ws.on("close", function() {
     console.log("websocket connection close")
 	clearInterval(updateRefs[players[ws.id].updateRef]);
-	delete players[ws.id];
+	players[ws.id].connected = false;
+	players[ws.id].dead = true;
+	players[ws.id].rank = aliveCount;
+	aliveCount--;
 	if (Object.keys(players).length < 2 && (timerStarted || gameStarted)){
 		gameStarted = false;
 		timerStarted = false;
@@ -203,6 +211,8 @@ function countdown(){
 		clearInterval(timerRef);
 		gameStarted = true;
 		newBlockRef = setInterval(createNewBlock, 1800);
+		aliveCount = Object.keys(players).length;
+		rankTotal =  Object.keys(players).length;
 	}
 	else{
 		timer--;
@@ -280,6 +290,8 @@ function updatePositions(player){
 			//There's an object directly above and directly below the player
 			//The player is squished.
 			if (objectAbove != null && objectBeneath != null){
+				player.rank = aliveCount;
+				aliveCount--;
 				player.dead = true;
 			}
 			
@@ -306,6 +318,8 @@ function updatePositions(player){
 			
 			//Check if player has entered the lava
 			if (player.y >= lava.y){
+				player.rank = aliveCount;
+				aliveCount--;
 				player.dead = true;
 			}
 			
@@ -407,18 +421,6 @@ function updateLava(){
 }
 
 function updateGame(){
-	var aliveCount;
-	if (gameStarted){
-		var tmpCount = 0;
-		for (var obj in players){
-			if (!players[obj].dead)
-				tmpCount++;
-		}
-		aliveCount = tmpCount;
-	}
-	else{
-		aliveCount = Object.keys(players).length;
-	}
 	if (gameStarted && aliveCount == 1){
 		gameStarted = false;
 		timerStarted = false;
@@ -426,8 +428,10 @@ function updateGame(){
 		for (var i = Object.keys(blocks).length; i > 2; i--){
 			delete blocks[i];
 		}
-		for (var obj in players){
+		for (var i = Object.keys(players).length; i >= 0; i--){
 			players[obj].dead = false;
+			if (!players[obj].connected)
+				delete players[obj];
 		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
