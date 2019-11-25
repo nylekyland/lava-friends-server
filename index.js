@@ -428,10 +428,10 @@ function updateGame(){
 		for (var i = Object.keys(blocks).length; i > 2; i--){
 			delete blocks[i];
 		}
-		for (var i = Object.keys(players).length; i >= 0; i--){
-			players[i].dead = false;
-			if (!players[i].connected)
-				delete players[i];
+		for (var obj in players){
+			players[obj].dead = false;
+			if (!players[obj].connected)
+				delete players[obj];
 		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
