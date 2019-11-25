@@ -429,9 +429,9 @@ function updateGame(){
 			delete blocks[i];
 		}
 		for (var i = Object.keys(players).length; i >= 0; i--){
-			players[obj].dead = false;
-			if (!players[obj].connected)
-				delete players[obj];
+			players[i].dead = false;
+			if (!players[i].connected)
+				delete players[i];
 		}
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
