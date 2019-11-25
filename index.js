@@ -431,6 +431,8 @@ function updateGame(){
 			delete blocks[i];
 		}
 		for (var obj in players){
+			if (!players[obj].dead)
+				players[obj].rank = aliveCount;
 			players[obj].dead = false;
 			if (!players[obj].connected)
 				delete players[obj];
