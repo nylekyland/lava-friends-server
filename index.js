@@ -423,7 +423,7 @@ function updateLava(){
 }
 
 function updateGame(){
-	if (gameStarted && aliveCount == 1){
+	if (gameStarted && aliveCount <= 1){
 		gameStarted = false;
 		timerStarted = false;
 		timer = 30;
@@ -432,7 +432,7 @@ function updateGame(){
 		}
 		for (var obj in players){
 			if (!players[obj].dead)
-				players[obj].rank = aliveCount;
+				players[obj].rank = 1;
 			players[obj].dead = false;
 			if (!players[obj].connected)
 				delete players[obj];
