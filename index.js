@@ -441,5 +441,9 @@ function updateGame(){
 		clearInterval(newBlockRef);
 		lava.y = 1000;
 		lava.height = 500;
+		if (Object.keys(players).length >= 2 && !timerStarted){
+			timerStarted = true;
+			timerRef = setInterval(countdown, 1000);
+		}
 	}
 }
