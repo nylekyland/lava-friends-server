@@ -94,7 +94,7 @@ wss.on("connection", function(ws) {
 	updateRef: 0,
 	dead: false,
 	connected: true,
-	rank: null,
+	rank: "",
 	color: colors[Math.floor(Math.random() * colors.length)]
   }
   
@@ -132,7 +132,7 @@ wss.on("connection", function(ws) {
 			height: players[obj].height,
 			clientId: players[obj].clientId,
 			color: players[obj].dead ? "dead" : players[obj].color,
-			rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : null
+			rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : ""
 		}
 		condensedPlayers.push(playerObj);
 	}
@@ -215,6 +215,9 @@ function countdown(){
 		newBlockRef = setInterval(createNewBlock, 1800);
 		aliveCount = Object.keys(players).length;
 		rankTotal =  Object.keys(players).length;
+		for (var obj in players){
+			players[obj].rank = "";
+		}
 	}
 	else{
 		timer--;
