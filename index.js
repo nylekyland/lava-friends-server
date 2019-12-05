@@ -75,8 +75,8 @@ wss.on("connection", function(ws) {
   players[ws.id] = {
 	x: 300,
 	y: 50,
-	width: 75,
-	height: 75,
+	width: 125,
+	height: 125,
 	id: ws.id,
 	clientId: null,
 	xVelocity: 0,
