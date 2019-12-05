@@ -128,6 +128,8 @@ wss.on("connection", function(ws) {
 		var playerObj = {
 			x: players[obj].x,
 			y: players[obj].y,
+			xVel: players[obj].xVelocity,
+			yVel: players[obj].yVelocity,
 			width: players[obj].width,
 			height: players[obj].height,
 			clientId: players[obj].clientId,
