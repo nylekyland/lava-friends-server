@@ -242,14 +242,14 @@ function updatePositions(player){
 			}
 			//The player pressed up and is already on the left wall -> wall jump to the right
 			if (upPressed && !player.lastUp && player.wallJumpLeft){
-				player.yVelocity = -12;
+				player.yVelocity = -14;
 				player.xVelocity = 12;
 				player.onGround = false;
 				player.wallJumpLeft = false;
 			}
 			//The player pressed up and is already on the right wall -> wall jump to the left
 			if (upPressed && !player.lastUp && player.wallJumpRight){
-				player.yVelocity = -12;
+				player.yVelocity = -14;
 				player.xVelocity = -12;
 				player.onGround = false;
 				player.wallJumpRight = false;
@@ -467,7 +467,7 @@ function resetPlayerPosition(player){
 		player.x = 55;
 	if (player.x + player.width >= 950)
 		player.x = 945;
-	player.y = 50;
+	player.y = 100;
 	player.yVelocity = 0;
 	player.xVelocity = 0;
 }
