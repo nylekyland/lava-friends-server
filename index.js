@@ -467,7 +467,7 @@ function resetPlayerPosition(player){
 		player.x = 55;
 	if (player.x + player.width >= 950)
 		player.x = 945;
-	player.y = 100;
+	player.y = 150;
 	player.yVelocity = 0;
 	player.xVelocity = 0;
 }
