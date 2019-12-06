@@ -377,8 +377,9 @@ function updatePositions(player){
 					player.yVelocity = 1;
 				}
 				player.xVelocity = 0;
-				player.wallJumpLeft = true;	
 				player.x = objectLeft.x + objectLeft.width;
+				if (!player.onGround)
+					player.wallJumpLeft = true;	
 	
 			}
 			//There's a block to the right of the player. Stop the xVelocity and set
@@ -388,8 +389,9 @@ function updatePositions(player){
 					player.yVelocity = 1;
 				}
 				player.xVelocity = 0;
-				player.wallJumpRight = true;
 				player.x = objectRight.x - player.width;
+				if (!player.onGround)
+					player.wallJumpRight = true;
 			}	
 		}
 	}
