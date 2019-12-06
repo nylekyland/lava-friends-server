@@ -10,7 +10,7 @@ var blocks = {};
 var originalBlocks = {};
 var gravity = 0.51;
 var xSpeed = 0.48;
-var timer = 30;
+var timer = 15;
 var timerStarted = false;
 var timerRef;
 var gameStarted = false;
@@ -75,8 +75,8 @@ wss.on("connection", function(ws) {
   players[ws.id] = {
 	x: 300,
 	y: 50,
-	width: 125,
-	height: 125,
+	width: 100,
+	height: 100,
 	id: ws.id,
 	clientId: null,
 	xVelocity: 0,
@@ -160,7 +160,7 @@ wss.on("connection", function(ws) {
 	if (Object.keys(players).length < 2 && (timerStarted || gameStarted)){
 		gameStarted = false;
 		timerStarted = false;
-		timer = 30;
+		timer = 15;
 		for (var i = Object.keys(blocks).length; i > 2; i--){
 			delete blocks[i];
 		}
@@ -210,7 +210,7 @@ function getHighestBlockY(){
 
 function countdown(){
 	if (timer == 0){
-		timer = 30;
+		timer = 15;
 		timerStarted = false;
 		clearInterval(timerRef);
 		gameStarted = true;
@@ -219,6 +219,7 @@ function countdown(){
 		rankTotal =  Object.keys(players).length;
 		for (var obj in players){
 			players[obj].rank = "";
+			resetPlayerPosition(players[obj]);
 		}
 	}
 	else{
@@ -325,9 +326,14 @@ function updatePositions(player){
 			
 			//Check if player has entered the lava
 			if (player.y >= lava.y){
-				player.rank = aliveCount;
-				aliveCount--;
-				player.dead = true;
+				if (gameStarted){
+					player.rank = aliveCount;
+					aliveCount--;
+					player.dead = true;	
+				}
+				else {
+					resetPlayerPosition(player);
+				}
 			}
 			
 			//X VELOCITY
@@ -367,7 +373,7 @@ function updatePositions(player){
 			//There's a block to the left of the player. Stop the xVelocity and set
 			//the position to be to the right of the object.
 			if (objectLeft != null && !player.dead){
-				if (player.wallJumpLeft){
+				if (player.wallJumpLeft && player.yVelocity > 0){
 					player.yVelocity = 1;
 				}
 				player.xVelocity = 0;
@@ -378,7 +384,7 @@ function updatePositions(player){
 			//There's a block to the right of the player. Stop the xVelocity and set
 			//the position to the left of the object.
 			if (objectRight != null && !player.dead){
-				if (player.wallJumpRight){
+				if (player.wallJumpRight && player.yVelocity > 0){
 					player.yVelocity = 1;
 				}
 				player.xVelocity = 0;
@@ -431,7 +437,7 @@ function updateGame(){
 	if (gameStarted && aliveCount <= 1){
 		gameStarted = false;
 		timerStarted = false;
-		timer = 30;
+		timer = 15;
 		for (var i = Object.keys(blocks).length; i > 2; i--){
 			delete blocks[i];
 		}
@@ -439,6 +445,7 @@ function updateGame(){
 			if (!players[obj].dead)
 				players[obj].rank = 1;
 			players[obj].dead = false;
+			resetPlayerPosition(players[obj]);
 			if (!players[obj].connected)
 				delete players[obj];
 		}
@@ -451,4 +458,12 @@ function updateGame(){
 			timerRef = setInterval(countdown, 1000);
 		}
 	}
+}
+
+function resetPlayerPosition(player){
+	if (player.x <= 50)
+		player.x = 55;
+	if (player.x + player.width >= 950)
+		player.x = 945;
+	player.y = 50;
 }
