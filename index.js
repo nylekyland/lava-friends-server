@@ -53,8 +53,8 @@ totalCount = 0;
 originalBlocks[0] = blocks[0];
 originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
-var updateBlocksRef = setInterval(updateBlocks, 14);
-var updateLavaRef = setInterval(updateLava, 14);
+var updateBlocksRef;
+var updateLavaRef;
 var updateGameRef = setInterval(updateGame, 14);
 var uuidv4 = require('uuid/v4');
 
