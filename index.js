@@ -15,6 +15,9 @@ var timerStarted = false;
 var timerRef;
 var gameStarted = false;
 var newBlockRef;
+var cooldownStarted = false;
+var cooldownRef;
+var cooldownTimer = 6;
 blocks[0] = {
 	object: "block",
 	id: 0,
@@ -440,25 +443,16 @@ function updateGame(){
 		gameStarted = false;
 		timerStarted = false;
 		timer = 15;
-		for (var i = Object.keys(blocks).length; i > 2; i--){
-			delete blocks[i];
-		}
+		cooldownStarted = true;
+		cooldownTimer = 6;
 		for (var obj in players){
 			if (!players[obj].dead)
 				players[obj].rank = 1;
-			players[obj].dead = false;
-			resetPlayerPosition(players[obj]);
-			if (!players[obj].connected)
-				delete players[obj];
 		}
+		clearInterval(updateLavaRef);
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
-		lava.y = 1000;
-		lava.height = 500;
-		if (Object.keys(players).length >= 2 && !timerStarted){
-			timerStarted = true;
-			timerRef = setInterval(countdown, 1000);
-		}
+		cooldownRef = setInterval(cooldown, 1000);
 	}
 }
 
@@ -470,4 +464,30 @@ function resetPlayerPosition(player){
 	player.y = 150;
 	player.yVelocity = 0;
 	player.xVelocity = 0;
+}
+
+function cooldown(){
+	if (cooldownTimer == 0){
+		cooldownStarted = false;
+		cooldownTimer = 6;
+		for (var i = Object.keys(blocks).length; i > 2; i--){
+			delete blocks[i];
+		}
+		for (var obj in players){
+			players[obj].dead = false;
+			resetPlayerPosition(players[obj]);
+			if (!players[obj].connected)
+				delete players[obj];
+		}
+		lava.y = 1000;
+		lava.height = 500;
+		clearInterval(cooldownRef);
+		if (Object.keys(players).length >= 2 && !timerStarted){
+			timerStarted = true;
+			timerRef = setInterval(countdown, 1000);
+		}
+	}
+	else{
+		cooldownTimer--;
+	}
 }
