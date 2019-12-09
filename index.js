@@ -330,10 +330,12 @@ function updatePositions(player){
 			}
 			
 			//Check if player has entered the lava
-			if (player.y >= lava.y){
-				if (gameStarted && !cooldownStarted){
-					player.rank = aliveCount;
-					aliveCount--;
+			if (player.y + (player.height / 2) >= lava.y){
+				if (gameStarted){
+					if (!cooldownStarted){
+						player.rank = aliveCount;
+						aliveCount--;
+					}
 					player.dead = true;	
 				}
 				else {
