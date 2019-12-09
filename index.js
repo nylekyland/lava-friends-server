@@ -331,7 +331,7 @@ function updatePositions(player){
 			
 			//Check if player has entered the lava
 			if (player.y >= lava.y){
-				if (gameStarted){
+				if (gameStarted && !cooldownStarted){
 					player.rank = aliveCount;
 					aliveCount--;
 					player.dead = true;	
