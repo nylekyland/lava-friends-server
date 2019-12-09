@@ -224,6 +224,8 @@ function countdown(){
 			players[obj].rank = "";
 			resetPlayerPosition(players[obj]);
 		}
+		updateBlocksRef = setInterval(updateBlocks, 14);
+		updateLavaRef = setInterval(updateLava, 14);
 	}
 	else{
 		timer--;
@@ -432,10 +434,6 @@ function updateLava(){
 		lava.y -= 0.4;
 		lava.height += 0.4;
 	}
-	else{
-		lava.y = 1000;
-		lava.height = 500;
-	}
 }
 
 function updateGame(){
@@ -449,6 +447,7 @@ function updateGame(){
 			if (!players[obj].dead)
 				players[obj].rank = 1;
 		}
+		clearInterval(updateBlocksRef);
 		clearInterval(updateLavaRef);
 		clearInterval(timerRef);
 		clearInterval(newBlockRef);
