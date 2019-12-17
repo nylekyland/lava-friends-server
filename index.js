@@ -4,7 +4,6 @@ var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
 var players = {};
-var playerQueue = {};
 var updateRefs = [];
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
@@ -76,92 +75,80 @@ wss.on("connection", function(ws) {
   
   ws.id = uuidv4();
   
-	var newPlayer = {
-		x: 300,
-		y: 50,
-		width: 100,
-		height: 100,
-		id: ws.id,
-		clientId: null,
-		xVelocity: 0,
-		yVelocity: 0,
-		jumps: 1,
-		object: "player",
-		leftPressed: false,
-		rightPressed: false,
-		upPressed: false,
-		downPressed: false,
-		wallJumpLeft: false,
-		wallJumpRight: false,
-		onGround: false,
-		lastUp: false,
-		updateRef: 0,
-		dead: false,
-		connected: true,
-		rank: "",
-		color: colors[Math.floor(Math.random() * colors.length)]
-  }	
-	
-  if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownStarted){
+  players[ws.id] = {
+	x: 300,
+	y: 50,
+	width: 100,
+	height: 100,
+	id: ws.id,
+	clientId: null,
+	xVelocity: 0,
+	yVelocity: 0,
+	jumps: 1,
+	object: "player",
+	leftPressed: false,
+	rightPressed: false,
+	upPressed: false,
+	downPressed: false,
+	wallJumpLeft: false,
+	wallJumpRight: false,
+	onGround: false,
+	lastUp: false,
+	updateRef: 0,
+	dead: false,
+	connected: true,
+	rank: "",
+	color: colors[Math.floor(Math.random() * colors.length)]
+  }
+  
+  if (Object.keys(players).length >= 2 && !timerStarted){
 	timerStarted = true;
 	timerRef = setInterval(countdown, 1000);
-	addAllQueuePlayers();
   }
-	
-  if (timerStarted){
-  	players[ws.id] = newPlayer;
-	updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
-    updateRefs.push(updateRef);
-    players[ws.id].updateRef = updateRef;
-  }
-  else{
-  	playerQueue[ws.id] = newPlayer;
-	updateRef = setInterval(function(){updatePositions(playerQueue[ws.id])}, 14);
-	updateRefs.push(updateRef);
-	playerQueue[ws.id].updateRef = updateRef;
-  }
+  
+  updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
+  updateRefs.push(updateRef);
+  players[ws.id].updateRef = updateRef;
   
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
 	
-	if (!playerQueue[ws.id]){
-		if (players[ws.id].clientId == null)
+	if (players[ws.id].clientId == null)
 		players[ws.id].clientId = data.clientId;
 	
-		//Position 1: Left is pressed
-		players[ws.id].leftPressed = !!(data.state & 1);
-		//Position 2: Right is pressed
-		players[ws.id].rightPressed = !!(data.state & 2);
-		//Position 3: Up is pressed
-		players[ws.id].upPressed = !!(data.state & 4);
-		//Position 4: Down is pressed
-		players[ws.id].downPressed = !! (data.state & 8);
-		
-		var condensedPlayers = [];
-		
-		for (var obj in players){
-			var playerObj = {
-				x: players[obj].x,
-				y: players[obj].y,
-				xVel: players[obj].xVelocity,
-				yVel: players[obj].yVelocity,
-				width: players[obj].width,
-				height: players[obj].height,
-				clientId: players[obj].clientId,
-				color: players[obj].dead ? "dead" : players[obj].color,
-				rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : ""
-			}
-			condensedPlayers.push(playerObj);
+	//Position 1: Left is pressed
+	players[ws.id].leftPressed = !!(data.state & 1);
+	//Position 2: Right is pressed
+	players[ws.id].rightPressed = !!(data.state & 2);
+	//Position 3: Up is pressed
+	players[ws.id].upPressed = !!(data.state & 4);
+	//Position 4: Down is pressed
+	players[ws.id].downPressed = !! (data.state & 8);
+	
+	var condensedPlayers = [];
+	
+	for (var obj in players){
+		var playerObj = {
+			x: players[obj].x,
+			y: players[obj].y,
+			xVel: players[obj].xVelocity,
+			yVel: players[obj].yVelocity,
+			width: players[obj].width,
+			height: players[obj].height,
+			clientId: players[obj].clientId,
+			color: players[obj].dead ? "dead" : players[obj].color,
+			rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : ""
 		}
-		var sendObject = {
-			"timer": timerStarted ? timer : "",
-			"players": JSON.stringify(condensedPlayers),
-			"blocks": JSON.stringify(blocks),
-			"lavaY": lava.y,
-			"lavaH": lava.height
-			}
-		ws.send(JSON.stringify(sendObject));
+		condensedPlayers.push(playerObj);
 	}
+	var sendObject = {
+		"timer": timerStarted ? timer : "",
+		"players": JSON.stringify(condensedPlayers),
+		"blocks": JSON.stringify(blocks),
+		"lavaY": lava.y,
+		"lavaH": lava.height
+		}
+	ws.send(JSON.stringify(sendObject));
   });
 
   ws.on("close", function() {
@@ -339,7 +326,7 @@ function updatePositions(player){
 			//The object blocks their path. Stop their yVelocity and they start falling.
 			if (objectAbove != null && !player.dead){
 				player.y = objectAbove.y + objectAbove.height;
-				player.yVelocity = objectAbove.gravity;
+				player.yVelocity = 0;
 			}
 			
 			//Check if player has entered the lava
@@ -503,12 +490,5 @@ function cooldown(){
 	}
 	else{
 		cooldownTimer--;
-	}
-}
-
-function addAllQueuePlayers(){
-	for (var obj in playerQueue){
-		players[obj] = JSON.parse(JSON.stringify(playerQueue[obj]));
-		delete playerQueue[obj];
 	}
 }
