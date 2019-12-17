@@ -4,6 +4,7 @@ var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
 var players = {};
+var playerQueue = {};
 var updateRefs = [];
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
@@ -75,35 +76,43 @@ wss.on("connection", function(ws) {
   
   ws.id = uuidv4();
   
-  players[ws.id] = {
-	x: 300,
-	y: 50,
-	width: 100,
-	height: 100,
-	id: ws.id,
-	clientId: null,
-	xVelocity: 0,
-	yVelocity: 0,
-	jumps: 1,
-	object: "player",
-	leftPressed: false,
-	rightPressed: false,
-	upPressed: false,
-	downPressed: false,
-	wallJumpLeft: false,
-	wallJumpRight: false,
-	onGround: false,
-	lastUp: false,
-	updateRef: 0,
-	dead: false,
-	connected: true,
-	rank: "",
-	color: colors[Math.floor(Math.random() * colors.length)]
+	var newPlayer = {
+		x: 300,
+		y: 50,
+		width: 100,
+		height: 100,
+		id: ws.id,
+		clientId: null,
+		xVelocity: 0,
+		yVelocity: 0,
+		jumps: 1,
+		object: "player",
+		leftPressed: false,
+		rightPressed: false,
+		upPressed: false,
+		downPressed: false,
+		wallJumpLeft: false,
+		wallJumpRight: false,
+		onGround: false,
+		lastUp: false,
+		updateRef: 0,
+		dead: false,
+		connected: true,
+		rank: "",
+		color: colors[Math.floor(Math.random() * colors.length)]
+  }	
+	
+  if (timerStarted){
+  	players[ws.id] = newPlayer;
+  }
+  else{
+  	playerQueue[ws.id] = newPlayer;
   }
   
-  if (Object.keys(players).length >= 2 && !timerStarted){
+  if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownStarted){
 	timerStarted = true;
 	timerRef = setInterval(countdown, 1000);
+	addAllQueuePlayers();
   }
   
   updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
@@ -326,7 +335,7 @@ function updatePositions(player){
 			//The object blocks their path. Stop their yVelocity and they start falling.
 			if (objectAbove != null && !player.dead){
 				player.y = objectAbove.y + objectAbove.height;
-				player.yVelocity = 0;
+				player.yVelocity = objectAbove.gravity;
 			}
 			
 			//Check if player has entered the lava
@@ -490,5 +499,12 @@ function cooldown(){
 	}
 	else{
 		cooldownTimer--;
+	}
+}
+
+function addAllQueuePlayers(){
+	for (var obj in playerQueue){
+		players[obj] = JSON.parse(JSON.stringify(playerQueue[obj]));
+		delete playerQueue[obj];
 	}
 }
