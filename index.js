@@ -124,42 +124,44 @@ wss.on("connection", function(ws) {
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
 	
-	if (players[ws.id].clientId == null)
+	if (!playerQueue[ws.id]){
+		if (players[ws.id].clientId == null)
 		players[ws.id].clientId = data.clientId;
 	
-	//Position 1: Left is pressed
-	players[ws.id].leftPressed = !!(data.state & 1);
-	//Position 2: Right is pressed
-	players[ws.id].rightPressed = !!(data.state & 2);
-	//Position 3: Up is pressed
-	players[ws.id].upPressed = !!(data.state & 4);
-	//Position 4: Down is pressed
-	players[ws.id].downPressed = !! (data.state & 8);
-	
-	var condensedPlayers = [];
-	
-	for (var obj in players){
-		var playerObj = {
-			x: players[obj].x,
-			y: players[obj].y,
-			xVel: players[obj].xVelocity,
-			yVel: players[obj].yVelocity,
-			width: players[obj].width,
-			height: players[obj].height,
-			clientId: players[obj].clientId,
-			color: players[obj].dead ? "dead" : players[obj].color,
-			rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : ""
+		//Position 1: Left is pressed
+		players[ws.id].leftPressed = !!(data.state & 1);
+		//Position 2: Right is pressed
+		players[ws.id].rightPressed = !!(data.state & 2);
+		//Position 3: Up is pressed
+		players[ws.id].upPressed = !!(data.state & 4);
+		//Position 4: Down is pressed
+		players[ws.id].downPressed = !! (data.state & 8);
+		
+		var condensedPlayers = [];
+		
+		for (var obj in players){
+			var playerObj = {
+				x: players[obj].x,
+				y: players[obj].y,
+				xVel: players[obj].xVelocity,
+				yVel: players[obj].yVelocity,
+				width: players[obj].width,
+				height: players[obj].height,
+				clientId: players[obj].clientId,
+				color: players[obj].dead ? "dead" : players[obj].color,
+				rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : ""
+			}
+			condensedPlayers.push(playerObj);
 		}
-		condensedPlayers.push(playerObj);
+		var sendObject = {
+			"timer": timerStarted ? timer : "",
+			"players": JSON.stringify(condensedPlayers),
+			"blocks": JSON.stringify(blocks),
+			"lavaY": lava.y,
+			"lavaH": lava.height
+			}
+		ws.send(JSON.stringify(sendObject));
 	}
-	var sendObject = {
-		"timer": timerStarted ? timer : "",
-		"players": JSON.stringify(condensedPlayers),
-		"blocks": JSON.stringify(blocks),
-		"lavaY": lava.y,
-		"lavaH": lava.height
-		}
-	ws.send(JSON.stringify(sendObject));
   });
 
   ws.on("close", function() {
