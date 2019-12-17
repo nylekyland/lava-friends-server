@@ -104,9 +104,15 @@ wss.on("connection", function(ws) {
 	
   if (timerStarted){
   	players[ws.id] = newPlayer;
+	updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
+    updateRefs.push(updateRef);
+    players[ws.id].updateRef = updateRef;
   }
   else{
   	playerQueue[ws.id] = newPlayer;
+	updateRef = setInterval(function(){updatePositions(playerQueue[ws.id])}, 14);
+	updateRefs.push(updateRef);
+	playerQueue[ws.id].updateRef = updateRef;
   }
   
   if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownStarted){
@@ -114,10 +120,6 @@ wss.on("connection", function(ws) {
 	timerRef = setInterval(countdown, 1000);
 	addAllQueuePlayers();
   }
-  
-  updateRef = setInterval(function(){updatePositions(players[ws.id])}, 14);
-  updateRefs.push(updateRef);
-  players[ws.id].updateRef = updateRef;
   
   ws.on('message', function incoming(json) {
 	var data = JSON.parse(json);
