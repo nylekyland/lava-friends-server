@@ -326,7 +326,7 @@ function updatePositions(player){
 			//The object blocks their path. Stop their yVelocity and they start falling.
 			if (objectAbove != null && !player.dead){
 				player.y = objectAbove.y + objectAbove.height;
-				player.yVelocity = 0;
+				player.yVelocity = objectAbove.gravity;
 			}
 			
 			//Check if player has entered the lava
