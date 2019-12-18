@@ -157,7 +157,8 @@ wss.on("connection", function(ws) {
                 height: players[obj].height,
                 clientId: players[obj].clientId,
                 color: players[obj].dead ? "dead" : players[obj].color,
-                rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : ""
+                rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
+				inQueue: players[obj].inQueue
             }
             condensedPlayers.push(playerObj);
         }
