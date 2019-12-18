@@ -110,7 +110,7 @@ wss.on("connection", function(ws) {
 	//Now that someone has connected, check how many people there are total.
 	//If there's more than 2 players and the countdown hasn't already started yet,
 	//start the timer.
-    if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownTimer) {
+    if (Object.keys(players).length >= 2 && !gameStarted && !cooldownTimer) {
         timerStarted = true;
         timerRef = setInterval(countdown, 1000)
 		addPlayersFromQueue();
