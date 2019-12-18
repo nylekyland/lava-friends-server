@@ -103,7 +103,8 @@ wss.on("connection", function(ws) {
         dead: false,
         connected: true,
         rank: "",
-        color: colors[Math.floor(Math.random() * colors.length)]
+        color: colors[Math.floor(Math.random() * colors.length)],
+		inQueue: true
     }
 
 	//Now that someone has connected, check how many people there are total.
@@ -111,8 +112,17 @@ wss.on("connection", function(ws) {
 	//start the timer.
     if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownTimer) {
         timerStarted = true;
-        timerRef = setInterval(countdown, 1000);
+        timerRef = setInterval(countdown, 1000)
+		addPlayersFromQueue();
     }
+	//If the timer is ticking down before play, the newly connected player will join
+	//the next game. Else, they will have to wait in the queue.
+	if (timerStarted){
+		players[ws.id].inQueue = false;
+	}
+	else{
+		players[ws.id].inQueue = true;
+	}
 
     updateRef = setInterval(function() {
         updatePositions(players[ws.id])
@@ -248,7 +258,7 @@ function updatePositions(player) {
         var downPressed = player.downPressed;
         var leftPressed = player.leftPressed;
         var rightPressed = player.rightPressed;
-        if (!player.dead) {
+        if (!player.dead && !player.inQueue) {
             //The player pressed up and is on the ground
             if (upPressed && !player.lastUp && player.onGround) {
                 player.yVelocity = -15;
@@ -494,8 +504,24 @@ function cooldown() {
         if (Object.keys(players).length >= 2 && !timerStarted) {
             timerStarted = true;
             timerRef = setInterval(countdown, 1000);
+			addPlayersFromQueue();
         }
     } else {
         cooldownTimer--;
     }
+}
+
+function addPlayersFromQueue(){
+	var count = 0;
+	for (var obj in players){
+		if (!players[obj].inQueue){
+			count++;
+		}
+		else{
+			if (count < 99){
+				players[obj].inQueue = false;
+				count++;
+			}
+		}
+	}
 }
