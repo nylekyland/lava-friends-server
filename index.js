@@ -104,7 +104,7 @@ wss.on("connection", function(ws) {
         connected: true,
         rank: "",
         color: colors[Math.floor(Math.random() * colors.length)],
-		inQueue: true
+		inQueue: false
     }
 
 	//Now that someone has connected, check how many people there are total.
