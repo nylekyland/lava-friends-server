@@ -158,6 +158,7 @@ wss.on("connection", function(ws) {
                 clientId: players[obj].clientId,
                 color: players[obj].dead ? "dead" : players[obj].color,
                 rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
+				dead: players[obj].dead,
 				inQueue: players[obj].inQueue
             }
             condensedPlayers.push(playerObj);
@@ -178,7 +179,8 @@ wss.on("connection", function(ws) {
         players[ws.id].connected = false;
         players[ws.id].dead = true;
         players[ws.id].rank = aliveCount;
-        aliveCount--;
+		if (!players[ws.id].inQueue)
+        	aliveCount--;
         if (!gameStarted)
             delete players[ws.id];
         if (Object.keys(players).length < 2 && (timerStarted || gameStarted)) {
