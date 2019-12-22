@@ -126,7 +126,7 @@ wss.on("connection", function(ws) {
 
     updateRef = setInterval(function() {
         updatePositions(players[ws.id])
-    }, 14);
+    }, 40);
     updateRefs.push(updateRef);
     players[ws.id].updateRef = updateRef;
 
