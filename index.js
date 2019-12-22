@@ -126,26 +126,12 @@ wss.on("connection", function(ws) {
 
     updateRef = setInterval(function() {
         updatePositions(players[ws.id])
-    }, 40);
+    }, 14);
     updateRefs.push(updateRef);
     players[ws.id].updateRef = updateRef;
-
-    ws.on('message', function incoming(json) {
-        var data = JSON.parse(json);
-
-        if (players[ws.id].clientId == null)
-            players[ws.id].clientId = data.clientId;
-
-        //Position 1: Left is pressed
-        players[ws.id].leftPressed = !!(data.state & 1);
-        //Position 2: Right is pressed
-        players[ws.id].rightPressed = !!(data.state & 2);
-        //Position 3: Up is pressed
-        players[ws.id].upPressed = !!(data.state & 4);
-        //Position 4: Down is pressed
-        players[ws.id].downPressed = !!(data.state & 8);
-
-        var condensedPlayers = [];
+	
+	var sendMessageRef = setInterval(function(){
+		var condensedPlayers = [];
 
         for (var obj in players) {
             var playerObj = {
@@ -167,6 +153,22 @@ wss.on("connection", function(ws) {
             "lavaH": lava.height
         }
         ws.send(JSON.stringify(sendObject));
+	}, 14);
+
+    ws.on('message', function incoming(json) {
+        var data = JSON.parse(json);
+
+        if (players[ws.id].clientId == null)
+            players[ws.id].clientId = data.clientId;
+
+        //Position 1: Left is pressed
+        players[ws.id].leftPressed = !!(data.state & 1);
+        //Position 2: Right is pressed
+        players[ws.id].rightPressed = !!(data.state & 2);
+        //Position 3: Up is pressed
+        players[ws.id].upPressed = !!(data.state & 4);
+        //Position 4: Down is pressed
+        players[ws.id].downPressed = !!(data.state & 8);
     });
 
     ws.on("close", function() {
