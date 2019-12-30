@@ -174,6 +174,7 @@ wss.on("connection", function(ws) {
 
     ws.on("close", function() {
         console.log("websocket connection close")
+		clearInterval(sendMessageRef);
         clearInterval(updateRefs[players[ws.id].updateRef]);
         players[ws.id].connected = false;
         players[ws.id].dead = true;
