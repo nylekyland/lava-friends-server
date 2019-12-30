@@ -152,6 +152,7 @@ wss.on("connection", function(ws) {
             "lavaY": lava.y,
             "lavaH": lava.height
         }
+		console.log(JSON.stringify(sendObject));
         ws.send(JSON.stringify(sendObject));
 	}, 28);
 
