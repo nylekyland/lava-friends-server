@@ -488,6 +488,10 @@ function resetPlayerPosition(player) {
 	player.onGround = false;
 	player.wallJumpLeft = false;
     player.wallJumpRight = false;
+	player.leftPressed = false;
+	player.rightPressed = false;
+	player.upPressed = false;
+	player.downPressed = false;
 }
 
 function cooldown() {
