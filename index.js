@@ -151,10 +151,6 @@ wss.on("connection", function(ws) {
     }, 14);
     updateRefs.push(updateRef);
     players[ws.id].updateRef = updateRef;
-	
-	var sendMessageRef = setInterval(function(){
-		
-	}, 35);
 
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
@@ -174,7 +170,6 @@ wss.on("connection", function(ws) {
 
     ws.on("close", function() {
         console.log("websocket connection close")
-		clearInterval(sendMessageRef);
         clearInterval(updateRefs[players[ws.id].updateRef]);
         players[ws.id].connected = false;
         players[ws.id].dead = true;
