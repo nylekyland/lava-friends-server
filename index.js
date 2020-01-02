@@ -153,7 +153,7 @@ wss.on("connection", function(ws) {
             "lavaH": lava.height
         }
         ws.send(JSON.stringify(sendObject));
-	}, 14);
+	}, 7);
 
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
