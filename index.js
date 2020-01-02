@@ -125,18 +125,23 @@ wss.on("connection", function(ws) {
 	}
 
     updateRef = setInterval(function() {
-        updatePositions(players[ws.id]);
+        updatePositions(players[ws.id])
+    }, 14);
+    updateRefs.push(updateRef);
+    players[ws.id].updateRef = updateRef;
+	
+	var sendMessageRef = setInterval(function(){
 		var condensedPlayers = [];
 
         for (var obj in players) {
             var playerObj = {
-                x: Math.round(players[obj].x),
-                y: Math.round(players[obj].y),
+                x: players[obj].x,
+                y: players[obj].y,
                 clientId: players[obj].clientId,
                 color: players[obj].dead ? "dead" : players[obj].color,
                 rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
-				dead: players[obj].dead ? 1 : 0,
-				inQueue: players[obj].inQueue ? 1 : 0
+				dead: players[obj].dead,
+				inQueue: players[obj].inQueue
             }
             condensedPlayers.push(playerObj);
         }
@@ -147,10 +152,8 @@ wss.on("connection", function(ws) {
             "lavaY": lava.y,
             "lavaH": lava.height
         }
-        ws.send(JSON.stringify(sendObject));
-    }, 14);
-    updateRefs.push(updateRef);
-    players[ws.id].updateRef = updateRef;
+        ws.send(btoa(JSON.stringify(sendObject)));
+	}, 14);
 
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
@@ -170,6 +173,7 @@ wss.on("connection", function(ws) {
 
     ws.on("close", function() {
         console.log("websocket connection close")
+		clearInterval(sendMessageRef);
         clearInterval(updateRefs[players[ws.id].updateRef]);
         players[ws.id].connected = false;
         players[ws.id].dead = true;
