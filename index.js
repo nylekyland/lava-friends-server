@@ -336,7 +336,7 @@ function updatePositions(player) {
             }
             //The next y coordinate overlaps a block that's underneath the player.
             //They are now on the ground and stop falling.
-            if (objectBeneath != null && objectBeneath.y != null && !player.dead) {
+            if (objectBeneath != null && !player.dead) {
                 player.y = objectBeneath.y - player.height;
                 player.yVelocity = 0;
                 player.onGround = true;
@@ -345,7 +345,7 @@ function updatePositions(player) {
             }
             //There's a block above the player.
             //The object blocks their path. Stop their yVelocity and they start falling.
-            if (objectAbove != null && objectAbove.y != null && !player.dead) {
+            if (objectAbove != null && !player.dead) {
                 player.y = objectAbove.y + objectAbove.height;
                 player.yVelocity = objectAbove.speed;
             }
@@ -485,6 +485,9 @@ function resetPlayerPosition(player) {
     player.y = 200;
     player.yVelocity = 0;
     player.xVelocity = 0;
+	player.onGround = false;
+	player.wallJumpLeft = false;
+    player.wallJumpRight = false;
 }
 
 function cooldown() {
