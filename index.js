@@ -152,7 +152,6 @@ wss.on("connection", function(ws) {
             "lavaY": lava.y,
             "lavaH": lava.height
         }
-		console.log(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
         ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
 	}, 14);
 
