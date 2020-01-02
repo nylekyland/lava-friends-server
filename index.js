@@ -130,13 +130,13 @@ wss.on("connection", function(ws) {
 
         for (var obj in players) {
             var playerObj = {
-                x: players[obj].x,
-                y: players[obj].y,
+                x: Math.round(players[obj].x),
+                y: Math.round(players[obj].y),
                 clientId: players[obj].clientId,
                 color: players[obj].dead ? "dead" : players[obj].color,
                 rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
-				dead: players[obj].dead,
-				inQueue: players[obj].inQueue
+				dead: players[obj].dead ? 1 : 0,
+				inQueue: players[obj].inQueue ? 1 : 0
             }
             condensedPlayers.push(playerObj);
         }
