@@ -125,12 +125,7 @@ wss.on("connection", function(ws) {
 	}
 
     updateRef = setInterval(function() {
-        updatePositions(players[ws.id])
-    }, 14);
-    updateRefs.push(updateRef);
-    players[ws.id].updateRef = updateRef;
-	
-	var sendMessageRef = setInterval(function(){
+        updatePositions(players[ws.id]);
 		var condensedPlayers = [];
 
         for (var obj in players) {
@@ -153,6 +148,12 @@ wss.on("connection", function(ws) {
             "lavaH": lava.height
         }
         ws.send(JSON.stringify(sendObject));
+    }, 14);
+    updateRefs.push(updateRef);
+    players[ws.id].updateRef = updateRef;
+	
+	var sendMessageRef = setInterval(function(){
+		
 	}, 35);
 
     ws.on('message', function incoming(json) {
