@@ -107,7 +107,9 @@ wss.on("connection", function(ws) {
         connected: true,
         rank: "",
         color: colors[Math.floor(Math.random() * colors.length)],
-		inQueue: false
+		inQueue: false,
+		anim: "idle",
+		lastLeftRight: right
     }
 
 	//Now that someone has connected, check how many people there are total.
@@ -141,10 +143,11 @@ wss.on("connection", function(ws) {
                 x: players[obj].x,
                 y: players[obj].y,
                 clientId: players[obj].clientId,
-                color: players[obj].dead ? "dead" : players[obj].color,
+                color: getColorNumber(players[obj].color),
                 rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
-				dead: players[obj].dead,
-				inQueue: players[obj].inQueue
+				dead: players[obj].dead ? 1 : 0,
+				inQueue: players[obj].inQueue ? 1 : 0,
+				anim: getAnimNumber(players[obj].anim)
             }
             condensedPlayers.push(playerObj);
         }
@@ -541,5 +544,30 @@ function addPlayersFromQueue(){
 				count++;
 			}
 		}
+	}
+}
+
+function getAnimNumber(anim){
+	switch (anim){
+		case "idle": return 0;
+		case "walkLeft": return 1;
+		case "jumpLeft": return 2;
+		case "fallLeft": return 3;
+		case "walkRight": return 4;
+		case "jumpRight": return 5;
+		case "fallRight": return 6;
+		case "win": return 7;
+		case "dead": return 8;
+		default: return 0; break;
+	}
+}
+
+function getColorNumber(color){
+	switch(color){
+		case "red": return 0;
+		case "green": return 1;
+		case "yellow": return 2;
+		case "blue": return 3;
+		default: return 0;
 	}
 }
