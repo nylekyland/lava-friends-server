@@ -346,7 +346,7 @@ function updatePositions(player) {
 				//They are now on the ground and stop falling.
 				if (objectBeneath != null && !player.dead) {
 					player.y = objectBeneath.y - player.height;
-					player.yVelocity = 0;
+					player.yVelocity = objectBeneath.speed;
 					player.onGround = true;
 					player.wallJumpLeft = false;
 					player.wallJumpRight = false;
