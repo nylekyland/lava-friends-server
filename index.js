@@ -549,15 +549,16 @@ function addPlayersFromQueue(){
 
 function getAnimNumber(anim){
 	switch (anim){
-		case "idle": return 0;
-		case "walkLeft": return 1;
-		case "jumpLeft": return 2;
-		case "fallLeft": return 3;
-		case "walkRight": return 4;
-		case "jumpRight": return 5;
-		case "fallRight": return 6;
-		case "win": return 7;
-		case "dead": return 8;
+		case "idleLeft": return 0;
+		case "idleRight": return 1;
+		case "walkLeft": return 2;
+		case "jumpLeft": return 3;
+		case "fallLeft": return 4;
+		case "walkRight": return 5;
+		case "jumpRight": return 6;
+		case "fallRight": return 7;
+		case "win": return 8;
+		case "dead": return 9;
 		default: return 0; break;
 	}
 }
@@ -565,8 +566,8 @@ function getAnimNumber(anim){
 function getColorNumber(color){
 	switch(color){
 		case "red": return 0;
-		case "green": return 1;
-		case "yellow": return 2;
+		case "yellow": return 1;
+		case "green": return 2;
 		case "blue": return 3;
 		default: return 0;
 	}
