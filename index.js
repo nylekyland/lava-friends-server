@@ -342,6 +342,7 @@ function updatePositions(player) {
 				//The next y coordinate overlaps a block that's underneath the player.
 				//They are now on the ground and stop falling.
 				if (objectBeneath != null && !player.dead) {
+					console.log('update from objectBeneath != null: y = ' + (objectBeneath.y - player.height));
 					player.y = objectBeneath.y - player.height;
 					player.yVelocity = 0;
 					player.onGround = true;
@@ -351,6 +352,7 @@ function updatePositions(player) {
 				//There's a block above the player.
 				//The object blocks their path. Stop their yVelocity and they start falling.
 				if (objectAbove != null && !player.dead) {
+					console.log('update from objectAbove != null: y = ' + (objectAbove.y + objectAbove.height));
 					player.y = objectAbove.y + objectAbove.height;
 					player.yVelocity = objectAbove.speed;
 				}
@@ -488,6 +490,7 @@ function resetPlayerPosition(player) {
         player.x = 55;
     if (player.x + player.width >= 950)
         player.x = 945;
+	console.log('update from resetPlayerPosition: y = 200');
     player.y = 200;
     player.yVelocity = 0;
     player.xVelocity = 0;
