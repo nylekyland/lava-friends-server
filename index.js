@@ -108,7 +108,7 @@ wss.on("connection", function(ws) {
         rank: "",
         color: colors[Math.floor(Math.random() * colors.length)],
 		inQueue: false,
-		anim: "idle",
+		anim: "idleRight",
 		lastLeftRight: "right"
     }
 
@@ -131,6 +131,7 @@ wss.on("connection", function(ws) {
 
     updateRef = setInterval(function() {
         updatePositions(players[ws.id]);
+		updateAnimations(players[ws.id]);
     }, 14);
     updateRefs.push(updateRef);
     players[ws.id].updateRef = updateRef;
@@ -436,6 +437,61 @@ function updatePositions(player) {
     }
 }
 
+function updateAnimations(player){
+	if (player.dead){
+		player.anim = "dead";
+	}
+	else{
+		//Check if player is in the air
+		if (!player.onGround){
+			//Check if player is rising or falling
+			if (player.yVelocity > 0){
+				//Check player's last l/r direction
+				if (player.lastLeftRight == "left"){
+					player.anim = "fallLeft";
+					return;
+				}
+				else{
+					player.anim = "fallRight";
+					return;
+				}
+			}
+			else{
+				if (player.lastLeftRight == "left"){
+					player.anim = "jumpLeft";
+					return;
+				}
+				else{
+					player.anim = "jumpRight";
+					return;
+				}
+			}
+		}
+		else{
+			if (player.xVelocity == 0){
+				if (player.lastLeftRight == "left"){
+					player.anim = "idleLeft";
+					return;
+				}
+				else{
+					player.anim = "idleRight";
+					return;
+				}
+			}
+			else{
+				if (player.lastLeftRight == "left"){
+					player.anim = "walkLeft";
+					return;
+				}
+				else{
+					player.anim = "walkRight";
+					return;
+				}
+			}
+		}
+	}
+}
+
 function updateBlocks() {
     /*
     	Update block positions
@@ -552,11 +608,11 @@ function getAnimNumber(anim){
 		case "idleLeft": return 0;
 		case "idleRight": return 1;
 		case "walkLeft": return 2;
-		case "jumpLeft": return 3;
+		case "walkRight": return 3;
 		case "fallLeft": return 4;
-		case "walkRight": return 5;
-		case "jumpRight": return 6;
-		case "fallRight": return 7;
+		case "fallRight": return 5;
+		case "jumpLeft": return 6;
+		case "jumpRight": return 7;
 		case "win": return 8;
 		case "dead": return 9;
 		default: return 0; break;
