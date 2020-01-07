@@ -447,6 +447,14 @@ function updateAnimations(player){
 		else{
 			//Check if player is in the air
 			if (!player.onGround){
+				if (player.wallJumpLeft){
+					player.anim = "wallSlideLeft";
+					return;
+				}
+				if (player.wallJumpRight){
+					player.anim = "wallSlideRight";
+					return;
+				}
 				//Check if player is rising or falling
 				if (player.yVelocity > 0){
 					//Check player's last l/r direction
@@ -617,8 +625,10 @@ function getAnimNumber(anim){
 		case "fallRight": return 5;
 		case "jumpLeft": return 6;
 		case "jumpRight": return 7;
-		case "win": return 8;
-		case "dead": return 9;
+		case "wallSlideLeft": return 8;
+		case "wallSlideRight": return 9;
+		case "win": return 10;
+		case "dead": return 11;
 		default: return 0; break;
 	}
 }
