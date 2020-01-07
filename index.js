@@ -438,57 +438,59 @@ function updatePositions(player) {
 }
 
 function updateAnimations(player){
-	if (player.dead){
-		player.anim = "dead";
-	}
-	else{
-		//Check if player is in the air
-		if (!player.onGround){
-			//Check if player is rising or falling
-			if (player.yVelocity > 0){
-				//Check player's last l/r direction
-				if (player.lastLeftRight == "left"){
-					player.anim = "fallLeft";
-					return;
-				}
-				else{
-					player.anim = "fallRight";
-					return;
-				}
-			}
-			else{
-				if (player.lastLeftRight == "left"){
-					player.anim = "jumpLeft";
-					return;
-				}
-				else{
-					player.anim = "jumpRight";
-					return;
-				}
-			}
+	if (player){
+		if (player.dead){
+			player.anim = "dead";
 		}
 		else{
-			if (player.xVelocity == 0){
-				if (player.lastLeftRight == "left"){
-					player.anim = "idleLeft";
-					return;
+			//Check if player is in the air
+			if (!player.onGround){
+				//Check if player is rising or falling
+				if (player.yVelocity > 0){
+					//Check player's last l/r direction
+					if (player.lastLeftRight == "left"){
+						player.anim = "fallLeft";
+						return;
+					}
+					else{
+						player.anim = "fallRight";
+						return;
+					}
 				}
 				else{
-					player.anim = "idleRight";
-					return;
+					if (player.lastLeftRight == "left"){
+						player.anim = "jumpLeft";
+						return;
+					}
+					else{
+						player.anim = "jumpRight";
+						return;
+					}
 				}
 			}
 			else{
-				if (player.lastLeftRight == "left"){
-					player.anim = "walkLeft";
-					return;
+				if (player.xVelocity == 0){
+					if (player.lastLeftRight == "left"){
+						player.anim = "idleLeft";
+						return;
+					}
+					else{
+						player.anim = "idleRight";
+						return;
+					}
 				}
 				else{
-					player.anim = "walkRight";
-					return;
+					if (player.lastLeftRight == "left"){
+						player.anim = "walkLeft";
+						return;
+					}
+					else{
+						player.anim = "walkRight";
+						return;
+					}
 				}
 			}
-		}
+		}	
 	}
 }
 
