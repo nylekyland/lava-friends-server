@@ -625,8 +625,8 @@ function getAnimNumber(anim){
 		case "fallRight": return 5;
 		case "jumpLeft": return 6;
 		case "jumpRight": return 7;
-		case "wallSlideLeft": return 8;
-		case "wallSlideRight": return 9;
+		case "wallJumpLeft": return 8;
+		case "wallJumpRight": return 9;
 		case "win": return 10;
 		case "dead": return 11;
 		default: return 0; break;
