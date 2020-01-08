@@ -161,7 +161,8 @@ wss.on("connection", function(ws) {
             "lavaY": lava.y,
             "lavaH": lava.height
         }
-        ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
+		if (ws.readyState === 1)
+			ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
 	}, 14);
 	
 	sendMessageRefs.push(sendMessageRef);
