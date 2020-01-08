@@ -159,9 +159,7 @@ wss.on("connection", function(ws) {
             "lavaY": lava.y,
             "lavaH": lava.height
         }
-		if (ws.readyState === WebSocket.OPEN){
-			ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
-		}
+        ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
 	}, 14);
 
     ws.on('message', function incoming(json) {
