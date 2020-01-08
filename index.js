@@ -187,8 +187,6 @@ wss.on("connection", function(ws) {
         players[ws.id].rank = aliveCount;
 		if (!players[ws.id].inQueue)
         	aliveCount--;
-        if (!gameStarted)
-            delete players[ws.id];
         if (Object.keys(players).length < 2 && (timerStarted || gameStarted)) {
             gameStarted = false;
             timerStarted = false;
@@ -204,6 +202,8 @@ wss.on("connection", function(ws) {
             lava.y = 1000;
             lava.height = 500;
         }
+		if (!gameStarted)
+            delete players[ws.id];
     });
 });
 
