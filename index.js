@@ -116,7 +116,8 @@ wss.on("connection", function(ws) {
 		inQueue: false,
 		anim: "idleRight",
 		lastLeftRight: "right",
-		punchLeftRight: "right"
+		punchLeftRight: "right",
+		stunned: false
     }
 
 	//Now that someone has connected, check how many people there are total.
@@ -410,6 +411,7 @@ function updatePositions(player) {
 								width: 2 * (player.width / 3),
 								height: (player.height / 3)
 							}
+							checkHitbox(player, hitbox);
 						}
 						else{
 							var hitbox = {
@@ -418,6 +420,7 @@ function updatePositions(player) {
 								width: 2 * (player.width / 3),
 								height: (player.height / 3)
 							}
+							checkHitbox(player, hitbox);
 						}
 					}
 				}
@@ -810,5 +813,20 @@ function getColorNumber(color){
 		case "green": return 2;
 		case "blue": return 3;
 		default: return 0;
+	}
+}
+
+function checkHitbox(currentPlayer, hitbox){
+	for (var obj in players){
+		if (players[obj] != currentPlayer){
+			if (rectangleOverlap(players[obj], hitbox) && !players[obj].stunned && !players[obj].dead && !players[obj].inQueue){
+				players[obj].stunned = true;
+				players[obj].yVelocity = -6;
+				if (currentPlayer.punchLeftRight == "right")
+					players[obj].xVelocity = 6;
+				else
+					players[obj].xVelocity = -6;
+			}
+		}
 	}
 }
