@@ -398,7 +398,7 @@ function updatePositions(player) {
 				
 				if (player.isPunching){
 					player.punchCounter++;
-					if (player.punchCounter > 12){
+					if (player.punchCounter > 25){
 						player.isPunching = false;
 						player.punchCounter = 0;
 					}
@@ -539,26 +539,38 @@ function updateAnimations(player){
 						switch (player.punchCounter){
 							case 1: 
 							case 2:
-								player.anim = "punchLeft1";
-								return;
 							case 3:
 							case 4:
-								player.anim = "punchLeft2";
+								player.anim = "punchLeft1";
 								return;
-							case 5: 
+							case 5:
 							case 6:
-								player.anim = "punchLeft3";
-								return;
 							case 7:
 							case 8:
+								player.anim = "punchLeft2";
+								return;
+							case 9: 
+							case 10:
+							case 11:
+							case 12:
+								player.anim = "punchLeft3";
+								return;
+							case 13:
+							case 14:
+							case 15:
+							case 16:
 								player.anim = "punchLeft4";
 								return;
-							case 9:
-							case 10:
+							case 17:
+							case 18:
+							case 19:
+							case 20:
 								player.anim = "punchLeft5";
 								return;
-							case 11: 
-							case 12:
+							case 21: 
+							case 22:
+							case 23:
+							case 24:
 								player.anim = "punchLeft6";
 								return;
 							default: player.anim = "idleLeft";
@@ -570,29 +582,41 @@ function updateAnimations(player){
 						switch (player.punchCounter){
 							case 1: 
 							case 2:
-								player.anim = "punchRight1";
-								return;
 							case 3:
 							case 4:
-								player.anim = "punchRight2";
+								player.anim = "punchRight1";
 								return;
-							case 5: 
+							case 5:
 							case 6:
-								player.anim = "punchRight3";
-								return;
 							case 7:
 							case 8:
+								player.anim = "punchRight2";
+								return;
+							case 9: 
+							case 10:
+							case 11:
+							case 12:
+								player.anim = "punchRight3";
+								return;
+							case 13:
+							case 14:
+							case 15:
+							case 16:
 								player.anim = "punchRight4";
 								return;
-							case 9:
-							case 10:
+							case 17:
+							case 18:
+							case 19:
+							case 20:
 								player.anim = "punchRight5";
 								return;
-							case 11: 
-							case 12:
+							case 21: 
+							case 22:
+							case 23:
+							case 24:
 								player.anim = "punchRight6";
 								return;
-							default: player.anim = "idleRight";
+							default: player.anim = "idleLeft";
 								return;
 						}
 					}
