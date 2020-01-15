@@ -98,10 +98,14 @@ wss.on("connection", function(ws) {
         rightPressed: false,
         upPressed: false,
         downPressed: false,
+		punchPressed: false,
         wallJumpLeft: false,
         wallJumpRight: false,
         onGround: false,
+		isPunching: false,
+		punchCounter: 0,
         lastUp: false,
+		lastPunch: false,
         updateRef: 0,
         dead: false,
         connected: true,
@@ -109,7 +113,8 @@ wss.on("connection", function(ws) {
         color: colors[Math.floor(Math.random() * colors.length)],
 		inQueue: false,
 		anim: "idleRight",
-		lastLeftRight: "right"
+		lastLeftRight: "right",
+		punchLeftRight: "right"
     }
 
 	//Now that someone has connected, check how many people there are total.
@@ -176,6 +181,8 @@ wss.on("connection", function(ws) {
         players[ws.id].upPressed = !!(data.state & 4);
         //Position 4: Down is pressed
         players[ws.id].downPressed = !!(data.state & 8);
+		//Position 5: Punch button is pressed
+		players[ws.id].punchPressed = !!(data.state & 16);
     });
 
     ws.on("close", function() {
@@ -267,6 +274,7 @@ function updatePositions(player) {
         var downPressed = player.downPressed;
         var leftPressed = player.leftPressed;
         var rightPressed = player.rightPressed;
+		var punchPressed = player.punchPressed;
         if (!player.dead && !player.inQueue) {
 			if (player.resetPosition){
 				player.resetPosition = false;
@@ -374,6 +382,45 @@ function updatePositions(player) {
 						player.resetPosition = true;
 					}
 				}
+				
+				//PUNCHING
+				//The player is on the ground and the punch button is pressed. Begin the punch
+				if (punchPressed && !player.lastPunch && player.onGround && !player.dead){
+					player.isPunching = true;
+					player.punchLeftRight = player.lastLeftRight;
+				}
+				
+				if (player.isPunching){
+					player.punchCounter++;
+					if (player.punchCounter > 12){
+						player.isPunching = false;
+						player.punchCounter = 0;
+					}
+					else if (player.punchCounter == 5 || player.punchCounter == 6){
+						if (player.punchLeftRight == "right"){
+							var hitbox = {
+								x: player.x + player.width,
+								y: player.y + (player.height / 6),
+								width: 2 * (player.width / 3),
+								height: (player.height / 3)
+							}
+						}
+						else{
+							var hitbox = {
+								x: player.x - (2 * (player.width / 3)),
+								y: player.y + (player.height / 6),
+								width: 2 * (player.width / 3),
+								height: (player.height / 3)
+							}
+						}
+					}
+				}
+				
+				if (punchPressed)
+					player.lastPunch = true;
+				else
+					player.lastPunch = false;
+				
 
 				//X VELOCITY
 				//The player is pressing left so we need to move them with their xVelocity
@@ -478,17 +525,96 @@ function updateAnimations(player){
 					}
 				}
 			}
+			//Player is on the ground
 			else{
-				if (player.xVelocity == 0){
-					if (player.lastLeftRight == "left"){
-						player.anim = "idleLeft";
-						return;
+				//The player is punching.
+				if (player.isPunching){
+					if (player.punchLeftRight == "left"){
+						switch (player.punchCounter){
+							case 1: 
+							case 2:
+								player.anim = "punchLeft1";
+								return;
+							case 3:
+							case 4:
+								player.anim = "punchLeft2";
+								return;
+							case 5: 
+							case 6:
+								player.anim = "punchLeft3";
+								return;
+							case 7:
+							case 8:
+								player.anim = "punchLeft4";
+								return;
+							case 9:
+							case 10:
+								player.anim = "punchLeft5";
+								return;
+							case 11: 
+							case 12:
+								player.anim = "punchLeft6";
+								return;
+							default: player.anim = "idleLeft";
+								return;
+								
+						}
 					}
 					else{
-						player.anim = "idleRight";
-						return;
+						switch (player.punchCounter){
+							case 1: 
+							case 2:
+								player.anim = "punchRight1";
+								return;
+							case 3:
+							case 4:
+								player.anim = "punchRight2";
+								return;
+							case 5: 
+							case 6:
+								player.anim = "punchRight3";
+								return;
+							case 7:
+							case 8:
+								player.anim = "punchRight4";
+								return;
+							case 9:
+							case 10:
+								player.anim = "punchRight5";
+								return;
+							case 11: 
+							case 12:
+								player.anim = "punchRight6";
+								return;
+							default: player.anim = "idleRight";
+								return;
+						}
 					}
 				}
+				//The player is standing still.
+				else if (player.xVelocity == 0){
+					if (player.lastLeftRight == "left"){
+						if (player.downPressed){
+							player.anim = "duckingLeft";
+							return;
+						}
+						else{
+							player.anim = "idleLeft";
+							return;	
+						}
+					}
+					else{
+						if (player.downPressed){
+							player.anim = "duckingRight";
+							return;
+						}
+						else{
+							player.anim = "idleRight";
+							return;
+						}
+					}
+				}
+				//The player is moving.
 				else{
 					if (player.lastLeftRight == "left"){
 						player.anim = "walkLeft";
@@ -629,6 +755,20 @@ function getAnimNumber(anim){
 		case "wallSlideRight": return 9;
 		case "win": return 10;
 		case "dead": return 11;
+		case "punchLeft1": return 12;
+		case "punchLeft2": return 13;
+		case "punchLeft3": return 14;
+		case "punchLeft4": return 15;
+		case "punchLeft5": return 16;
+		case "punchLeft6": return 17;
+		case "punchRight1": return 12;
+		case "punchRight2": return 13;
+		case "punchRight3": return 14;
+		case "punchRight4": return 15;
+		case "punchRight5": return 16;
+		case "punchRight6": return 17;
+		case "duckingLeft": return 18;
+		case "duckingRight": return 19;
 		default: return 0; break;
 	}
 }
