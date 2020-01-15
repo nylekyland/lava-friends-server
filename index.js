@@ -831,9 +831,9 @@ function checkHitbox(currentPlayer, hitbox){
 				players[obj].stunned = true;
 				players[obj].yVelocity = -10;
 				if (currentPlayer.punchLeftRight == "right")
-					players[obj].xVelocity = 6;
+					players[obj].xVelocity = 24;
 				else
-					players[obj].xVelocity = -6;
+					players[obj].xVelocity = -24;
 			}
 		}
 	}
