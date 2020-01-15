@@ -325,7 +325,7 @@ function updatePositions(player) {
 				player.yVelocity += gravity;
 
 				//If player is idle, slow down their xVelocity to 0.
-				if (player.xVelocity != 0 && (!leftPressed && !rightPressed)) {
+				if (!player.stunned && player.xVelocity != 0 && (!leftPressed && !rightPressed)) {
 					if (player.xVelocity > 0)
 						player.xVelocity -= xSpeed;
 					if (player.xVelocity < 0)
