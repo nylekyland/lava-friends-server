@@ -5,6 +5,7 @@ var app = express()
 var port = process.env.PORT || 5000
 var players = {};
 var updateRefs = [];
+var sendMessageRefs = [];
 var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
 var originalBlocks = {};
@@ -107,6 +108,7 @@ wss.on("connection", function(ws) {
         lastUp: false,
 		lastPunch: false,
         updateRef: 0,
+		sendMessageRef: 0,
         dead: false,
         connected: true,
         rank: "",
@@ -134,7 +136,7 @@ wss.on("connection", function(ws) {
 		players[ws.id].inQueue = true;
 	}
 
-    updateRef = setInterval(function() {
+    var updateRef = setInterval(function() {
         updatePositions(players[ws.id]);
 		updateAnimations(players[ws.id]);
     }, 14);
@@ -164,8 +166,12 @@ wss.on("connection", function(ws) {
             "lavaY": lava.y,
             "lavaH": lava.height
         }
-        ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
+		if (ws.readyState === 1)
+			ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
 	}, 14);
+	
+	sendMessageRefs.push(sendMessageRef);
+    players[ws.id].sendMessageRef = sendMessageRef;
 
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
@@ -187,7 +193,7 @@ wss.on("connection", function(ws) {
 
     ws.on("close", function() {
         console.log("websocket connection close")
-		clearInterval(sendMessageRef);
+		clearInterval(sendMessageRefs[players[ws.id].sendMessageRef]);
         clearInterval(updateRefs[players[ws.id].updateRef]);
         players[ws.id].connected = false;
         players[ws.id].dead = true;
