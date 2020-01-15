@@ -117,7 +117,8 @@ wss.on("connection", function(ws) {
 		anim: "idleRight",
 		lastLeftRight: "right",
 		punchLeftRight: "right",
-		stunned: false
+		stunned: false,
+		stunnedCounter: 50
     }
 
 	//Now that someone has connected, check how many people there are total.
@@ -288,6 +289,13 @@ function updatePositions(player) {
 				resetPlayerPosition(player);
 			}
 			else{
+				if (player.stunned)
+					player.stunnedCounter--;
+				if (player.stunnedCounter <= 0){
+					player.stunned = false;
+					player.stunnedCounter = 50;
+				}
+				
 				//The player pressed up and is on the ground
 				if (upPressed && !player.lastUp && player.onGround) {
 					player.yVelocity = -15;
@@ -436,13 +444,13 @@ function updatePositions(player) {
 				if (leftPressed && !player.dead && !player.isPunching) {
 					player.lastLeftRight = "left";
 					player.xVelocity -= xSpeed;
-					if (player.xVelocity < -6)
+					if (!player.stunned && player.xVelocity < -6)
 						player.xVelocity = -6;
 				}
 				if (rightPressed && !player.dead && !player.isPunching) {
 					player.lastLeftRight = "right";
 					player.xVelocity += xSpeed;
-					if (player.xVelocity > 6)
+					if (!player.stunned && player.xVelocity > 6)
 						player.xVelocity = 6;
 				}
 				//Check if there are any blocks in the way
@@ -821,7 +829,7 @@ function checkHitbox(currentPlayer, hitbox){
 		if (players[obj] != currentPlayer){
 			if (rectangleOverlap(players[obj], hitbox) && !players[obj].stunned && !players[obj].dead && !players[obj].inQueue){
 				players[obj].stunned = true;
-				players[obj].yVelocity = -6;
+				players[obj].yVelocity = -10;
 				if (currentPlayer.punchLeftRight == "right")
 					players[obj].xVelocity = 6;
 				else
