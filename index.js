@@ -430,13 +430,13 @@ function updatePositions(player) {
 
 				//X VELOCITY
 				//The player is pressing left so we need to move them with their xVelocity
-				if (leftPressed) {
+				if (leftPressed && !player.dead && !player.isPunching) {
 					player.lastLeftRight = "left";
 					player.xVelocity -= xSpeed;
 					if (player.xVelocity < -6)
 						player.xVelocity = -6;
 				}
-				if (rightPressed) {
+				if (rightPressed && !player.dead && !player.isPunching) {
 					player.lastLeftRight = "right";
 					player.xVelocity += xSpeed;
 					if (player.xVelocity > 6)
