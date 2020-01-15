@@ -767,14 +767,14 @@ function getAnimNumber(anim){
 		case "punchLeft4": return 15;
 		case "punchLeft5": return 16;
 		case "punchLeft6": return 17;
-		case "punchRight1": return 12;
-		case "punchRight2": return 13;
-		case "punchRight3": return 14;
-		case "punchRight4": return 15;
-		case "punchRight5": return 16;
-		case "punchRight6": return 17;
-		case "duckingLeft": return 18;
-		case "duckingRight": return 19;
+		case "punchRight1": return 18;
+		case "punchRight2": return 19;
+		case "punchRight3": return 20;
+		case "punchRight4": return 21;
+		case "punchRight5": return 22;
+		case "punchRight6": return 23;
+		case "duckingLeft": return 24;
+		case "duckingRight": return 25;
 		default: return 0; break;
 	}
 }
