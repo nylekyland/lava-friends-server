@@ -297,19 +297,19 @@ function updatePositions(player) {
 				}
 				
 				//The player pressed up and is on the ground
-				if (upPressed && !player.lastUp && player.onGround) {
+				if (upPressed && !player.lastUp && player.onGround && !player.stunned) {
 					player.yVelocity = -15;
 					player.onGround = false;
 				}
 				//The player pressed up and is already on the left wall -> wall jump to the right
-				if (upPressed && !player.lastUp && player.wallJumpLeft) {
+				if (upPressed && !player.lastUp && player.wallJumpLeft && !player.stunned) {
 					player.yVelocity = -14;
 					player.xVelocity = 12;
 					player.onGround = false;
 					player.wallJumpLeft = false;
 				}
 				//The player pressed up and is already on the right wall -> wall jump to the left
-				if (upPressed && !player.lastUp && player.wallJumpRight) {
+				if (upPressed && !player.lastUp && player.wallJumpRight && !player.stunned) {
 					player.yVelocity = -14;
 					player.xVelocity = -12;
 					player.onGround = false;
@@ -400,7 +400,7 @@ function updatePositions(player) {
 				
 				//PUNCHING
 				//The player is on the ground and the punch button is pressed. Begin the punch
-				if (punchPressed && !player.lastPunch && player.onGround && !player.dead){
+				if (punchPressed && !player.lastPunch && player.onGround && !player.dead && !player.stunned){
 					player.isPunching = true;
 					player.punchLeftRight = player.lastLeftRight;
 				}
@@ -441,16 +441,16 @@ function updatePositions(player) {
 
 				//X VELOCITY
 				//The player is pressing left so we need to move them with their xVelocity
-				if (leftPressed && !player.dead && !player.isPunching) {
+				if (leftPressed && !player.dead && !player.isPunching && !player.stunned) {
 					player.lastLeftRight = "left";
 					player.xVelocity -= xSpeed;
-					if (!player.stunned && player.xVelocity < -6)
+					if (player.xVelocity < -6)
 						player.xVelocity = -6;
 				}
-				if (rightPressed && !player.dead && !player.isPunching) {
+				if (rightPressed && !player.dead && !player.isPunching && !player.stunned) {
 					player.lastLeftRight = "right";
 					player.xVelocity += xSpeed;
-					if (!player.stunned && player.xVelocity > 6)
+					if (player.xVelocity > 6)
 						player.xVelocity = 6;
 				}
 				//Check if there are any blocks in the way
