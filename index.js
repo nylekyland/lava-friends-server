@@ -507,6 +507,17 @@ function updateAnimations(player){
 	if (player){
 		if (player.dead){
 			player.anim = "dead";
+			return;
+		}
+		else if (player.stunned){
+			if (player.lastleftRight == "left"){
+				player.anim = "stunnedLeft";
+				return;
+			}
+			else{
+				player.anim = "stunnedRight";
+				return;
+			}
 		}
 		else{
 			//Check if player is in the air
@@ -810,6 +821,8 @@ function getAnimNumber(anim){
 		case "punchRight6": return 23;
 		case "duckingLeft": return 24;
 		case "duckingRight": return 25;
+		case "stunnedLeft": return 26;
+		case "stunnedRight": return 27;
 		default: return 0; break;
 	}
 }
