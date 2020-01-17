@@ -181,7 +181,7 @@ wss.on("connection", function(ws) {
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
 
-        if (players[ws.id].clientId == null)
+        if (players[ws.id].clientId == null){
             players[ws.id].clientId = data.clientId;
 
         //Position 1: Left is pressed
@@ -856,28 +856,30 @@ function checkHitbox(currentPlayer, hitbox){
 }
 
 function pickCamera(player){
-	if (!player.dead && !player.inQueue){
-		player.cameraObj = player.clientId;
-		return player.clientId;
-	}
-	else{
-		var ids = [];
-		for (var obj in players){
-			if (players[obj].cameraObj == players[obj].clientId && !players[obj].dead && !players[obj].inQueue){
-				player.cameraObj = players[obj].clientId;
-				return players[obj].clientId;
-			}
-			else if (!players[obj].dead && !players[obj].inQueue)
-				ids.push(players[obj].clientId);
-		}
-		if (ids.length == 0){
+	if (player){
+		if (!player.dead && !player.inQueue){
 			player.cameraObj = player.clientId;
 			return player.clientId;
 		}
 		else{
-			var rand = ids[Math.floor(Math.random() * ids.length)];
-			player.cameraObj = rand;
-			return rand;
-		}
+			var ids = [];
+			for (var obj in players){
+				if (players[obj].cameraObj == players[obj].clientId && !players[obj].dead && !players[obj].inQueue){
+					player.cameraObj = players[obj].clientId;
+					return players[obj].clientId;
+				}
+				else if (!players[obj].dead && !players[obj].inQueue)
+					ids.push(players[obj].clientId);
+			}
+			if (ids.length == 0){
+				player.cameraObj = player.clientId;
+				return player.clientId;
+			}
+			else{
+				var rand = ids[Math.floor(Math.random() * ids.length)];
+				player.cameraObj = rand;
+				return rand;
+			}
+		}	
 	}
 }
