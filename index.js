@@ -181,7 +181,7 @@ wss.on("connection", function(ws) {
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
 
-        if (players[ws.id].clientId == null){
+        if (players[ws.id].clientId == null)
             players[ws.id].clientId = data.clientId;
 
         //Position 1: Left is pressed
