@@ -118,7 +118,8 @@ wss.on("connection", function(ws) {
 		lastLeftRight: "right",
 		punchLeftRight: "right",
 		stunned: false,
-		stunnedCounter: 50
+		stunnedCounter: 50,
+		cameraObj: ''
     }
 
 	//Now that someone has connected, check how many people there are total.
@@ -855,17 +856,27 @@ function checkHitbox(currentPlayer, hitbox){
 
 function pickCamera(player){
 	if (!player.dead && !player.inQueue){
+		player.cameraObj = player.clientId;
 		return player.clientId;
 	}
 	else{
 		var ids = [];
 		for (var obj in players){
-			if (!players[obj].dead && !players[obj].inQueue)
+			if (players[obj].cameraObj == players[obj].clientId && !players[obj].dead && !players[obj].inQueue){
+				player.cameraObj = players[obj].clientId;
+				return players[obj].clientId;
+			}
+			else if (!players[obj].dead && !players[obj].inQueue)
 				ids.push(players[obj].clientId);
 		}
-		if (ids.length == 0)
+		if (ids.length == 0){
+			player.cameraObj = player.clientId;
 			return player.clientId;
-		else
-			return ids[Math.floor(Math.random() * ids.length)];
+		}
+		else{
+			var rand = ids[Math.floor(Math.random() * ids.length)];
+			player.cameraObj = rand;
+			return rand;
+		}
 	}
 }
