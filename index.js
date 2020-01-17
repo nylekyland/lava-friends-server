@@ -157,7 +157,8 @@ wss.on("connection", function(ws) {
                 rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
 				dead: players[obj].dead ? 1 : 0,
 				inQueue: players[obj].inQueue ? 1 : 0,
-				anim: getAnimNumber(players[obj].anim)
+				anim: getAnimNumber(players[obj].anim),
+				cam: pickCamera(players[obj])
             }
             condensedPlayers.push(playerObj);
         }
@@ -849,5 +850,22 @@ function checkHitbox(currentPlayer, hitbox){
 					players[obj].xVelocity = -12;
 			}
 		}
+	}
+}
+
+function pickCamera(player){
+	if (!player.dead && !player.inQueue){
+		return player.clientId;
+	}
+	else{
+		var ids = [];
+		for (var obj in players){
+			if (!players[obj].dead && !players[obj].inQueue)
+				ids.push(players[obj].clientId);
+		}
+		if (ids.length == 0)
+			return player.clientId;
+		else
+			return ids[Math.floor(Math.random() * ids.length)];
 	}
 }
