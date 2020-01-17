@@ -142,6 +142,7 @@ wss.on("connection", function(ws) {
     var updateRef = setInterval(function() {
         updatePositions(players[ws.id]);
 		updateAnimations(players[ws.id]);
+		pickCamera(players[ws.id]);
     }, 14);
     updateRefs.push(updateRef);
     players[ws.id].updateRef = updateRef;
@@ -159,7 +160,7 @@ wss.on("connection", function(ws) {
 				dead: players[obj].dead ? 1 : 0,
 				inQueue: players[obj].inQueue ? 1 : 0,
 				anim: getAnimNumber(players[obj].anim),
-				cam: pickCamera(players[obj])
+				cam: players[obj].cameraObj,
             }
             condensedPlayers.push(playerObj);
         }
