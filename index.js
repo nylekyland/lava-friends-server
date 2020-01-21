@@ -872,8 +872,8 @@ function pickCamera(player){
 					ids.push(players[obj].clientId);
 			}
 			if (ids.length == 0){
-				player.cameraObj = player.clientId;
-				return player.clientId;
+				player.cameraObj = '';
+				return '';
 			}
 			else{
 				var rand = ids[Math.floor(Math.random() * ids.length)];
