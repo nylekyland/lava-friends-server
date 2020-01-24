@@ -205,8 +205,6 @@ wss.on("connection", function(ws) {
 		
 		players[ws.id].character = data.characterColor.charAt(0);
 		players[ws.id].color = data.characterColor.charAt(1);
-		console.log(players[ws.id].character);
-		console.log(players[ws.id].color);
 		
     });
 
@@ -575,89 +573,12 @@ function updateAnimations(player){
 				//The player is punching.
 				if (player.isPunching){
 					if (player.punchLeftRight == "left"){
-						switch (player.punchCounter){
-							case 1: 
-							case 2:
-							case 3:
-							case 4:
-								player.anim = "punchLeft1";
-								return;
-							case 5:
-							case 6:
-							case 7:
-							case 8:
-								player.anim = "punchLeft2";
-								return;
-							case 9: 
-							case 10:
-							case 11:
-							case 12:
-								player.anim = "punchLeft3";
-								return;
-							case 13:
-							case 14:
-							case 15:
-							case 16:
-								player.anim = "punchLeft4";
-								return;
-							case 17:
-							case 18:
-							case 19:
-							case 20:
-								player.anim = "punchLeft5";
-								return;
-							case 21: 
-							case 22:
-							case 23:
-							case 24:
-								player.anim = "punchLeft6";
-								return;
-							default: player.anim = "idleLeft";
-								return;
-								
-						}
+						player.anim = "punchLeft";
+						return;
 					}
 					else{
-						switch (player.punchCounter){
-							case 1: 
-							case 2:
-							case 3:
-							case 4:
-								player.anim = "punchRight1";
-								return;
-							case 5:
-							case 6:
-							case 7:
-							case 8:
-								player.anim = "punchRight2";
-								return;
-							case 9: 
-							case 10:
-							case 11:
-							case 12:
-								player.anim = "punchRight3";
-								return;
-							case 13:
-							case 14:
-							case 15:
-							case 16:
-								player.anim = "punchRight4";
-								return;
-							case 17:
-							case 18:
-							case 19:
-							case 20:
-								player.anim = "punchRight5";
-								return;
-							case 21: 
-							case 22:
-							case 23:
-							case 24:
-								player.anim = "punchRight6";
-								return;
-							default: player.anim = "idleLeft";
-								return;
-						}
+						player.anim = "punchRight";
+						return;
 					}
 				}
 				//The player is standing still.
@@ -824,18 +745,8 @@ function getAnimNumber(anim){
 		case "wallSlideRight": return 9;
 		case "win": return 10;
 		case "dead": return 11;
-		case "punchLeft1": return 12;
-		case "punchLeft2": return 13;
-		case "punchLeft3": return 14;
-		case "punchLeft4": return 15;
-		case "punchLeft5": return 16;
-		case "punchLeft6": return 17;
-		case "punchRight1": return 18;
-		case "punchRight2": return 19;
-		case "punchRight3": return 20;
-		case "punchRight4": return 21;
-		case "punchRight5": return 22;
-		case "punchRight6": return 23;
+		case "punchLeft": return 12;
+		case "punchRight": return 18;
 		case "duckingLeft": return 24;
 		case "duckingRight": return 25;
 		case "stunnedLeft": return 26;
