@@ -230,8 +230,10 @@ wss.on("connection", function(ws) {
 			return g.id == players[ws.id].gameId;
 		});
 		for (var i = thisGame.length - 1; i >= 0; i--){
-			if (thisGame[i].totalCount <= 0)
+			if (thisGame[i].totalCount <= 0){
+				console.log("removing a game: id " + thisGame.id);
 				thisGame.splice(i, 1);
+			}
 		}
         if (!gameStarted)
             delete players[ws.id];
@@ -280,10 +282,12 @@ function chooseGame(player, gameType){
 			totalCount: 0
 		});
 		player.gameId = newGameId;
+		console.log("created new game: id " + newGameId);
 	}
 	//There's an existing game that the player can join. 
 	else{
 		player.gameId = eligibleGames[0].id;
+		console.log("player joined exiting game: id " + eligibleGames[0].id);
 	}
 }
 
