@@ -231,7 +231,7 @@ wss.on("connection", function(ws) {
 		});
 		for (var i = 0; i < thisGame.length; i++){
 			if (thisGame[i].totalCount <= 0)
-				thisGame = null;
+				thisGame[i] = null;
 		}
         if (!gameStarted)
             delete players[ws.id];
