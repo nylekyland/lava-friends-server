@@ -151,7 +151,7 @@ wss.on("connection", function(ws) {
 	}
 
     var updateRef = setInterval(function() {
-		if (players[ws.id].clientId !== null && players[ws.id].gameId !== null){
+		if (players[ws.id] && players[ws.id].clientId !== null && players[ws.id].gameId !== null){
 			updatePositions(players[ws.id]);
 			updateAnimations(players[ws.id]);
 			pickCamera(players[ws.id]);
