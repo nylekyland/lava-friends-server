@@ -1,15 +1,22 @@
+//Websocket stuff
 var WebSocketServer = require("ws").Server
 var http = require("http")
 var express = require("express")
 var app = express()
 var port = process.env.PORT || 5000
+
+//Global constants across all games
 var players = {};
 var updateRefs = [];
 var sendMessageRefs = [];
-var blocks = {};
-var originalBlocks = {};
+
+//Speed constants;
 var gravity = 0.51;
 var xSpeed = 0.48;
+
+//These should be local to a specific game.
+var blocks = {};
+var originalBlocks = {};
 var timer = 15;
 var timerStarted = false;
 var timerRef;
