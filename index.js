@@ -6,7 +6,6 @@ var port = process.env.PORT || 5000
 var players = {};
 var updateRefs = [];
 var sendMessageRefs = [];
-var colors = ['red', 'yellow', 'green', 'blue'];
 var blocks = {};
 var originalBlocks = {};
 var gravity = 0.51;
@@ -112,7 +111,8 @@ wss.on("connection", function(ws) {
         dead: false,
         connected: true,
         rank: "",
-        color: colors[Math.floor(Math.random() * colors.length)],
+		character: 0,
+        color: 0,
 		inQueue: false,
 		anim: "idleRight",
 		lastLeftRight: "right",
@@ -155,7 +155,8 @@ wss.on("connection", function(ws) {
                 x: players[obj].x,
                 y: players[obj].y,
                 clientId: players[obj].clientId,
-                color: getColorNumber(players[obj].color),
+				character: players[obj].character,
+                color: players[obj].color,
                 rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
 				dead: players[obj].dead ? 1 : 0,
 				inQueue: players[obj].inQueue ? 1 : 0,
@@ -194,6 +195,10 @@ wss.on("connection", function(ws) {
         players[ws.id].downPressed = !!(data.state & 8);
 		//Position 5: Punch button is pressed
 		players[ws.id].punchPressed = !!(data.state & 16);
+		
+		players[ws.id].character = data.characterColor.charAt(0);
+		players[ws.id].color = data.characterColor.charAt(1);
+		
     });
 
     ws.on("close", function() {
@@ -827,16 +832,6 @@ function getAnimNumber(anim){
 		case "stunnedLeft": return 26;
 		case "stunnedRight": return 27;
 		default: return 0; break;
-	}
-}
-
-function getColorNumber(color){
-	switch(color){
-		case "red": return 0;
-		case "yellow": return 1;
-		case "green": return 2;
-		case "blue": return 3;
-		default: return 0;
 	}
 }
 
