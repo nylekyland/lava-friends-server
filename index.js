@@ -233,6 +233,7 @@ wss.on("connection", function(ws) {
 			if (thisGame[i].totalCount <= 0){
 				console.log("removing a game: id " + thisGame[i].id);
 				thisGame.splice(i, 1);
+				console.log("number of current games: " + games.length); 
 			}
 		}
         if (!gameStarted)
