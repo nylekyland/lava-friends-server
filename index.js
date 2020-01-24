@@ -15,24 +15,7 @@ var gravity = 0.51;
 var xSpeed = 0.48;
 
 //This array handles all of the current games going on.
-var games = [
-	{
-		id: 1,
-		type: "ffa",
-		blocks: {},
-		originalBlocks: {},
-		timer: 15,
-		timerStarted: false,
-		timerRef: null,
-		gameStarted: false,
-		newBlockRef: null,
-		cooldownStarted: false,
-		cooldownRef: null,
-		cooldownTimer: 6,
-		aliveCount: 0,
-		totalCount: 0
-	}
-];
+var games = [];
 
 //These should be local to a specific game.
 var blocks = {};
@@ -116,6 +99,7 @@ wss.on("connection", function(ws) {
         width: 100,
         height: 100,
         id: ws.id,
+		gameId: null,
         clientId: null,
         xVelocity: 0,
         yVelocity: 0,
@@ -167,9 +151,11 @@ wss.on("connection", function(ws) {
 	}
 
     var updateRef = setInterval(function() {
-        updatePositions(players[ws.id]);
-		updateAnimations(players[ws.id]);
-		pickCamera(players[ws.id]);
+		if (players[ws.id].clientId !== null && players[ws.id].gameId !== null){
+			updatePositions(players[ws.id]);
+			updateAnimations(players[ws.id]);
+			pickCamera(players[ws.id]);
+		}
     }, 14);
     updateRefs.push(updateRef);
     players[ws.id].updateRef = updateRef;
@@ -211,6 +197,9 @@ wss.on("connection", function(ws) {
 
         if (players[ws.id].clientId === null)
             players[ws.id].clientId = data.clientId;
+		if (players[ws.id].gameId === null){
+			chooseGame(players[ws.id], data.gameType);
+		}
 
         //Position 1: Left is pressed
         players[ws.id].leftPressed = !!(data.state & 1);
@@ -256,6 +245,40 @@ wss.on("connection", function(ws) {
         }
     });
 });
+
+//When a new player joins, pick a currently running game that still has room
+//for more players, or create a new one if there aren't any.
+function chooseGame(player, gameType){
+	var eligibleGames = games.filter(function (g){
+		return g.type == gameType && g.totalCount < 20;
+	});
+	//If there are no valid game types (or they're all full), create a new one
+	//and assign it.
+	if (eligibleGames.length === 0){
+		var newGameId = games.length + 1;
+		games.push({
+			id: newGameId,
+			type: gameType,
+			blocks: {},
+			originalBlocks: {},
+			timer: 15,
+			timerStarted: false,
+			timerRef: null,
+			gameStarted: false,
+			newBlockRef: null,
+			cooldownStarted: false,
+			cooldownRef: null,
+			cooldownTimer: 6,
+			aliveCount: 0,
+			totalCount: 0
+		});
+		player.gameId = newGameId;
+	}
+	//There's an existing game that the player can join. 
+	else{
+		player.gameId = eligibleGames[0].id;
+	}
+}
 
 function rectangleOverlap(rect1, rect2) {
     return (rect1.x < rect2.x + rect2.width &&
