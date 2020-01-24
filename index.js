@@ -205,6 +205,8 @@ wss.on("connection", function(ws) {
 		
 		players[ws.id].character = data.characterColor.charAt(0);
 		players[ws.id].color = data.characterColor.charAt(1);
+		console.log(players[ws.id].character);
+		console.log(players[ws.id].color);
 		
     });
 
