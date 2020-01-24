@@ -226,8 +226,6 @@ wss.on("connection", function(ws) {
         players[ws.id].rank = aliveCount;
 		if (!players[ws.id].inQueue)
         	aliveCount--;
-        if (!gameStarted)
-            delete players[ws.id];
 		var thisGame = games.filter(function (g) {
 			return g.id == players[ws.id].gameId;
 		});
@@ -235,6 +233,8 @@ wss.on("connection", function(ws) {
 			if (thisGame[i].totalCount <= 0)
 				thisGame = null;
 		}
+        if (!gameStarted)
+            delete players[ws.id];
         if (Object.keys(players).length < 2 && (timerStarted || gameStarted)) {
             gameStarted = false;
             timerStarted = false;
