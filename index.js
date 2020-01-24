@@ -699,6 +699,7 @@ function updateLava() {
 }
 
 function updateGame() {
+	console.log(games);
     if (gameStarted && aliveCount <= 1) {
         gameStarted = false;
         timerStarted = false;
