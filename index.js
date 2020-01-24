@@ -1,9 +1,9 @@
 //Websocket stuff
-var WebSocketServer = require("ws").Server
-var http = require("http")
-var express = require("express")
-var app = express()
-var port = process.env.PORT || 5000
+var WebSocketServer = require("ws").Server;
+var http = require("http");
+var express = require("express");
+var app = express();
+var port = process.env.PORT || 5000;
 
 //Global constants across all games
 var players = {};
@@ -13,6 +13,26 @@ var sendMessageRefs = [];
 //Speed constants;
 var gravity = 0.51;
 var xSpeed = 0.48;
+
+//This array handles all of the current games going on.
+var games = [
+	{
+		id: 1,
+		type: "ffa",
+		blocks: {},
+		originalBlocks: {},
+		timer: 15,
+		timerStarted: false,
+		timerRef: null,
+		gameStarted: false,
+		newBlockRef: null,
+		cooldownStarted: false,
+		cooldownRef: null,
+		cooldownTimer: 6,
+		aliveCount: 0,
+		totalCount: 0
+	}
+];
 
 //These should be local to a specific game.
 var blocks = {};
@@ -44,7 +64,7 @@ blocks[1] = {
     height: 1600,
     gravity: false,
 	speed: 0
-}
+};
 blocks[2] = {
     object: "block",
     id: 2,
@@ -54,11 +74,11 @@ blocks[2] = {
     height: 1600,
     gravity: false,
 	speed: 0
-}
+};
 lava = {
     y: 1000,
     height: 500
-}
+};
 aliveCount = 0;
 totalCount = 0;
 originalBlocks[0] = blocks[0];
@@ -69,17 +89,17 @@ var updateLavaRef;
 var updateGameRef = setInterval(updateGame, 14);
 var uuidv4 = require('uuid/v4');
 
-app.use(express.static(__dirname + "/"))
+app.use(express.static(__dirname + "/"));
 
-var server = http.createServer(app)
+var server = http.createServer(app);
 server.listen(port, function() {
-    console.log("http server listening on %d", port)
+    console.log("http server listening on %d", port);
 });
 
 var wss = new WebSocketServer({
     server: server
-})
-console.log("websocket server created")
+});
+console.log("websocket server created");
 
 /*
  *  A new player has connected
@@ -127,14 +147,14 @@ wss.on("connection", function(ws) {
 		stunned: false,
 		stunnedCounter: 50,
 		cameraObj: ''
-    }
+    };
 
 	//Now that someone has connected, check how many people there are total.
 	//If there's more than 2 players and the countdown hasn't already started yet,
 	//start the timer.
     if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownStarted) {
         timerStarted = true;
-        timerRef = setInterval(countdown, 1000)
+        timerRef = setInterval(countdown, 1000);
 		addPlayersFromQueue();
     }
 	//If the timer is ticking down before play, the newly connected player will join
@@ -169,7 +189,7 @@ wss.on("connection", function(ws) {
 				inQueue: players[obj].inQueue ? 1 : 0,
 				anim: getAnimNumber(players[obj].anim),
 				cam: players[obj].cameraObj,
-            }
+            };
             condensedPlayers.push(playerObj);
         }
         var sendObject = {
@@ -178,7 +198,7 @@ wss.on("connection", function(ws) {
             "blocks": JSON.stringify(blocks),
             "lavaY": lava.y,
             "lavaH": lava.height
-        }
+        };
 		if (ws.readyState === 1)
 			ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
 	}, 14);
@@ -189,7 +209,7 @@ wss.on("connection", function(ws) {
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
 
-        if (players[ws.id].clientId == null)
+        if (players[ws.id].clientId === null)
             players[ws.id].clientId = data.clientId;
 
         //Position 1: Left is pressed
@@ -209,7 +229,7 @@ wss.on("connection", function(ws) {
     });
 
     ws.on("close", function() {
-        console.log("websocket connection close")
+        console.log("websocket connection close");
 		clearInterval(sendMessageRefs[players[ws.id].sendMessageRef]);
         clearInterval(updateRefs[players[ws.id].updateRef]);
         players[ws.id].connected = false;
@@ -264,14 +284,14 @@ function getHighestBlockY() {
     for (var block in blocks) {
         if (blocks[block].gravity) {
             if (blocks[block].y <= highest)
-                highest = blocks[block].y
+                highest = blocks[block].y;
         }
     }
     return highest > -1600 ? -1600 : highest;
 }
 
 function countdown() {
-    if (timer == 0) {
+    if (timer === 0) {
         timer = 15;
         timerStarted = false;
         clearInterval(timerRef);
@@ -340,7 +360,7 @@ function updatePositions(player) {
 				player.yVelocity += gravity;
 
 				//If player is idle, slow down their xVelocity to 0.
-				if (!player.stunned && player.xVelocity != 0 && (!leftPressed && !rightPressed)) {
+				if (!player.stunned && player.xVelocity !== 0 && (!leftPressed && !rightPressed)) {
 					if (player.xVelocity > 0)
 						player.xVelocity -= xSpeed;
 					if (player.xVelocity < 0)
@@ -362,7 +382,7 @@ function updatePositions(player) {
 						y: player.y + player.yVelocity,
 						width: player.width,
 						height: player.height
-					}
+					};
 					if (rectangleOverlap(blocks[block], newObj)) {
 						if (blocks[block].y > player.y)
 							objectBeneath = blocks[block];
@@ -373,20 +393,20 @@ function updatePositions(player) {
 
 				//There's an object directly above and directly below the player
 				//The player is squished.
-				if (objectAbove != null && objectBeneath != null) {
+				if (objectAbove !== null && objectBeneath !== null) {
 					player.rank = aliveCount;
 					aliveCount--;
 					player.dead = true;
 				}
 
 				//Nothing is underneath the player, so keep falling
-				if (objectBeneath == null && !player.dead) {
+				if (objectBeneath === null && !player.dead) {
 					player.onGround = false;
 					player.y += player.yVelocity;
 				}
 				//The next y coordinate overlaps a block that's underneath the player.
 				//They are now on the ground and stop falling.
-				if (objectBeneath != null && !player.dead) {
+				if (objectBeneath !== null && !player.dead) {
 					player.y = objectBeneath.y - player.height;
 					player.yVelocity = objectBeneath.speed;
 					player.onGround = true;
@@ -395,7 +415,7 @@ function updatePositions(player) {
 				}
 				//There's a block above the player.
 				//The object blocks their path. Stop their yVelocity and they start falling.
-				if (objectAbove != null && !player.dead) {
+				if (objectAbove !== null && !player.dead) {
 					player.y = objectAbove.y + objectAbove.height;
 					player.yVelocity = objectAbove.speed;
 				}
@@ -427,22 +447,23 @@ function updatePositions(player) {
 						player.punchCounter = 0;
 					}
 					else if (player.punchCounter == 5 || player.punchCounter == 6){
+						var hitbox;
 						if (player.punchLeftRight == "right"){
-							var hitbox = {
+							hitbox = {
 								x: player.x + player.width,
 								y: player.y + (player.height / 6),
 								width: 2 * (player.width / 3),
 								height: (player.height / 3)
-							}
+							};
 							checkHitbox(player, hitbox);
 						}
 						else{
-							var hitbox = {
+							hitbox = {
 								x: player.x - (2 * (player.width / 3)),
 								y: player.y + (player.height / 6),
 								width: 2 * (player.width / 3),
 								height: (player.height / 3)
-							}
+							};
 							checkHitbox(player, hitbox);
 						}
 					}
@@ -475,7 +496,7 @@ function updatePositions(player) {
 						y: player.y,
 						width: player.width,
 						height: player.height
-					}
+					};
 					if (rectangleOverlap(blocks[block], newObj)) {
 						if (blocks[block].x > player.x)
 							objectRight = blocks[block];
@@ -485,14 +506,14 @@ function updatePositions(player) {
 					}
 				}
 				//Nothing is stopping the player from moving left so, move at xVelocity
-				if (objectLeft == null && objectRight == null && !player.dead) {
+				if (objectLeft === null && objectRight === null && !player.dead) {
 					player.x += player.xVelocity;
 					player.wallJumpLeft = false;
 					player.wallJumpRight = false;
 				}
 				//There's a block to the left of the player. Stop the xVelocity and set
 				//the position to be to the right of the object.
-				if (objectLeft != null && !player.dead) {
+				if (objectLeft !== null && !player.dead) {
 					if (player.wallJumpLeft && player.yVelocity > 0) {
 						player.yVelocity = 1;
 					}
@@ -504,7 +525,7 @@ function updatePositions(player) {
 				}
 				//There's a block to the right of the player. Stop the xVelocity and set
 				//the position to the left of the object.
-				if (objectRight != null && !player.dead) {
+				if (objectRight !== null && !player.dead) {
 					if (player.wallJumpRight && player.yVelocity > 0) {
 						player.yVelocity = 1;
 					}
@@ -582,7 +603,7 @@ function updateAnimations(player){
 					}
 				}
 				//The player is standing still.
-				else if (player.xVelocity == 0){
+				else if (player.xVelocity === 0){
 					if (player.lastLeftRight == "left"){
 						if (player.downPressed){
 							player.anim = "duckingLeft";
@@ -632,14 +653,14 @@ function updateBlocks() {
                 y: blocks[block].y + blocks[block].speed,
                 width: blocks[block].width,
                 height: blocks[block].height
-            }
+            };
             for (var block2 in blocks) {
                 if (block2 != block && rectangleOverlap(newObj, blocks[block2])) {
                     blockUnderneath = blocks[block2];
                     break;
                 }
             }
-            if (blockUnderneath == null)
+            if (blockUnderneath === null)
                 blocks[block].y += blocks[block].speed;
             else
                 blocks[block].y = blockUnderneath.y - blocks[block].height;
@@ -691,7 +712,7 @@ function resetPlayerPosition(player) {
 }
 
 function cooldown() {
-    if (cooldownTimer == 0) {
+    if (cooldownTimer === 0) {
         cooldownStarted = false;
         cooldownTimer = 6;
         for (var i = Object.keys(blocks).length; i > 2; i--) {
@@ -751,7 +772,7 @@ function getAnimNumber(anim){
 		case "duckingRight": return 25;
 		case "stunnedLeft": return 26;
 		case "stunnedRight": return 27;
-		default: return 0; break;
+		default: return 0;
 	}
 }
 
@@ -786,7 +807,7 @@ function pickCamera(player){
 				else if (!players[obj].dead && !players[obj].inQueue)
 					ids.push(players[obj].clientId);
 			}
-			if (ids.length == 0){
+			if (ids.length === 0){
 				player.cameraObj = '';
 				return '';
 			}
