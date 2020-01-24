@@ -227,7 +227,7 @@ wss.on("connection", function(ws) {
 		if (!players[ws.id].inQueue)
         	aliveCount--;
 		for (var i = games.length - 1; i >= 0; i--){
-			if (thisGame[i].id == players[ws.id].gameId && thisGame[i].totalCount <= 0){
+			if (games[i].id == players[ws.id].gameId && games[i].totalCount <= 0){
 				console.log("removing a game: id " + games[i].id);
 				games.splice(i, 1);
 				console.log("number of current games: " + games.length); 
