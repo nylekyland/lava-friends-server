@@ -229,9 +229,9 @@ wss.on("connection", function(ws) {
 		var thisGame = games.filter(function (g) {
 			return g.id == players[ws.id].gameId;
 		});
-		for (var i = 0; i < thisGame.length; i++){
+		for (var i = thisGame.length - 1; i >= 0; i--){
 			if (thisGame[i].totalCount <= 0)
-				thisGame[i] = null;
+				thisGame.splice(i, 1);
 		}
         if (!gameStarted)
             delete players[ws.id];
