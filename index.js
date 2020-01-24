@@ -231,7 +231,7 @@ wss.on("connection", function(ws) {
 		});
 		for (var i = thisGame.length - 1; i >= 0; i--){
 			if (thisGame[i].totalCount <= 0){
-				console.log("removing a game: id " + thisGame.id);
+				console.log("removing a game: id " + thisGame[i].id);
 				thisGame.splice(i, 1);
 			}
 		}
