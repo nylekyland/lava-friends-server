@@ -226,13 +226,10 @@ wss.on("connection", function(ws) {
         players[ws.id].rank = aliveCount;
 		if (!players[ws.id].inQueue)
         	aliveCount--;
-		var thisGame = games.filter(function (g) {
-			return g.id == players[ws.id].gameId;
-		});
-		for (var i = thisGame.length - 1; i >= 0; i--){
-			if (thisGame[i].totalCount <= 0){
+		for (var i = games.length - 1; i >= 0; i--){
+			if (thisGame[i].id == players[ws.id].gameId && thisGame[i].totalCount <= 0){
 				console.log("removing a game: id " + thisGame[i].id);
-				thisGame.splice(i, 1);
+				games.splice(i, 1);
 				console.log("number of current games: " + games.length); 
 			}
 		}
