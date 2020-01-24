@@ -228,6 +228,13 @@ wss.on("connection", function(ws) {
         	aliveCount--;
         if (!gameStarted)
             delete players[ws.id];
+		var thisGame = games.filter(function (g) {
+			return g.id == players[ws.id].gameId;
+		});
+		for (var i = 0; i < thisGame.length; i++){
+			if (thisGame[i].totalCount <= 0)
+				thisGame = null;
+		}
         if (Object.keys(players).length < 2 && (timerStarted || gameStarted)) {
             gameStarted = false;
             timerStarted = false;
