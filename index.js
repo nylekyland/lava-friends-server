@@ -182,7 +182,7 @@ wss.on("connection", function(ws) {
 		}
 		//If the game hasn't already started, delete the player.
 		//If the game is now empty, delete the game too.
-		if (!gameStarted){
+		if (!games[index].gameStarted){
 			games[index].totalCount--;
 			if (games[index].totalCount <= 0){
 				console.log("removing a game: id " + games[index].id);
