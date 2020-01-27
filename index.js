@@ -133,23 +133,6 @@ wss.on("connection", function(ws) {
 		cameraObj: ''
     };
 
-	//Now that someone has connected, check how many people there are total.
-	//If there's more than 2 players and the countdown hasn't already started yet,
-	//start the timer.
-    if (Object.keys(players).length >= 2 && !timerStarted && !gameStarted && !cooldownStarted) {
-        timerStarted = true;
-        timerRef = setInterval(countdown, 1000);
-		addPlayersFromQueue();
-    }
-	//If the timer is ticking down before play, the newly connected player will join
-	//the next game. Else, they will have to wait in the queue.
-	if (timerStarted || Object.keys(players).length <= 1){
-		players[ws.id].inQueue = false;
-	}
-	else{
-		players[ws.id].inQueue = true;
-	}
-
     var updateRef = setInterval(function() {
 		if (players[ws.id] && players[ws.id].clientId !== null && players[ws.id].gameId !== null){
 			updatePositions(players[ws.id]);
@@ -271,7 +254,7 @@ function chooseGame(player, gameType){
 	//and assign it.
 	if (eligibleGames.length === 0){
 		var newGameId = games.length + 1;
-		games.push({
+		var newGame = {
 			id: newGameId,
 			type: gameType,
 			blocks: {},
@@ -287,18 +270,40 @@ function chooseGame(player, gameType){
 			aliveCount: 0,
 			totalCount: 0,
 			updateGameRef: null
-		});
+		}
+		games.push(newGame);
 		updateGameRef = setInterval(function(){
-			updateGame(games[games.length - 1]);
+			updateGame(newGame);
 		}, 14);
 		player.gameId = newGameId;
 		console.log("created new game: id " + newGameId);
+		
+		player.inQueue = false;
 	}
 	//There's an existing game that the player can join. 
 	else{
 		player.gameId = eligibleGames[0].id;
 		eligibleGames[0].totalCount++;
 		console.log("player joined existing game: id " + eligibleGames[0].id);
+		
+		//Now that someone has connected, check how many people there are total.
+		//If there's more than 2 players and the countdown hasn't already started yet,
+		//start the timer.
+	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownStarted) {
+	        eligibleGames[0].timerStarted = true;
+	        timerRef = setInterval(function(){
+				countdown(eligibleGames[0]);
+			}, 1000);
+			addPlayersFromQueue(eligibleGames[0]);
+	    }
+		//If the timer is ticking down before play, the newly connected player will join
+		//the next game. Else, they will have to wait in the queue.
+		if (eligibleGames[0].timerStarted || eligibleGames[0].totalCount <= 1){
+			player.inQueue = false;
+		}
+		else{
+			player.inQueue = true;
+		}
 	}
 }
 
@@ -784,6 +789,7 @@ function cooldown(game) {
         if (Object.keys(players).length >= 2 && !timerStarted) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
+				console.log(game);
 				countdown(game);
 			}, 1000);
 			addPlayersFromQueue(game.id);
