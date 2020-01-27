@@ -191,21 +191,21 @@ wss.on("connection", function(ws) {
 			}
             delete players[ws.id];
 		}
-        if (game[index].totalCount < 2 && (game[index].timerStarted || game[index].gameStarted)) {
-            game[index].gameStarted = false;
-            game[index].timerStarted = false;
-            game[index].timer = 15;
-            for (var i = Object.keys(game[index].blocks).length; i > 2; i--) {
-                delete game[index].blocks[i];
+        if (games[index].totalCount < 2 && (games[index].timerStarted || games[index].gameStarted)) {
+            games[index].gameStarted = false;
+            games[index].timerStarted = false;
+            games[index].timer = 15;
+            for (var i = Object.keys(games[index].blocks).length; i > 2; i--) {
+                delete games[index].blocks[i];
             }
             for (var obj in players) {
-				if (players[obj].gameId == game[index].id)
+				if (players[obj].gameId == games[index].id)
                 	players[obj].dead = false;
             }
-            clearInterval(game[index].timerRef);
-            clearInterval(game[index].newBlockRef);
-            game[index].lava.y = 1000;
-            game[index].lava.height = 500;
+            clearInterval(games[index].timerRef);
+            clearInterval(games[index].newBlockRef);
+            games[index].lava.y = 1000;
+            games[index].lava.height = 500;
         }
     });
 });
