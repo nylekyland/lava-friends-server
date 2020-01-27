@@ -69,7 +69,7 @@ originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
 var updateBlocksRef;
 var updateLavaRef;
-var updateGameRef = setInterval(updateGame, 14);
+//var updateGameRef = setInterval(updateGame, 14);
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"));
@@ -223,18 +223,25 @@ wss.on("connection", function(ws) {
         clearInterval(updateRefs[players[ws.id].updateRef]);
         players[ws.id].connected = false;
         players[ws.id].dead = true;
-        players[ws.id].rank = aliveCount;
-		if (!players[ws.id].inQueue)
-        	aliveCount--;
-		for (var i = games.length - 1; i >= 0; i--){
-			if (games[i].id == players[ws.id].gameId && games[i].totalCount <= 0){
-				console.log("removing a game: id " + games[i].id);
-				games.splice(i, 1);
-				console.log("number of current games: " + games.length); 
-			}
+				
+		var index = games.indexOf(findPlayersGame(players[ws.id].gameId));
+		players[ws.id].rank = games[index].aliveCount;
+		
+		//If the player isn't currently in the queue, subtract from alive count.
+		if (!players[ws.id].inQueue){
+			games[index].aliveCount--;
 		}
-        if (!gameStarted)
+		//If the game hasn't already started, delete the player.
+		//If the game is now empty, delete the game too.
+		if (!gameStarted){
+			games[index].totalCount--;
+			if (games[index].totalCount <= 0){
+				console.log("removing a game: id " + games[index].id);
+				games.splice(index, 1);
+				console.log("number of current games: " + games.length);
+			}
             delete players[ws.id];
+		}
         if (Object.keys(players).length < 2 && (timerStarted || gameStarted)) {
             gameStarted = false;
             timerStarted = false;
@@ -277,15 +284,20 @@ function chooseGame(player, gameType){
 			cooldownRef: null,
 			cooldownTimer: 6,
 			aliveCount: 0,
-			totalCount: 0
+			totalCount: 0,
+			updateGameRef: null
 		});
+		updateGameRef = setInterval(function(){
+			updateGame(games[games.length]);
+		}, 14);
 		player.gameId = newGameId;
 		console.log("created new game: id " + newGameId);
 	}
 	//There's an existing game that the player can join. 
 	else{
 		player.gameId = eligibleGames[0].id;
-		console.log("player joined exiting game: id " + eligibleGames[0].id);
+		eligibleGames[0].totalCount++;
+		console.log("player joined existing game: id " + eligibleGames[0].id);
 	}
 }
 
@@ -322,23 +334,25 @@ function getHighestBlockY() {
     return highest > -1600 ? -1600 : highest;
 }
 
-function countdown() {
-    if (timer === 0) {
-        timer = 15;
-        timerStarted = false;
+function countdown(game) {
+    if (game.timer === 0) {
+        game.timer = 15;
+        game.timerStarted = false;
         clearInterval(timerRef);
-        gameStarted = true;
+        game.gameStarted = true;
         newBlockRef = setInterval(createNewBlock, 1800);
-        aliveCount = Object.keys(players).length;
-        rankTotal = Object.keys(players).length;
+        game.aliveCount = Object.keys(players).length;
+        game.rankTotal = Object.keys(players).length;
         for (var obj in players) {
-            players[obj].rank = "";
-			players[obj].resetPosition = true;
+			if (players[obj].gameId == game.id){
+				players[obj].rank = "";
+				players[obj].resetPosition = true;
+			}
         }
         updateBlocksRef = setInterval(updateBlocks, 14);
         updateLavaRef = setInterval(updateLava, 14);
     } else {
-        timer--;
+        game.timer--;
     }
 }
 
@@ -707,22 +721,26 @@ function updateLava() {
     }
 }
 
-function updateGame() {
-    if (gameStarted && aliveCount <= 1) {
-        gameStarted = false;
-        timerStarted = false;
-        timer = 15;
-        cooldownStarted = true;
-        cooldownTimer = 6;
+function updateGame(game) {
+    if (game.gameStarted && game.aliveCount <= 1) {
+        game.gameStarted = false;
+        game.timerStarted = false;
+        game.timer = 15;
+        game.cooldownStarted = true;
+        game.cooldownTimer = 6;
         for (var obj in players) {
-            if (!players[obj].dead)
-                players[obj].rank = 1;
+			if (players[obj].gameId == game.id){
+				if (!players[obj].dead)
+                	players[obj].rank = 1;
+			}
         }
         clearInterval(updateBlocksRef);
         clearInterval(updateLavaRef);
         clearInterval(timerRef);
         clearInterval(newBlockRef);
-        cooldownRef = setInterval(cooldown, 1000);
+        cooldownRef = setInterval(function(){
+			cooldown(game);
+		}, 1000);
     }
 }
 
@@ -743,42 +761,49 @@ function resetPlayerPosition(player) {
 	player.downPressed = false;
 }
 
-function cooldown() {
-    if (cooldownTimer === 0) {
-        cooldownStarted = false;
-        cooldownTimer = 6;
-        for (var i = Object.keys(blocks).length; i > 2; i--) {
-            delete blocks[i];
+function cooldown(game) {
+    if (game.cooldownTimer === 0) {
+        game.cooldownStarted = false;
+        game.cooldownTimer = 6;
+        for (var i = Object.keys(game.blocks).length; i > 2; i--) {
+            delete game.blocks[i];
         }
         for (var obj in players) {
-            players[obj].dead = false;
-			players[obj].resetPosition = true;
-            if (!players[obj].connected)
-                delete players[obj];
+			if (players[obj].gameId == game.id){
+				players[obj].dead = false;
+				players[obj].resetPosition = true;
+            	if (!players[obj].connected){
+                	delete players[obj];
+				}
+			}
         }
-        lava.y = 1000;
-        lava.height = 500;
+        game.lava.y = 1000;
+        game.lava.height = 500;
         clearInterval(cooldownRef);
         if (Object.keys(players).length >= 2 && !timerStarted) {
             timerStarted = true;
-            timerRef = setInterval(countdown, 1000);
-			addPlayersFromQueue();
+            timerRef = setInterval(function(){
+				countdown(game);
+			}, 1000);
+			addPlayersFromQueue(game);
         }
     } else {
-        cooldownTimer--;
+        game.cooldownTimer--;
     }
 }
 
-function addPlayersFromQueue(){
+function addPlayersFromQueue(game){
 	var count = 0;
 	for (var obj in players){
-		if (!players[obj].inQueue){
-			count++;
-		}
-		else{
-			if (count < 99){
-				players[obj].inQueue = false;
+		if (players[obj].gameId == game.id){
+			if (!players[obj].inQueue){
 				count++;
+			}
+			else{
+				if (count < 99){
+					players[obj].inQueue = false;
+					count++;
+				}
 			}
 		}
 	}
@@ -850,4 +875,12 @@ function pickCamera(player){
 			}
 		}	
 	}
+}
+
+function findPlayersGame(value){
+	for (var i = 0; i < games.length; i++){
+		if (games[i].id === value)
+			return i;
+	}
+	return -1;
 }
