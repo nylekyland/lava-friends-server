@@ -786,17 +786,17 @@ function cooldown(game) {
             game.timerRef = setInterval(function(){
 				countdown(game);
 			}, 1000);
-			addPlayersFromQueue(game);
+			addPlayersFromQueue(game.id);
         }
     } else {
         game.cooldownTimer--;
     }
 }
 
-function addPlayersFromQueue(game){
+function addPlayersFromQueue(gameId){
 	var count = 0;
 	for (var obj in players){
-		if (players[obj].gameId == game.id){
+		if (players[obj].gameId == gameId){
 			if (!players[obj].inQueue){
 				count++;
 			}
