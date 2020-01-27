@@ -368,8 +368,7 @@ function countdown(game) {
 
 function updatePositions(player) {
     //Player logic
-	console.log("player: " + player);
-    if (player && player.gameId) {
+    if (player !== null && player.gameId !== null) {
 		var game = games[findPlayersGame(player.gameId)];
 		
         var upPressed = player.upPressed;
