@@ -110,7 +110,7 @@ wss.on("connection", function(ws) {
     players[ws.id].updateRef = updateRef;
 	
 	var sendMessageRef = setInterval(function(){
-		if (players[ws.id].gameId !== null){
+		if (players[ws.id] && players[ws.id].gameId !== null){
 			var condensedPlayers = [];
 			var game = games[findPlayersGame(players[ws.id].gameId)];
 	        for (var obj in players) {
