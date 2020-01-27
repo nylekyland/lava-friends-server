@@ -183,11 +183,6 @@ wss.on("connection", function(ws) {
 		//If the game is now empty, delete the game too.
 		if (!games[index].gameStarted){
 			games[index].totalCount--;
-			if (games[index].totalCount <= 0){
-				console.log("removing a game: id " + games[index].id);
-				games.splice(index, 1);
-				console.log("number of current games: " + games.length);
-			}
             delete players[ws.id];
 		}
         if (games[index].totalCount < 2 && (games[index].timerStarted || games[index].gameStarted)) {
@@ -206,6 +201,11 @@ wss.on("connection", function(ws) {
             games[index].lava.y = 1000;
             games[index].lava.height = 500;
         }
+		if (games[index].totalCount <= 0){
+			console.log("removing a game: id " + games[index].id);
+			games.splice(index, 1);
+			console.log("number of current games: " + games.length);
+		}
     });
 });
 
