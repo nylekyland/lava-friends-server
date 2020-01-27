@@ -288,7 +288,7 @@ function chooseGame(player, gameType){
 			updateGameRef: null
 		});
 		updateGameRef = setInterval(function(){
-			updateGame(games[games.length]);
+			updateGame(games[games.length - 1]);
 		}, 14);
 		player.gameId = newGameId;
 		console.log("created new game: id " + newGameId);
