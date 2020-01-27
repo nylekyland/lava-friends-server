@@ -16,6 +16,7 @@ var xSpeed = 0.48;
 
 //This array handles all of the current games going on.
 var games = [];
+var gamePlayerLimit = 2;
 
 //These should be local to a specific game.
 //var blocks = {};
@@ -213,7 +214,7 @@ wss.on("connection", function(ws) {
 //for more players, or create a new one if there aren't any.
 function chooseGame(player, gameType){
 	var eligibleGames = games.filter(function (g){
-		return g.type == gameType && g.totalCount < 20;
+		return g.type == gameType && g.totalCount < gamePlayerLimit;
 	});
 	//If there are no valid game types (or they're all full), create a new one
 	//and assign it.
