@@ -789,6 +789,7 @@ function cooldown(game) {
 				players[obj].dead = false;
 				players[obj].resetPosition = true;
             	if (!players[obj].connected){
+					game.totalCount--;
                 	delete players[obj];
 				}
 			}
