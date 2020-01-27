@@ -253,7 +253,7 @@ function chooseGame(player, gameType){
 	//If there are no valid game types (or they're all full), create a new one
 	//and assign it.
 	if (eligibleGames.length === 0){
-		var newGameId = games.length + 1;
+		var newGameId = games.length;
 		var newGame = {
 			id: newGameId,
 			type: gameType,
@@ -346,8 +346,8 @@ function countdown(game) {
         clearInterval(timerRef);
         game.gameStarted = true;
         newBlockRef = setInterval(createNewBlock, 1800);
-        game.aliveCount = Object.keys(players).length;
-        game.rankTotal = Object.keys(players).length;
+        game.aliveCount = game.totalCount;
+        game.rankTotal = game.totalCount;
         for (var obj in players) {
 			if (players[obj].gameId == game.id){
 				players[obj].rank = "";
