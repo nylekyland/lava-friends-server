@@ -781,8 +781,8 @@ function cooldown(game) {
         game.lava.height = 500;
         clearInterval(cooldownRef);
         if (Object.keys(players).length >= 2 && !timerStarted) {
-            timerStarted = true;
-            timerRef = setInterval(function(){
+            game.timerStarted = true;
+            game.timerRef = setInterval(function(){
 				countdown(game);
 			}, 1000);
 			addPlayersFromQueue(game);
