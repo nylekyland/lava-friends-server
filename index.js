@@ -207,7 +207,7 @@ wss.on("connection", function(ws) {
         players[ws.id].connected = false;
         players[ws.id].dead = true;
 				
-		var index = games.indexOf(findPlayersGame(players[ws.id].gameId));
+		var index = games[findPlayersGame(players[ws.id].gameId)];
 		console.log(index);
 		players[ws.id].rank = games[index].aliveCount;
 		
