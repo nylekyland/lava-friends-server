@@ -796,7 +796,7 @@ function cooldown(game) {
         game.lava.y = 1000;
         game.lava.height = 500;
         clearInterval(cooldownRef);
-        if (Object.keys(players).length >= 2 && !timerStarted) {
+        if (game.totalCount >= 2 && !game.timerStarted) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
 				console.log(game);
