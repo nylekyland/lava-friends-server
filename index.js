@@ -114,20 +114,20 @@ wss.on("connection", function(ws) {
 			var condensedPlayers = [];
 			var game = games[findPlayersGame(players[ws.id].gameId)];
 	        for (var obj in players) {
-				if (players.gameId == game.id){
+				if (players[obj].gameId == game.id){
 					var playerObj = {
-	                x: players[obj].x,
-	                y: players[obj].y,
-	                clientId: players[obj].clientId,
-					character: players[obj].character,
-	                color: players[obj].color,
-	                rank: players[obj].rank ? players[obj].rank + '/' + game.rankTotal : "",
-					dead: players[obj].dead ? 1 : 0,
-					inQueue: players[obj].inQueue ? 1 : 0,
-					anim: getAnimNumber(players[obj].anim),
-					cam: players[obj].cameraObj,
-	            };
-	            condensedPlayers.push(playerObj);
+		                x: players[obj].x,
+		                y: players[obj].y,
+		                clientId: players[obj].clientId,
+						character: players[obj].character,
+		                color: players[obj].color,
+		                rank: players[obj].rank ? players[obj].rank + '/' + game.rankTotal : "",
+						dead: players[obj].dead ? 1 : 0,
+						inQueue: players[obj].inQueue ? 1 : 0,
+						anim: getAnimNumber(players[obj].anim),
+						cam: players[obj].cameraObj,
+		            };
+	            	condensedPlayers.push(playerObj);
 				}
 	        }
 	        var sendObject = {
