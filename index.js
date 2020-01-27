@@ -173,7 +173,6 @@ wss.on("connection", function(ws) {
         players[ws.id].dead = true;
 				
 		var index = findPlayersGame(players[ws.id].gameId);
-		console.log(index);
 		players[ws.id].rank = games[index].aliveCount;
 		
 		//If the player isn't currently in the queue, subtract from alive count.
@@ -800,7 +799,6 @@ function cooldown(game) {
         if (game.totalCount >= 2 && !game.timerStarted) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
-				console.log(game);
 				countdown(game);
 			}, 1000);
 			addPlayersFromQueue(game.id);
