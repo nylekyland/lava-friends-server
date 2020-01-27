@@ -293,7 +293,7 @@ function chooseGame(player, gameType){
 		//start the timer.
 	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownStarted) {
 	        eligibleGames[0].timerStarted = true;
-	        timerRef = setInterval(function(){
+	        eligibleGames[0].timerRef = setInterval(function(){
 				countdown(eligibleGames[0]);
 			}, 1000);
 			addPlayersFromQueue(eligibleGames[0]);
