@@ -18,21 +18,16 @@ var xSpeed = 0.48;
 var games = [];
 
 //These should be local to a specific game.
-var blocks = {};
-var originalBlocks = {};
-var timer = 15;
-var timerStarted = false;
-var timerRef;
-var gameStarted = false;
-var newBlockRef;
-var cooldownStarted = false;
-var cooldownRef;
-var cooldownTimer = 6;
-aliveCount = 0;
-totalCount = 0;
-originalBlocks[0] = blocks[0];
-originalBlocks[1] = blocks[1];
-originalBlocks[2] = blocks[2];
+//var blocks = {};
+//var originalBlocks = {};
+//var timer = 15;
+//var timerStarted = false;
+//var gameStarted = false;
+//var cooldownStarted = false;
+//var cooldownRef;
+//var cooldownTimer = 6;
+//aliveCount = 0;
+//totalCount = 0;
 //var updateBlocksRef;
 //var updateLavaRef;
 //var updateGameRef = setInterval(updateGame, 14);
@@ -272,6 +267,9 @@ function chooseGame(player, gameType){
 		    gravity: false,
 			speed: 0
 		};
+		newGame.originalBlocks[0] = newGame.blocks[0];
+		newGame.originalBlocks[1] = newGame.blocks[1];
+		newGame.originalBlocks[2] = newGame.blocks[2];
 		newGame.lava = {
 		    y: 1000,
 		    height: 500
@@ -318,27 +316,27 @@ function rectangleOverlap(rect1, rect2) {
         rect1.y + rect1.height > rect2.y);
 }
 
-function createNewBlock() {
+function createNewBlock(game) {
     var size = 150 + Math.floor(Math.random() * 50);
     var newBlock = {
         object: "block",
-        id: Object.keys(blocks).length + 1,
+        id: Object.keys(game.blocks).length + 1,
         x: 50 + Math.floor(Math.random() * (900 - size)),
-        y: getHighestBlockY(),
+        y: getHighestBlockY(game),
         width: size,
         height: size,
         speed: 2 + Math.floor(Math.random() * 4),
         gravity: true
     };
-    blocks[Object.keys(blocks).length + 1] = newBlock;
+    game.blocks[Object.keys(game.blocks).length + 1] = newBlock;
 }
 
-function getHighestBlockY() {
+function getHighestBlockY(game) {
     var highest = 600;
-    for (var block in blocks) {
-        if (blocks[block].gravity) {
-            if (blocks[block].y <= highest)
-                highest = blocks[block].y;
+    for (var block in game.blocks) {
+        if (game.blocks[block].gravity) {
+            if (game.blocks[block].y <= highest)
+                highest = game.blocks[block].y;
         }
     }
     return highest > -1600 ? -1600 : highest;
@@ -348,9 +346,11 @@ function countdown(game) {
     if (game.timer === 0) {
         game.timer = 15;
         game.timerStarted = false;
-        clearInterval(timerRef);
+        clearInterval(game.timerRef);
         game.gameStarted = true;
-        newBlockRef = setInterval(createNewBlock, 1800);
+        game.newBlockRef = setInterval(function(){
+			createNewBlock(game);
+		}, 1800);
         game.aliveCount = game.totalCount;
         game.rankTotal = game.totalCount;
         for (var obj in players) {
@@ -752,8 +752,8 @@ function updateGame(game) {
         }
         clearInterval(game.updateBlocksRef);
         clearInterval(game.updateLavaRef);
-        clearInterval(timerRef);
-        clearInterval(newBlockRef);
+        clearInterval(game.timerRef);
+        clearInterval(game.newBlockRef);
         cooldownRef = setInterval(function(){
 			cooldown(game);
 		}, 1000);
