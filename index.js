@@ -28,40 +28,6 @@ var newBlockRef;
 var cooldownStarted = false;
 var cooldownRef;
 var cooldownTimer = 6;
-blocks[0] = {
-    object: "block",
-    id: 0,
-    x: 0,
-    y: 600,
-    width: 1000,
-    height: 50,
-    gravity: false,
-	speed: 0,
-};
-blocks[1] = {
-    object: "block",
-    id: 1,
-    x: 0,
-    y: -1000,
-    width: 50,
-    height: 1600,
-    gravity: false,
-	speed: 0
-};
-blocks[2] = {
-    object: "block",
-    id: 2,
-    x: 950,
-    y: -1000,
-    width: 50,
-    height: 1600,
-    gravity: false,
-	speed: 0
-};
-lava = {
-    y: 1000,
-    height: 500
-};
 aliveCount = 0;
 totalCount = 0;
 originalBlocks[0] = blocks[0];
@@ -262,6 +228,7 @@ function chooseGame(player, gameType){
 			id: newGameId,
 			type: gameType,
 			blocks: {},
+			lava: {},
 			originalBlocks: {},
 			timer: 15,
 			timerStarted: false,
@@ -275,6 +242,40 @@ function chooseGame(player, gameType){
 			totalCount: 1,
 			updateGameRef: null
 		}
+		newGame.blocks[0] = {
+		    object: "block",
+		    id: 0,
+		    x: 0,
+		    y: 600,
+		    width: 1000,
+		    height: 50,
+		    gravity: false,
+			speed: 0,
+		};
+		newGame.blocks[1] = {
+		    object: "block",
+		    id: 1,
+		    x: 0,
+		    y: -1000,
+		    width: 50,
+		    height: 1600,
+		    gravity: false,
+			speed: 0
+		};
+		newGame.blocks[2] = {
+		    object: "block",
+		    id: 2,
+		    x: 950,
+		    y: -1000,
+		    width: 50,
+		    height: 1600,
+		    gravity: false,
+			speed: 0
+		};
+		newGame.lava = {
+		    y: 1000,
+		    height: 500
+		};
 		games.push(newGame);
 		updateGameRef = setInterval(function(){
 			updateGame(newGame);
