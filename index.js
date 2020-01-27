@@ -225,6 +225,7 @@ wss.on("connection", function(ws) {
         players[ws.id].dead = true;
 				
 		var index = games.indexOf(findPlayersGame(players[ws.id].gameId));
+		console.log(index);
 		players[ws.id].rank = games[index].aliveCount;
 		
 		//If the player isn't currently in the queue, subtract from alive count.
@@ -878,6 +879,7 @@ function pickCamera(player){
 }
 
 function findPlayersGame(value){
+	console.log("entered findPlayersGame w/ value: " + value);
 	for (var i = 0; i < games.length; i++){
 		if (games[i].id === value)
 			return i;
