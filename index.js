@@ -268,7 +268,7 @@ function chooseGame(player, gameType){
 			cooldownRef: null,
 			cooldownTimer: 6,
 			aliveCount: 0,
-			totalCount: 0,
+			totalCount: 1,
 			updateGameRef: null
 		}
 		games.push(newGame);
@@ -277,7 +277,6 @@ function chooseGame(player, gameType){
 		}, 14);
 		player.gameId = newGameId;
 		console.log("created new game: id " + newGameId);
-		
 		player.inQueue = false;
 	}
 	//There's an existing game that the player can join. 
