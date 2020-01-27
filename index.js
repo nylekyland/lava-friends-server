@@ -144,32 +144,36 @@ wss.on("connection", function(ws) {
     players[ws.id].updateRef = updateRef;
 	
 	var sendMessageRef = setInterval(function(){
-		var condensedPlayers = [];
-
-        for (var obj in players) {
-            var playerObj = {
-                x: players[obj].x,
-                y: players[obj].y,
-                clientId: players[obj].clientId,
-				character: players[obj].character,
-                color: players[obj].color,
-                rank: players[obj].rank ? players[obj].rank + '/' + rankTotal : "",
-				dead: players[obj].dead ? 1 : 0,
-				inQueue: players[obj].inQueue ? 1 : 0,
-				anim: getAnimNumber(players[obj].anim),
-				cam: players[obj].cameraObj,
-            };
-            condensedPlayers.push(playerObj);
-        }
-        var sendObject = {
-            "timer": timerStarted ? timer : "",
-            "players": JSON.stringify(condensedPlayers),
-            "blocks": JSON.stringify(blocks),
-            "lavaY": lava.y,
-            "lavaH": lava.height
-        };
-		if (ws.readyState === 1)
-			ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
+		if (players[ws.id].gameId !== null){
+			var condensedPlayers = [];
+			var game = games[findPlayersGame(players[ws.id].gameId)];
+	        for (var obj in players) {
+				if (players.gameId == game.id){
+					var playerObj = {
+	                x: players[obj].x,
+	                y: players[obj].y,
+	                clientId: players[obj].clientId,
+					character: players[obj].character,
+	                color: players[obj].color,
+	                rank: players[obj].rank ? players[obj].rank + '/' + game.rankTotal : "",
+					dead: players[obj].dead ? 1 : 0,
+					inQueue: players[obj].inQueue ? 1 : 0,
+					anim: getAnimNumber(players[obj].anim),
+					cam: players[obj].cameraObj,
+	            };
+	            condensedPlayers.push(playerObj);
+				}
+	        }
+	        var sendObject = {
+	            "timer": game.timerStarted ? game.timer : "",
+	            "players": JSON.stringify(condensedPlayers),
+	            "blocks": JSON.stringify(game.blocks),
+	            "lavaY": game.lava.y,
+	            "lavaH": game.lava.height
+	        };
+			if (ws.readyState === 1)
+				ws.send(Buffer.from(JSON.stringify(sendObject)).toString('base64'));
+		}
 	}, 14);
 	
 	sendMessageRefs.push(sendMessageRef);
