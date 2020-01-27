@@ -378,6 +378,7 @@ function updatePositions(player) {
         var rightPressed = player.rightPressed;
 		var punchPressed = player.punchPressed;
         if (!player.dead && !player.inQueue) {
+			console.log("updating position");
 			if (player.resetPosition){
 				player.resetPosition = false;
 				resetPlayerPosition(player);
