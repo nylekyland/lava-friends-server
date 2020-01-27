@@ -33,8 +33,8 @@ totalCount = 0;
 originalBlocks[0] = blocks[0];
 originalBlocks[1] = blocks[1];
 originalBlocks[2] = blocks[2];
-var updateBlocksRef;
-var updateLavaRef;
+//var updateBlocksRef;
+//var updateLavaRef;
 //var updateGameRef = setInterval(updateGame, 14);
 var uuidv4 = require('uuid/v4');
 
@@ -359,8 +359,12 @@ function countdown(game) {
 				players[obj].resetPosition = true;
 			}
         }
-        updateBlocksRef = setInterval(updateBlocks, 14);
-        updateLavaRef = setInterval(updateLava, 14);
+        game.updateBlocksRef = setInterval(function(){
+			updateBlocks(game);
+		}, 14);
+        game.updateLavaRef = setInterval(function(){
+			updateLava(game);
+		}, 14);
     } else {
         game.timer--;
     }
@@ -699,37 +703,37 @@ function updateAnimations(player){
 	}
 }
 
-function updateBlocks() {
+function updateBlocks(game) {
     /*
     	Update block positions
     */
-    for (var block in blocks) {
+    for (var block in game.blocks) {
         var blockUnderneath = null;
-        if (blocks[block].gravity) {
+        if (game.blocks[block].gravity) {
             var newObj = {
-                x: blocks[block].x,
-                y: blocks[block].y + blocks[block].speed,
-                width: blocks[block].width,
-                height: blocks[block].height
+                x: game.blocks[block].x,
+                y: game.blocks[block].y + game.blocks[block].speed,
+                width: game.blocks[block].width,
+                height: game.blocks[block].height
             };
-            for (var block2 in blocks) {
-                if (block2 != block && rectangleOverlap(newObj, blocks[block2])) {
-                    blockUnderneath = blocks[block2];
+            for (var block2 in game.blocks) {
+                if (block2 != block && rectangleOverlap(newObj, game.blocks[block2])) {
+                    blockUnderneath = game.blocks[block2];
                     break;
                 }
             }
             if (blockUnderneath === null)
-                blocks[block].y += blocks[block].speed;
+                game.blocks[block].y += game.blocks[block].speed;
             else
-                blocks[block].y = blockUnderneath.y - blocks[block].height;
+                game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
         }
     }
 }
 
-function updateLava() {
-    if (gameStarted) {
-        lava.y -= 0.4;
-        lava.height += 0.4;
+function updateLava(game) {
+    if (game.gameStarted) {
+        game.lava.y -= 0.4;
+        game.lava.height += 0.4;
     }
 }
 
@@ -746,8 +750,8 @@ function updateGame(game) {
                 	players[obj].rank = 1;
 			}
         }
-        clearInterval(updateBlocksRef);
-        clearInterval(updateLavaRef);
+        clearInterval(game.updateBlocksRef);
+        clearInterval(game.updateLavaRef);
         clearInterval(timerRef);
         clearInterval(newBlockRef);
         cooldownRef = setInterval(function(){
