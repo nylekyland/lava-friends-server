@@ -754,7 +754,7 @@ function updateGame(game) {
         clearInterval(game.updateLavaRef);
         clearInterval(game.timerRef);
         clearInterval(game.newBlockRef);
-        cooldownRef = setInterval(function(){
+        game.cooldownRef = setInterval(function(){
 			cooldown(game);
 		}, 1000);
     }
@@ -795,7 +795,7 @@ function cooldown(game) {
         }
         game.lava.y = 1000;
         game.lava.height = 500;
-        clearInterval(cooldownRef);
+        clearInterval(game.cooldownRef);
         if (game.totalCount >= 2 && !game.timerStarted) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
