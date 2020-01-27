@@ -892,7 +892,6 @@ function pickCamera(player){
 }
 
 function findPlayersGame(value){
-	console.log("entered findPlayersGame w/ value: " + value);
 	for (var i = 0; i < games.length; i++){
 		if (games[i].id === value)
 			return i;
