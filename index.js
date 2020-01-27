@@ -368,7 +368,10 @@ function countdown(game) {
 
 function updatePositions(player) {
     //Player logic
-    if (player) {
+    if (player && player.gameId) {
+		
+		var game = games[findPlayersGame(player.gameId)];
+		
         var upPressed = player.upPressed;
         var downPressed = player.downPressed;
         var leftPressed = player.leftPressed;
@@ -432,18 +435,18 @@ function updatePositions(player) {
 
 				//Y VELOCITY
 				//Check their next y coordinate to see if it overlaps any blocks
-				for (var block in blocks) {
+				for (var block in game.blocks) {
 					var newObj = {
 						x: player.x,
 						y: player.y + player.yVelocity,
 						width: player.width,
 						height: player.height
 					};
-					if (rectangleOverlap(blocks[block], newObj)) {
-						if (blocks[block].y > player.y)
-							objectBeneath = blocks[block];
-						else if (blocks[block].y < player.y)
-							objectAbove = blocks[block];
+					if (rectangleOverlap(game.blocks[block], newObj)) {
+						if (game.blocks[block].y > player.y)
+							objectBeneath = game.blocks[block];
+						else if (game.blocks[block].y < player.y)
+							objectAbove = game.blocks[block];
 					}
 				}
 
@@ -477,11 +480,11 @@ function updatePositions(player) {
 				}
 
 				//Check if player has entered the lava
-				if (player.y + (player.height / 2) >= lava.y) {
-					if (gameStarted || cooldownStarted) {
-						if (!cooldownStarted) {
-							player.rank = aliveCount;
-							aliveCount--;
+				if (player.y + (player.height / 2) >= game.lava.y) {
+					if (game.gameStarted || game.cooldownStarted) {
+						if (!game.cooldownStarted) {
+							player.rank = game.aliveCount;
+							game.aliveCount--;
 						}
 						player.dead = true;
 					} else {
@@ -546,18 +549,18 @@ function updatePositions(player) {
 						player.xVelocity = 6;
 				}
 				//Check if there are any blocks in the way
-				for (var block in blocks) {
+				for (var block in game.blocks) {
 					var newObj = {
 						x: player.x + player.xVelocity,
 						y: player.y,
 						width: player.width,
 						height: player.height
 					};
-					if (rectangleOverlap(blocks[block], newObj)) {
-						if (blocks[block].x > player.x)
-							objectRight = blocks[block];
-						else if (blocks[block].x < player.x)
-							objectLeft = blocks[block];
+					if (rectangleOverlap(game.blocks[block], newObj)) {
+						if (game.blocks[block].x > player.x)
+							objectRight = game.blocks[block];
+						else if (game.blocks[block].x < player.x)
+							objectLeft = game.blocks[block];
 						break;
 					}
 				}
