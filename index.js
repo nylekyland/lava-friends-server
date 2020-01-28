@@ -853,7 +853,7 @@ function getAnimNumber(anim){
 
 function checkHitbox(currentPlayer, hitbox){
 	for (var obj in players){
-		if (players[obj] != currentPlayer){
+		if (players[obj] != currentPlayer && players[obj].gameId == currentPlayer.gameId){
 			if (rectangleOverlap(players[obj], hitbox) && !players[obj].stunned && !players[obj].dead && !players[obj].inQueue){
 				players[obj].stunned = true;
 				players[obj].yVelocity = -10;
@@ -879,7 +879,7 @@ function pickCamera(player){
 					player.cameraObj = players[obj].clientId;
 					return players[obj].clientId;
 				}
-				else if (!players[obj].dead && !players[obj].inQueue)
+				else if (!players[obj].dead && !players[obj].inQueue && players[obj].gameId == player.gameId)
 					ids.push(players[obj].clientId);
 			}
 			if (ids.length === 0){
