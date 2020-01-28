@@ -852,9 +852,11 @@ function getAnimNumber(anim){
 }
 
 function checkHitbox(currentPlayer, hitbox){
+	var game = games[findPlayersGame(currentPlayer.gameId)];
 	for (var obj in players){
 		if (players[obj] != currentPlayer && players[obj].gameId == currentPlayer.gameId){
-			if (rectangleOverlap(players[obj], hitbox) && !players[obj].stunned && !players[obj].dead && !players[obj].inQueue){
+			if (rectangleOverlap(players[obj], hitbox) && !players[obj].stunned && !players[obj].dead && !players[obj].inQueue
+				&& (game.type === "ffa" || (game.type === "team" && players[obj].color !== currentPlayer.color))){
 				players[obj].stunned = true;
 				players[obj].yVelocity = -10;
 				if (currentPlayer.punchLeftRight == "right")
