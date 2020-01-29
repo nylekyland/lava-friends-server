@@ -144,13 +144,7 @@ wss.on("connection", function(ws) {
     ws.on('message', function incoming(json) {
         var data = JSON.parse(json);
 
-        if (players[ws.id].clientId === null)
-            players[ws.id].clientId = data.clientId;
-		if (players[ws.id].gameId === null){
-			chooseGame(players[ws.id], data.gameType);
-		}
-
-        //Position 1: Left is pressed
+		//Position 1: Left is pressed
         players[ws.id].leftPressed = !!(data.state & 1);
         //Position 2: Right is pressed
         players[ws.id].rightPressed = !!(data.state & 2);
@@ -163,6 +157,12 @@ wss.on("connection", function(ws) {
 		
 		players[ws.id].character = data.characterColor.charAt(0);
 		players[ws.id].color = data.characterColor.charAt(1);
+		
+        if (players[ws.id].clientId === null)
+            players[ws.id].clientId = data.clientId;
+		if (players[ws.id].gameId === null){
+			chooseGame(players[ws.id], data.gameType);
+		}
 		
     });
 
@@ -275,6 +275,16 @@ function chooseGame(player, gameType){
 		    y: 1000,
 		    height: 500
 		};
+		if (newGame.type == "team"){
+			if (player.color == 0){
+				newGame.redCount = 1;
+				newGame.blueCount = 0;
+			}
+			else if (player.color == 3){
+				newGame.redCount = 0;
+				newGame.blueCount = 1;
+			}
+		}
 		games.push(newGame);
 		updateGameRef = setInterval(function(){
 			updateGame(newGame);
@@ -287,6 +297,12 @@ function chooseGame(player, gameType){
 	else{
 		player.gameId = eligibleGames[0].id;
 		eligibleGames[0].totalCount++;
+		if (eligibleGames[0].type == "team"){
+			if (player.color == 0)
+				eligibleGames[0].redCount++;
+			else if (player.color == 3)
+				eligibleGames[0].blueCount++;
+		}
 		console.log("player joined existing game: id " + eligibleGames[0].id);
 		
 		//Now that someone has connected, check how many people there are total.
@@ -459,6 +475,12 @@ function updatePositions(player) {
 				if (objectAbove !== null && objectBeneath !== null) {
 					player.rank = game.aliveCount;
 					game.aliveCount--;
+					if (game.type == "team"){
+						if (player.color == 0)
+							game.redCount--;
+						else if (player.color == 3)
+							game.blueCount--;
+					}
 					player.dead = true;
 				}
 
@@ -489,6 +511,12 @@ function updatePositions(player) {
 						if (!game.cooldownStarted) {
 							player.rank = game.aliveCount;
 							game.aliveCount--;
+							if (game.type == "team"){
+								if (player.color == 0)
+									game.redCount--;
+								else if (player.color == 3)
+									game.blueCount--;
+							}
 						}
 						player.dead = true;
 					} else {
@@ -739,7 +767,7 @@ function updateLava(game) {
 }
 
 function updateGame(game) {
-    if (game.gameStarted && game.aliveCount <= 1) {
+    if (game.gameStarted && game.aliveCount <= 1 && game.type == "ffa") {
         game.gameStarted = false;
         game.timerStarted = false;
         game.timer = 15;
@@ -759,6 +787,44 @@ function updateGame(game) {
 			cooldown(game);
 		}, 1000);
     }
+	if (game.gameStarted && game.type == "team"){
+		if (game.redCount < 1 || game.blueCount < 1){
+			game.gameStarted = false;
+			game.timerStarted = false;
+			game.timer = 15;
+			game.cooldownStarted = true;
+			game.cooldownTimer = 6;
+			if (game.redCount < 1){
+				for (var obj in players){
+					if (players[obj].gameId == game.id){
+						if (players[obj].color == 3){
+							players[obj].rank = 1;
+						}
+						else
+							players[obj].rank = 2;
+					}
+				}
+			}
+			else if (game.blueCount < 1){
+				for (var obj in players){
+					if (players[obj].gameId == game.id){
+						if (players[obj].color == 0){
+							players[obj].rank = 1;
+						}
+						else
+							players[obj].rank = 2;
+					}
+				}
+			}
+			clearInterval(game.updateBlocksRef);
+	        clearInterval(game.updateLavaRef);
+	        clearInterval(game.timerRef);
+	        clearInterval(game.newBlockRef);
+	        game.cooldownRef = setInterval(function(){
+				cooldown(game);
+			}, 1000);
+		}
+	}
 }
 
 function resetPlayerPosition(player) {
