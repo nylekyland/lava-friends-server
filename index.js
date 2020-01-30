@@ -188,20 +188,28 @@ wss.on("connection", function(ws) {
 		if (!players[ws.id].inQueue){
 			games[index].aliveCount--;
 			if (games[index].type == "team"){
-				if (players[ws.id].color == 0)
-					games[index].redCount--;
+				if (players[ws.id].color == 0){
+					games[index].redAliveCount--;
+				}
 				else if (players[ws.id].color == 3)
-					games[index].blueCount--;
+					games[index].blueAliveCount--;
 			}
 		}
 		//If the game hasn't already started, delete the player.
 		if (!games[index].gameStarted){
 			games[index].totalCount--;
+			if (games[index].type == "team"){
+				if (players[ws.id].color == 0){
+					games[index].redTotalCount--;
+				}
+				else if (players[ws.id].color == 3)
+					games[index].blueTotalCount--;
+			}
             delete players[ws.id];
 		}
 		//If there's only one player left in the room (or it's a team battle
 		//and there's no players on one of the teams, we need to stop the countdown.
-        if ((games[index].totalCount < 2 || (games[index].type == "team" && (games[index].redCount < 1 || games[index].blueCount < 1))) 
+        if ((games[index].totalCount < 2 || (games[index].type == "team" && (games[index].redTotalCount < 1 || games[index].blueTotalCount < 1))) 
 			&& (games[index].timerStarted || games[index].gameStarted)) {
             games[index].gameStarted = false;
             games[index].timerStarted = false;
@@ -294,12 +302,16 @@ function chooseGame(player, gameType){
 		};
 		if (newGame.type == "team"){
 			if (player.color == 0){
-				newGame.redCount = 1;
-				newGame.blueCount = 0;
+				newGame.redTotalCount = 1;
+				newGame.blueTotalCount = 0;
+				newGame.redAliveCount = 1;
+				newGame.blueAliveCount = 0;
 			}
 			else if (player.color == 3){
-				newGame.redCount = 0;
-				newGame.blueCount = 1;
+				newGame.redTotalCount = 0;
+				newGame.blueTotalCount = 1;
+				newGame.redAliveCount = 0;
+				newGame.blueAliveCount = 1;
 			}
 		}
 		games.push(newGame);
@@ -315,10 +327,11 @@ function chooseGame(player, gameType){
 		player.gameId = eligibleGames[0].id;
 		eligibleGames[0].totalCount++;
 		if (eligibleGames[0].type == "team"){
-			if (player.color == 0)
-				eligibleGames[0].redCount++;
+			if (player.color == 0){
+				eligibleGames[0].redTotalCount++;
+			}
 			else if (player.color == 3)
-				eligibleGames[0].blueCount++;
+				eligibleGames[0].blueTotalCount++;
 		}
 		console.log("player joined existing game: id " + eligibleGames[0].id);
 		
@@ -326,7 +339,7 @@ function chooseGame(player, gameType){
 		//If there's more than 2 players and the countdown hasn't already started yet,
 		//start the timer.
 	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownStarted
-			&& (eligibleGames[0].type == "ffa" || (eligibleGames[0].type == "team" && eligibleGames[0].redCount > 0 && eligibleGames[0].blueCount > 0))) {
+			&& (eligibleGames[0].type == "ffa" || (eligibleGames[0].type == "team" && eligibleGames[0].redTotalCount > 0 && eligibleGames[0].blueTotalCount > 0))) {
 	        eligibleGames[0].timerStarted = true;
 	        eligibleGames[0].timerRef = setInterval(function(){
 				countdown(eligibleGames[0]);
@@ -338,7 +351,7 @@ function chooseGame(player, gameType){
 		//Else, they will have to wait in the queue.
 		if (eligibleGames[0].timerStarted || 
 			((eligibleGames[0].type == "ffa" && eligibleGames[0].totalCount <= 1) || 
-			eligibleGames[0].type == "team" && (eligibleGames[0].redCount < 1 || eligibleGames[0].blueCount < 1))){
+			eligibleGames[0].type == "team" && (eligibleGames[0].redTotalCount < 1 || eligibleGames[0].blueTotalCount < 1))){
 			player.inQueue = false;
 		}
 		else{
@@ -392,6 +405,18 @@ function countdown(game) {
 		}, 1800);
         game.aliveCount = game.totalCount;
         game.rankTotal = game.totalCount;
+		if (game.type == "team"){
+			game.redAliveCount = 0;
+			game.blueAliveCount = 0;
+			for (var obj in players){
+				if (players[obj].gameId == game.id){
+					if (players[obj].color == 0)
+						game.redAliveCount++;
+					else if (players[obj].color == 3)
+						game.blueAliveCount++;
+				}
+			}
+		}
         for (var obj in players) {
 			if (players[obj].gameId == game.id){
 				players[obj].rank = "";
@@ -499,9 +524,9 @@ function updatePositions(player) {
 					game.aliveCount--;
 					if (game.type == "team"){
 						if (player.color == 0)
-							game.redCount--;
+							game.redAliveCount--;
 						else if (player.color == 3)
-							game.blueCount--;
+							game.blueAliveCount--;
 					}
 					player.dead = true;
 				}
@@ -535,9 +560,9 @@ function updatePositions(player) {
 							game.aliveCount--;
 							if (game.type == "team"){
 								if (player.color == 0)
-									game.redCount--;
+									game.redAliveCount--;
 								else if (player.color == 3)
-									game.blueCount--;
+									game.blueAliveCount--;
 							}
 						}
 						player.dead = true;
@@ -810,13 +835,13 @@ function updateGame(game) {
 		}, 1000);
     }
 	if (game.gameStarted && game.type == "team"){
-		if (game.redCount < 1 || game.blueCount < 1){
+		if (game.redAliveCount < 1 || game.blueAliveCount < 1){
 			game.gameStarted = false;
 			game.timerStarted = false;
 			game.timer = 15;
 			game.cooldownStarted = true;
 			game.cooldownTimer = 6;
-			if (game.redCount < 1){
+			if (game.redAliveCount < 1){
 				for (var obj in players){
 					if (players[obj].gameId == game.id){
 						if (players[obj].color == 3){
@@ -827,7 +852,7 @@ function updateGame(game) {
 					}
 				}
 			}
-			else if (game.blueCount < 1){
+			else if (game.blueAliveCount < 1){
 				for (var obj in players){
 					if (players[obj].gameId == game.id){
 						if (players[obj].color == 0){
@@ -886,7 +911,7 @@ function cooldown(game) {
         game.lava.y = 1000;
         game.lava.height = 500;
         clearInterval(game.cooldownRef);
-        if (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redCount > 0 && game.blueCount > 0))) {
+        if (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redTotalCount > 0 && game.blueTotalCount > 0))) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
 				countdown(game);
