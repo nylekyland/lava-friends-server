@@ -308,7 +308,8 @@ function chooseGame(player, gameType){
 		//Now that someone has connected, check how many people there are total.
 		//If there's more than 2 players and the countdown hasn't already started yet,
 		//start the timer.
-	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownStarted) {
+	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownStarted
+			&& (eligibleGames[0].type == "ffa" || (eligibleGames[0].type == "team" && eligibleGames[0].redCount > 0 && eligibleGames[0].blueCount > 0))) {
 	        eligibleGames[0].timerStarted = true;
 	        eligibleGames[0].timerRef = setInterval(function(){
 				countdown(eligibleGames[0]);
