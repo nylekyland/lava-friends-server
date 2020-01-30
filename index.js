@@ -142,6 +142,7 @@ wss.on("connection", function(ws) {
     players[ws.id].sendMessageRef = sendMessageRef;
 
     ws.on('message', function incoming(json) {
+		//Parse the incoming json.
         var data = JSON.parse(json);
 
 		//Position 1: Left is pressed
@@ -155,9 +156,12 @@ wss.on("connection", function(ws) {
 		//Position 5: Punch button is pressed
 		players[ws.id].punchPressed = !!(data.state & 16);
 		
+		//Get which character & color to display.
 		players[ws.id].character = data.characterColor.charAt(0);
 		players[ws.id].color = data.characterColor.charAt(1);
 		
+		//If they don't have a clientId, they need one.
+		//If they don't have a game, they need to join one.
         if (players[ws.id].clientId === null)
             players[ws.id].clientId = data.clientId;
 		if (players[ws.id].gameId === null){
@@ -174,19 +178,31 @@ wss.on("connection", function(ws) {
         players[ws.id].dead = true;
 				
 		var index = findPlayersGame(players[ws.id].gameId);
-		players[ws.id].rank = games[index].aliveCount;
+		//If the player leaves, their rank needs to be determined so that the
+		//other players can know.
+		if (games[index].type == "ffa")
+			players[ws.id].rank = games[index].aliveCount;
 		
 		//If the player isn't currently in the queue, subtract from alive count.
+		//If it's a team game, remove the count from the team total.
 		if (!players[ws.id].inQueue){
 			games[index].aliveCount--;
+			if (games[index].type == "team"){
+				if (players[ws.id].color == 0)
+					games[index].redCount--;
+				else if (players[ws.id].color == 3)
+					games[index].blueCount--;
+			}
 		}
 		//If the game hasn't already started, delete the player.
-		//If the game is now empty, delete the game too.
 		if (!games[index].gameStarted){
 			games[index].totalCount--;
             delete players[ws.id];
 		}
-        if (games[index].totalCount < 2 && (games[index].timerStarted || games[index].gameStarted)) {
+		//If there's only one player left in the room (or it's a team battle
+		//and there's no players on one of the teams, we need to stop the countdown.
+        if ((games[index].totalCount < 2 || (games[index].type == "team" && (games[index].redCount < 1 || games[index].blueCount < 1))) 
+			&& (games[index].timerStarted || games[index].gameStarted)) {
             games[index].gameStarted = false;
             games[index].timerStarted = false;
             games[index].timer = 15;
@@ -202,6 +218,7 @@ wss.on("connection", function(ws) {
             games[index].lava.y = 1000;
             games[index].lava.height = 500;
         }
+		//If there's nobody left in the game, we can delete it.
 		if (games[index].totalCount <= 0){
 			console.log("removing a game: id " + games[index].id);
 			games.splice(index, 1);
@@ -308,7 +325,7 @@ function chooseGame(player, gameType){
 		//Now that someone has connected, check how many people there are total.
 		//If there's more than 2 players and the countdown hasn't already started yet,
 		//start the timer.
-	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownStarted
+	    if (eligibleGames[0].totalCount >= 2 && !eligibleGames[0].timerStarted && !eligibleGames[0].gameStarted && !eligibleGames[0].cooldownSt'arted
 			&& (eligibleGames[0].type == "ffa" || (eligibleGames[0].type == "team" && eligibleGames[0].redCount > 0 && eligibleGames[0].blueCount > 0))) {
 	        eligibleGames[0].timerStarted = true;
 	        eligibleGames[0].timerRef = setInterval(function(){
@@ -327,6 +344,7 @@ function chooseGame(player, gameType){
 	}
 }
 
+//Checks if two rectangles overlap each other.
 function rectangleOverlap(rect1, rect2) {
     return (rect1.x < rect2.x + rect2.width &&
         rect1.x + rect1.width > rect2.x &&
@@ -865,7 +883,7 @@ function cooldown(game) {
         game.lava.y = 1000;
         game.lava.height = 500;
         clearInterval(game.cooldownRef);
-        if (game.totalCount >= 2 && !game.timerStarted) {
+        if (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redCount > 0 && game.blueCount > 0))) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
 				countdown(game);
