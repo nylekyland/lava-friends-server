@@ -16,7 +16,7 @@ var xSpeed = 0.48;
 
 //This array handles all of the current games going on.
 var games = [];
-var gamePlayerLimit = 2;
+var gamePlayerLimit = 8;
 
 //These should be local to a specific game.
 //var blocks = {};
@@ -333,9 +333,12 @@ function chooseGame(player, gameType){
 			}, 1000);
 			addPlayersFromQueue(eligibleGames[0]);
 	    }
-		//If the timer is ticking down before play, the newly connected player will join
-		//the next game. Else, they will have to wait in the queue.
-		if (eligibleGames[0].timerStarted || eligibleGames[0].totalCount <= 1){
+		//If the timer is ticking down before play (or it's a team battle and there's not enough players)
+		//the newly connected player will join the next game.
+		//Else, they will have to wait in the queue.
+		if (eligibleGames[0].timerStarted || 
+			((game.type == "ffa" && eligibleGames[0].totalCount <= 1) || 
+			game.type == "team" && (eligibleGames[0].redCount < 1 || eligibleGames[0].blueCount < 1))){
 			player.inQueue = false;
 		}
 		else{
