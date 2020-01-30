@@ -337,8 +337,8 @@ function chooseGame(player, gameType){
 		//the newly connected player will join the next game.
 		//Else, they will have to wait in the queue.
 		if (eligibleGames[0].timerStarted || 
-			((game.type == "ffa" && eligibleGames[0].totalCount <= 1) || 
-			game.type == "team" && (eligibleGames[0].redCount < 1 || eligibleGames[0].blueCount < 1))){
+			((eligibleGames[0].type == "ffa" && eligibleGames[0].totalCount <= 1) || 
+			eligibleGames[0].type == "team" && (eligibleGames[0].redCount < 1 || eligibleGames[0].blueCount < 1))){
 			player.inQueue = false;
 		}
 		else{
