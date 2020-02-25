@@ -972,10 +972,14 @@ function checkHitbox(currentPlayer, hitbox){
 				&& (game.type === "ffa" || (game.type === "team" && players[obj].color !== currentPlayer.color))){
 				players[obj].stunned = true;
 				players[obj].yVelocity = -10;
-				if (currentPlayer.punchLeftRight == "right")
+				if (currentPlayer.punchLeftRight == "right"){
+					players[obj].lastLeftRight = "left";
 					players[obj].xVelocity = 12;
-				else
+				}
+				else{
 					players[obj].xVelocity = -12;
+					players[obj].lastLeftRight = "right";
+				}
 			}
 		}
 	}
