@@ -801,13 +801,6 @@ function updateBlocks(game) {
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
         }
     }
-	var highestY = getHighestPlayer(game);
-	if (game.blocks[1].y <= highestY){
-		game.blocks[1].y = highestY;
-		game.blocks[1].height = 600 - highestY;
-		game.blocks[2].y = highestY;
-		game.blocks[2].height = 600 - highestY;
-	}
 }
 
 function updateLava(game) {
@@ -875,6 +868,13 @@ function updateGame(game) {
 				cooldown(game);
 			}, 1000);
 		}
+	}
+	var highestY = getHighestPlayer(game);
+	if (game.blocks[1].y <= highestY){
+		game.blocks[1].y = highestY;
+		game.blocks[1].height = 600 - highestY;
+		game.blocks[2].y = highestY;
+		game.blocks[2].height = 600 - highestY;
 	}
 }
 
