@@ -18,20 +18,6 @@ var xSpeed = 0.48;
 var games = [];
 var gamePlayerLimit = 8;
 
-//These should be local to a specific game.
-//var blocks = {};
-//var originalBlocks = {};
-//var timer = 15;
-//var timerStarted = false;
-//var gameStarted = false;
-//var cooldownStarted = false;
-//var cooldownRef;
-//var cooldownTimer = 6;
-//aliveCount = 0;
-//totalCount = 0;
-//var updateBlocksRef;
-//var updateLavaRef;
-//var updateGameRef = setInterval(updateGame, 14);
 var uuidv4 = require('uuid/v4');
 
 app.use(express.static(__dirname + "/"));
@@ -208,7 +194,7 @@ wss.on("connection", function(ws) {
             delete players[ws.id];
 		}
 		//If there's only one player left in the room (or it's a team battle
-		//and there's no players on one of the teams, we need to stop the countdown.
+		//and there's no players on one of the teams), we need to stop the countdown.
         if ((games[index].totalCount < 2 || (games[index].type == "team" && (games[index].redTotalCount < 1 || games[index].blueTotalCount < 1))) 
 			&& (games[index].timerStarted || games[index].gameStarted)) {
             games[index].gameStarted = false;
@@ -392,6 +378,17 @@ function getHighestBlockY(game) {
         }
     }
     return highest > -1600 ? -1600 : highest;
+}
+
+function getHighestPlayer(game){
+	var highest = -1000;
+	for (var obj in players){
+		if (players[obj].gameId == game.id){
+			if (players[obj].y - 1000 <= highest)
+				highest = players[obj].y - 1000;
+		}
+	}
+	return highest;
 }
 
 function countdown(game) {
@@ -804,6 +801,11 @@ function updateBlocks(game) {
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
         }
     }
+	var highestY = getHighestPlayer(game);
+	blocks[1].y = highestY;
+	blocks[1].height = 1600 - highestY;
+	blocks[2].y = highestY;
+	blocks[2].height = 1600 - highestY;
 }
 
 function updateLava(game) {
