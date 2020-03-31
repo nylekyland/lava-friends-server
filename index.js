@@ -802,10 +802,10 @@ function updateBlocks(game) {
         }
     }
 	var highestY = getHighestPlayer(game);
-	blocks[1].y = highestY;
-	blocks[1].height = 1600 - highestY;
-	blocks[2].y = highestY;
-	blocks[2].height = 1600 - highestY;
+	game.blocks[1].y = highestY;
+	game.blocks[1].height = 1600 - highestY;
+	game.blocks[2].y = highestY;
+	game.blocks[2].height = 1600 - highestY;
 }
 
 function updateLava(game) {
