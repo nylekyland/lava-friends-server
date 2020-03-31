@@ -388,7 +388,7 @@ function getHighestPlayer(game){
 				highest = players[obj].y;
 		}
 	}
-	return highest;
+	return highest - 1000;
 }
 
 function countdown(game) {
@@ -870,10 +870,10 @@ function updateGame(game) {
 		}
 	}
 	var highestY = getHighestPlayer(game);
-	if (game.blocks[1].y <= highestY - 1000){
-		game.blocks[1].y = highestY - 1000;
+	if (game.blocks[1].y <= highestY){
+		game.blocks[1].y = highestY;
 		game.blocks[1].height = 1600 - highestY;
-		game.blocks[2].y = highestY - 1000;
+		game.blocks[2].y = highestY;
 		game.blocks[2].height = 1600 - highestY;
 	}
 }
