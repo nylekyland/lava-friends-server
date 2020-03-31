@@ -870,7 +870,7 @@ function updateGame(game) {
 		}
 	}
 	var highestY = getHighestPlayer(game);
-	if (game.blocks[1].y <= highestY){
+	if (game.blocks[1].y <= highestY - 1000){
 		game.blocks[1].y = highestY - 1000;
 		game.blocks[1].height = 1600 - highestY;
 		game.blocks[2].y = highestY - 1000;
