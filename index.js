@@ -381,7 +381,7 @@ function getHighestBlockY(game) {
 }
 
 function getHighestPlayer(game){
-	var highest = -1000;
+	var highest = 600;
 	for (var obj in players){
 		if (players[obj].gameId == game.id){
 			if (players[obj].y - 1000 <= highest)
