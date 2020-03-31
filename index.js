@@ -381,11 +381,11 @@ function getHighestBlockY(game) {
 }
 
 function getHighestPlayer(game){
-	var highest = 600;
+	var highest = -1000;
 	for (var obj in players){
 		if (players[obj].gameId == game.id){
-			if (players[obj].y - 1000 <= highest)
-				highest = players[obj].y - 1000;
+			if (players[obj].y - 500 <= highest)
+				highest = players[obj].y - 500;
 		}
 	}
 	return highest;
