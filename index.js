@@ -385,7 +385,7 @@ function getHighestPlayer(game){
 	for (var obj in players){
 		if (players[obj].gameId == game.id){
 			if (players[obj].y - 1000 <= highest)
-				highest = players[obj].y - 1000;
+				highest = players[obj].y;
 		}
 	}
 	return highest;
