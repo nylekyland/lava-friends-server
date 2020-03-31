@@ -263,9 +263,9 @@ function chooseGame(player, gameType){
 		    object: "block",
 		    id: 1,
 		    x: 0,
-		    y: -1000,
+		    y: -1000000,
 		    width: 50,
-		    height: 1600,
+		    height: 1000600,
 		    gravity: false,
 			speed: 0
 		};
@@ -273,9 +273,9 @@ function chooseGame(player, gameType){
 		    object: "block",
 		    id: 2,
 		    x: 950,
-		    y: -1000,
+		    y: -1000000,
 		    width: 50,
-		    height: 1600,
+		    height: 1000600,
 		    gravity: false,
 			speed: 0
 		};
@@ -869,11 +869,6 @@ function updateGame(game) {
 			}, 1000);
 		}
 	}
-	var highestY = getHighestPlayer(game);
-	game.blocks[1].y = highestY - 1000;
-	game.blocks[1].height = 1600 - highestY;
-	game.blocks[2].y = highestY - 1000;
-	game.blocks[2].height = 1600 - highestY;
 }
 
 function resetPlayerPosition(player) {
