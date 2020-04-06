@@ -113,6 +113,7 @@ wss.on("connection", function(ws) {
 				}
 	        }
 	        var sendObject = {
+				"status": getGameStatus(game),
 	            "timer": game.timerStarted ? game.timer : "",
 	            "players": JSON.stringify(condensedPlayers),
 	            "blocks": JSON.stringify(game.blocks),
@@ -343,6 +344,26 @@ function chooseGame(player, gameType){
 		else{
 			player.inQueue = true;
 		}
+	}
+}
+
+//Returns game status
+// 0 = FFA
+// 1 = Team Battle
+// 2 = Starting Soon
+// 3 = Searching for Players
+function getGameStatus(game){
+	if (game.gameStarted){
+		if (game.type == "ffa")
+			return 0;
+		if (game.type == "team")
+			return 1;
+	}
+	else{
+		if (game.timerStarted)
+			return 2;
+		else
+			return 3;
 	}
 }
 
