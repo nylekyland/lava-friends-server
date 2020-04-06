@@ -360,7 +360,7 @@ function getGameStatus(game){
 			return 1;
 	}
 	else{
-		if (game.timerStarted)
+		if (game.timerStarted || game.cooldownStarted)
 			return 2;
 		else
 			return 3;
