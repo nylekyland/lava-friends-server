@@ -360,7 +360,13 @@ function getGameStatus(game){
 			return 1;
 	}
 	else{
-		if (game.timerStarted || game.cooldownStarted)
+		if (game.cooldownStarted){
+			if (game.type == "ffa")
+				return 0;
+			if (game.type == "team")
+				return 1;
+		}
+		if (game.timerStarted)
 			return 2;
 		else
 			return 3;
