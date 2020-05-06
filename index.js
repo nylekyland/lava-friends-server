@@ -846,7 +846,7 @@ function updateGame(game) {
         game.cooldownTimer = 6;
         for (var obj in players) {
 			if (players[obj].gameId == game.id){
-				if (!players[obj].dead)
+				if (!players[obj].dead && !players[obj].inQueue)
                 	players[obj].rank = 1;
 			}
         }
