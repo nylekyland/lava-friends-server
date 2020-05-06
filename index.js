@@ -256,7 +256,7 @@ function chooseGame(player, gameType){
 		    x: 0,
 		    y: 600,
 		    width: 1000,
-		    height: 50,
+		    height: 150,
 		    gravity: false,
 			speed: 0,
 		};
