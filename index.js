@@ -259,6 +259,7 @@ function chooseGame(player, gameType){
 		    height: 100,
 		    gravity: false,
 			speed: 0,
+			color: "a"
 		};
 		newGame.blocks[1] = {
 		    object: "block",
@@ -268,7 +269,8 @@ function chooseGame(player, gameType){
 		    width: 50,
 		    height: 1000600,
 		    gravity: false,
-			speed: 0
+			speed: 0,
+			color: "a"
 		};
 		newGame.blocks[2] = {
 		    object: "block",
@@ -278,7 +280,8 @@ function chooseGame(player, gameType){
 		    width: 50,
 		    height: 1000600,
 		    gravity: false,
-			speed: 0
+			speed: 0,
+			color: "a"
 		};
 		newGame.originalBlocks[0] = newGame.blocks[0];
 		newGame.originalBlocks[1] = newGame.blocks[1];
@@ -391,9 +394,16 @@ function createNewBlock(game) {
         width: size,
         height: size,
         speed: 2 + Math.floor(Math.random() * 4),
-        gravity: true
+        gravity: true,
+		color: randomLetter()
     };
     game.blocks[Object.keys(game.blocks).length + 1] = newBlock;
+}
+
+function randomLetter(){
+	var letters = ["a", "b", "c", "d", "e"];
+    var letter = letters[Math.floor(Math.random() * letters.length)];
+    return letter;
 }
 
 function getHighestBlockY(game) {
