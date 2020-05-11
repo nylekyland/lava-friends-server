@@ -256,7 +256,7 @@ function chooseGame(player, gameType){
 		    x: 0,
 		    y: 600,
 		    width: 1000,
-		    height: 300,
+		    height: 400,
 		    gravity: false,
 			speed: 0,
 			color: "a"
