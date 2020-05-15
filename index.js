@@ -291,13 +291,13 @@ function chooseGame(player, gameType){
 		    height: 500
 		};
 		if (newGame.type == "team"){
-			if (player.color == 0){
+			if (determineRed(player)){
 				newGame.redTotalCount = 1;
 				newGame.blueTotalCount = 0;
 				newGame.redAliveCount = 1;
 				newGame.blueAliveCount = 0;
 			}
-			else if (player.color == 3){
+			else if (determineBlue(player)){
 				newGame.redTotalCount = 0;
 				newGame.blueTotalCount = 1;
 				newGame.redAliveCount = 0;
@@ -317,10 +317,10 @@ function chooseGame(player, gameType){
 		player.gameId = eligibleGames[0].id;
 		eligibleGames[0].totalCount++;
 		if (eligibleGames[0].type == "team"){
-			if (player.color == 0){
+			if (determineRed(player)){
 				eligibleGames[0].redTotalCount++;
 			}
-			else if (player.color == 3)
+			else if (determineBlue(player))
 				eligibleGames[0].blueTotalCount++;
 		}
 		console.log("player joined existing game: id " + eligibleGames[0].id);
@@ -444,9 +444,14 @@ function countdown(game) {
 			game.blueAliveCount = 0;
 			for (var obj in players){
 				if (players[obj].gameId == game.id){
-					if (players[obj].color == 0)
+					//Determine the color of the player and set the alive count.
+					//Character 1 (Dog): Red = 1, Blue = 3
+					//Character 2 (Robot): Red = 1, Blue = 0
+					//Character 3 (Yokon): Red = 0, Blue = 1
+					//Character 4 (Cat): Red = 0, Blue = 1
+					if (determineRed(players[obj]))
 						game.redAliveCount++;
-					else if (players[obj].color == 3)
+					else if (determineBlue(players[obj]))
 						game.blueAliveCount++;
 				}
 			}
@@ -466,6 +471,20 @@ function countdown(game) {
     } else {
         game.timer--;
     }
+}
+
+function determineRed(player){
+	return ((player.character == 1 && player.color == 0) ||
+			(player.character == 2 && player.color == 1) ||
+			(player.character == 3 && player.color == 0) ||
+			(player.character == 4 && player.color == 0));
+}
+
+function determineBlue(player){
+	return ((player.character == 1 && player.color == 3) ||
+			(player.character == 2 && player.color == 0) ||
+			(player.character == 3 && player.color == 1) ||
+			(player.character == 4 && player.color == 1));
 }
 
 function updatePositions(player) {
@@ -557,9 +576,9 @@ function updatePositions(player) {
 					player.rank = game.aliveCount;
 					game.aliveCount--;
 					if (game.type == "team"){
-						if (player.color == 0)
+						if (determineRed(player))
 							game.redAliveCount--;
-						else if (player.color == 3)
+						else if (determineBlue(player))
 							game.blueAliveCount--;
 					}
 					player.dead = true;
@@ -593,9 +612,9 @@ function updatePositions(player) {
 							player.rank = game.aliveCount;
 							game.aliveCount--;
 							if (game.type == "team"){
-								if (player.color == 0)
+								if (determineRed(player))
 									game.redAliveCount--;
-								else if (player.color == 3)
+								else if (determineBlue(player))
 									game.blueAliveCount--;
 							}
 						}
@@ -1003,7 +1022,8 @@ function checkHitbox(currentPlayer, hitbox){
 	for (var obj in players){
 		if (players[obj] != currentPlayer && players[obj].gameId == currentPlayer.gameId){
 			if (rectangleOverlap(players[obj], hitbox) && !players[obj].stunned && !players[obj].dead && !players[obj].inQueue
-				&& (game.type === "ffa" || (game.type === "team" && players[obj].color !== currentPlayer.color))){
+				&& (game.type === "ffa" || 
+				(game.type === "team" && (determineRed(players[obj]) && determineBlue(currentPlayer)) || (determineBlue(players[obj]) && determineRed(currentPlayer))))){
 				players[obj].stunned = true;
 				players[obj].yVelocity = -10;
 				if (currentPlayer.punchLeftRight == "right"){
