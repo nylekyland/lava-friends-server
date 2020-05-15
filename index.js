@@ -897,7 +897,7 @@ function updateGame(game) {
 			if (game.redAliveCount < 1){
 				for (var obj in players){
 					if (players[obj].gameId == game.id){
-						if (players[obj].color == 3){
+						if (determineBlue(players[obj])){
 							players[obj].rank = 1;
 						}
 						else
@@ -908,7 +908,7 @@ function updateGame(game) {
 			else if (game.blueAliveCount < 1){
 				for (var obj in players){
 					if (players[obj].gameId == game.id){
-						if (players[obj].color == 0){
+						if (determineRed(players[obj])){
 							players[obj].rank = 1;
 						}
 						else
