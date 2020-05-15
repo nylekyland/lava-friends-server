@@ -442,6 +442,7 @@ function countdown(game) {
 		if (game.type == "team"){
 			game.redAliveCount = 0;
 			game.blueAliveCount = 0;
+			game.rankTotal = 2;
 			for (var obj in players){
 				if (players[obj].gameId == game.id){
 					//Determine the color of the player and set the alive count.
