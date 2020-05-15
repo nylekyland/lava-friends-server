@@ -175,10 +175,10 @@ wss.on("connection", function(ws) {
 		if (!players[ws.id].inQueue){
 			games[index].aliveCount--;
 			if (games[index].type == "team"){
-				if (players[ws.id].color == 0){
+				if (determineRed(players[ws.id])){
 					games[index].redAliveCount--;
 				}
-				else if (players[ws.id].color == 3)
+				else if (determineBlue(players[ws.id]))
 					games[index].blueAliveCount--;
 			}
 		}
@@ -186,10 +186,10 @@ wss.on("connection", function(ws) {
 		if (!games[index].gameStarted){
 			games[index].totalCount--;
 			if (games[index].type == "team"){
-				if (players[ws.id].color == 0){
+				if (determineRed(players[ws.id])){
 					games[index].redTotalCount--;
 				}
-				else if (players[ws.id].color == 3)
+				else if (determineBlue(players[ws.id]))
 					games[index].blueTotalCount--;
 			}
             delete players[ws.id];
