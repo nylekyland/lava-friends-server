@@ -574,7 +574,8 @@ function updatePositions(player) {
 				//There's an object directly above and directly below the player
 				//The player is squished.
 				if (objectAbove !== null && objectBeneath !== null) {
-					player.rank = game.aliveCount;
+					if (game.type == "ffa")
+						player.rank = game.aliveCount;
 					game.aliveCount--;
 					if (game.type == "team"){
 						if (determineRed(player))
@@ -610,7 +611,8 @@ function updatePositions(player) {
 				if (player.y + (player.height / 2) >= game.lava.y) {
 					if (game.gameStarted || game.cooldownStarted) {
 						if (!game.cooldownStarted) {
-							player.rank = game.aliveCount;
+							if (game.type == "ffa")
+								player.rank = game.aliveCount;
 							game.aliveCount--;
 							if (game.type == "team"){
 								if (determineRed(player))
