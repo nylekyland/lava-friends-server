@@ -174,7 +174,7 @@ wss.on("connection", function(ws) {
 		
 		//If the player isn't currently in the queue, subtract from alive count.
 		//If it's a team game, remove the count from the team total.
-		if (!players[ws.id].inQueue){
+		if (!players[ws.id].inQueue || games[index].type == "single"){
 			games[index].aliveCount--;
 			if (games[index].type == "team"){
 				if (determineRed(players[ws.id])){
@@ -185,7 +185,7 @@ wss.on("connection", function(ws) {
 			}
 		}
 		//If the game hasn't already started, delete the player.
-		if (!games[index].gameStarted){
+		if (!games[index].gameStarted || games[index].type == "single"){
 			games[index].totalCount--;
 			if (games[index].type == "team"){
 				if (determineRed(players[ws.id])){
