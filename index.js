@@ -889,6 +889,7 @@ function updateBlocks(game) {
 		if (game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
+	console.log(game.blocks.length);
 	for (var i = game.blocks.length; i >= 0; i--){
 		if (game.blocks[i].toBeDeleted)
 			console.log(game.blocks[i]);
