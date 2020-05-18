@@ -900,10 +900,10 @@ function updateLava(game) {
 }
 
 function updateGame(game) {
-	for (var block in game.blocks){
-		if (block.stopped && block.y > lava.y + 500)
-			delete game.blocks[block];
-	}
+	for (var i = Object.keys(game.blocks).length; i > 2; i--) {
+        if (game.blocks[i].deletable)
+			delete game.blocks[i];
+    }
     if (game.gameStarted && game.aliveCount <= 1 && game.type == "ffa") {
         game.gameStarted = false;
         game.timerStarted = false;
