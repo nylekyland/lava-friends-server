@@ -428,7 +428,7 @@ function getHighestBlockY(game) {
                 highest = game.blocks[block].y;
         }
     }
-    return highest > -1600 ? -1600 : highest - 3000;
+    return highest > -600 ? -600 : highest - 1000;
 }
 
 function getHighestPlayer(game){
