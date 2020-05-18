@@ -876,7 +876,7 @@ function updateBlocks(game) {
                     break;
                 }
             }
-            if (blockUnderneath === null)
+            if (blockUnderneath === null && !game.blocks[block].stopped)
                 game.blocks[block].y += game.blocks[block].speed;
             else{
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
