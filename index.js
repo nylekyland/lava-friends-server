@@ -973,7 +973,7 @@ function updateGame(game) {
     }
 	if (game.blocks && Object.keys(game.blocks).length > 3){
 		for (var i = Object.keys(game.blocks).length; i > 2; i--) {
-	        if (game.blocks[i].toBeDeleted)
+	        if (game.blocks[i]["toBeDeleted"])
 				game.blocks.splice(i, 1);
 	    }	
 	}
