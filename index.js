@@ -109,7 +109,7 @@ wss.on("connection", function(ws) {
 						inQueue: players[obj].inQueue ? 1 : 0,
 						anim: getAnimNumber(players[obj].anim),
 						cam: players[obj].cameraObj,
-						height: game.type == "single" ? getHighest(players[obj]) : ""
+						highest: game.type == "single" ? getHighest(players[obj]) : ""
 		            };
 	            	condensedPlayers.push(playerObj);
 				}
