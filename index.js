@@ -419,7 +419,7 @@ function createNewBlock(game) {
 		stopped: false,
 		toBeDeleted: false
     };
-    game.blocks[Object.keys(game.blocks).length + 1] = newBlock;
+    game.blocks[Object.keys(game.blocks).length] = newBlock;
 }
 
 function randomLetter(){
