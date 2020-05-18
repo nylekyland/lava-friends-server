@@ -972,11 +972,13 @@ function updateGame(game) {
 			cooldown(game);
 		}, 1000);
     }
-	for (var i = Object.keys(game.blocks).length; i > 2; i--) {
-		console.log(game.blocks[i]);
-        if (game.blocks[i].toBeDeleted)
-			delete game.blocks[i];
-    }
+	if (game.blocks && game.blocks >= 3){
+		for (var i = Object.keys(game.blocks).length; i > 2; i--) {
+			console.log(game.blocks[i]);
+	        if (game.blocks[i].toBeDeleted)
+				delete game.blocks[i];
+	    }	
+	}
 }
 
 function resetPlayerPosition(player) {
