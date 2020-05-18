@@ -890,7 +890,7 @@ function updateBlocks(game) {
 			game.blocks[block].toBeDeleted = true;
     }
 	game.blocks = game.blocks.filter(function(g){
-		g.toBeDeleted = false;
+		return !g.toBeDeleted;
 	});
 }
 
