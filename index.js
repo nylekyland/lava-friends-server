@@ -974,7 +974,7 @@ function updateGame(game) {
 	if (game.blocks && Object.keys(game.blocks).length > 3){
 		for (var i = Object.keys(game.blocks).length; i > 2; i--) {
 			console.log(game.blocks[i]);
-	        if (game.blocks[i].toBeDeleted)
+	        if (Object.keys(game.blocks[i]).toBeDeleted)
 				delete game.blocks[i];
 	    }	
 	}
