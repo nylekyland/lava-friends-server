@@ -404,7 +404,7 @@ function createNewBlock(game) {
         object: "block",
         id: Object.keys(game.blocks).length + 1,
         x: 50 + Math.floor(Math.random() * (900 - size)),
-        y: getHighestBlockY(game),
+        y: getHighestPlayer(game) - 1500,
         width: size,
         height: size,
         speed: 2 + Math.floor(Math.random() * 4),
@@ -428,7 +428,7 @@ function getHighestBlockY(game) {
                 highest = game.blocks[block].y;
         }
     }
-    return highest > -600 ? -600 : highest - 1000;
+    return highest > -1600 ? -1600 : highest - 3000;
 }
 
 function getHighestPlayer(game){
