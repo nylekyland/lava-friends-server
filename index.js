@@ -889,10 +889,11 @@ function updateBlocks(game) {
 		if (game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
-	for (var i = Object.keys(game.blocks).length - 1; i > 2; i--) {
+	//TODO
+	/*for (var i = Object.keys(game.blocks).length - 1; i > 2; i--) {
 		if (game.blocks[i].toBeDeleted)
 			delete game.blocks[i];
-    }
+    }*/
 }
 
 function updateLava(game) {
