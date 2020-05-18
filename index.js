@@ -967,10 +967,10 @@ function resetPlayerPosition(player) {
         player.x = 55;
     if (player.x + player.width >= 950)
         player.x = 945 - player.width;
-    player.y = 200;
+	player.y = 500;
     player.yVelocity = 0;
     player.xVelocity = 0;
-	player.onGround = false;
+	player.onGround = true;
 	player.wallJumpLeft = false;
     player.wallJumpRight = false;
 	player.leftPressed = false;
