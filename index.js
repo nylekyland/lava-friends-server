@@ -971,7 +971,7 @@ function updateGame(game) {
 			cooldown(game);
 		}, 1000);
     }
-	if (game.blocks && game.blocks >= 3){
+	if (game.blocks && game.blocks.length >= 3){
 		for (var i = Object.keys(game.blocks).length; i > 2; i--) {
 			console.log(game.blocks[i]);
 	        if (game.blocks[i].toBeDeleted)
