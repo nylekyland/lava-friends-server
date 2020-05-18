@@ -891,6 +891,7 @@ function updateBlocks(game) {
     }
 	for (var i = game.blocks.length; i >= 0; i--){
 		if (game.blocks[i].toBeDeleted)
+			console.log(game.blocks[i]);
 			game.blocks.splice(i, 1);
 	}
 }
