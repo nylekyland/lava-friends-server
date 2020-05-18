@@ -441,7 +441,10 @@ function getHighestPlayer(game){
 
 function countdown(game) {
     if (game.timer === 0) {
-        game.timer = 15;
+		if (game.type == "single")
+			game.timer = 5;
+		else
+        	game.timer = 15;
         game.timerStarted = false;
         clearInterval(game.timerRef);
         game.gameStarted = true;
@@ -942,7 +945,7 @@ function updateGame(game) {
 	if (game.gameStarted && game.aliveCount <= 1 && game.type == "single") {
         game.gameStarted = false;
         game.timerStarted = false;
-        game.timer = 15;
+        game.timer = 5;
         game.cooldownStarted = true;
         game.cooldownTimer = 6;
         clearInterval(game.updateBlocksRef);
