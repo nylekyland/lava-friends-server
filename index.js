@@ -214,7 +214,7 @@ wss.on("connection", function(ws) {
             games[index].lava.height = 500;
         }
 		//If there's nobody left in the game, we can delete it.
-		if (games[index].totalCount <= 0){
+		if (games[index].totalCount <= 0 || games[index].type == "single"){
 			console.log("removing a game: id " + games[index].id);
 			games.splice(index, 1);
 			console.log("number of current games: " + games.length);
@@ -230,7 +230,7 @@ function chooseGame(player, gameType){
 	});
 	//If there are no valid game types (or they're all full), create a new one
 	//and assign it.
-	if (eligibleGames.length === 0){
+	if (eligibleGames.length === 0 || gameType == "single"){
 		var newGameId = games.length;
 		var newGame = {
 			id: newGameId,
@@ -355,12 +355,15 @@ function chooseGame(player, gameType){
 // 1 = Team Battle
 // 2 = Starting Soon
 // 3 = Searching for Players
+// 4 = Single Player
 function getGameStatus(game){
 	if (game.gameStarted){
 		if (game.type == "ffa")
 			return 0;
 		if (game.type == "team")
 			return 1;
+		if (game.type == "single")
+			return 4;
 	}
 	else{
 		if (game.cooldownStarted){
@@ -368,6 +371,8 @@ function getGameStatus(game){
 				return 0;
 			if (game.type == "team")
 				return 1;
+			if (game.type == "single")
+				return 4;
 		}
 		if (game.timerStarted)
 			return 2;
@@ -928,6 +933,20 @@ function updateGame(game) {
 			}, 1000);
 		}
 	}
+	if (game.gameStarted && game.aliveCount <= 1 && game.type == "single") {
+        game.gameStarted = false;
+        game.timerStarted = false;
+        game.timer = 15;
+        game.cooldownStarted = true;
+        game.cooldownTimer = 6;
+        clearInterval(game.updateBlocksRef);
+        clearInterval(game.updateLavaRef);
+        clearInterval(game.timerRef);
+        clearInterval(game.newBlockRef);
+        game.cooldownRef = setInterval(function(){
+			cooldown(game);
+		}, 1000);
+    }
 }
 
 function resetPlayerPosition(player) {
@@ -967,7 +986,7 @@ function cooldown(game) {
         game.lava.y = 1000;
         game.lava.height = 500;
         clearInterval(game.cooldownRef);
-        if (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redTotalCount > 0 && game.blueTotalCount > 0))) {
+        if (game.type == "single" || (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redTotalCount > 0 && game.blueTotalCount > 0)))) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
 				countdown(game);
