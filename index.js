@@ -890,8 +890,8 @@ function updateBlocks(game) {
 			game.blocks[block].toBeDeleted = true;
     }
 	for (var i = Object.keys(game.blocks).length - 1; i > 2; i--) {
-        console.log(game.blocks[i]);
-		if (game.blocks[i].toBeDeleted)
+        console.log(i);
+		if (game.blocks[game.blocks[i]].toBeDeleted)
 			delete game.blocks[i];
     }
 }
