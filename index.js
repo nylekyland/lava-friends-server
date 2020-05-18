@@ -901,7 +901,7 @@ function updateLava(game) {
 
 function updateGame(game) {
 	for (var i = Object.keys(game.blocks).length; i > 2; i--) {
-        if (game.blocks[i].deletable)
+        if (game.blocks[i].toBeDeleted)
 			delete game.blocks[i];
     }
     if (game.gameStarted && game.aliveCount <= 1 && game.type == "ffa") {
