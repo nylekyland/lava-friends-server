@@ -889,6 +889,10 @@ function updateBlocks(game) {
 		if (game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
+	for (var i = game.blocks.length; i >= 0; i--){
+		if (game.blocks[i].toBeDeleted)
+			game.blocks.splice(i, 1);
+	}
 }
 
 function updateLava(game) {
@@ -971,12 +975,6 @@ function updateGame(game) {
 			cooldown(game);
 		}, 1000);
     }
-	if (game.blocks && Object.keys(game.blocks).length > 3){
-		for (var i = Object.keys(game.blocks).length; i > 2; i--) {
-	        if (game.blocks[i]["toBeDeleted"])
-				game.blocks.splice(i, 1);
-	    }	
-	}
 }
 
 function resetPlayerPosition(player) {
