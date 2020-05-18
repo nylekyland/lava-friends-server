@@ -900,10 +900,6 @@ function updateLava(game) {
 }
 
 function updateGame(game) {
-	for (var i = Object.keys(game.blocks).length; i > 2; i--) {
-        if (game.blocks[i].toBeDeleted)
-			delete game.blocks[i];
-    }
     if (game.gameStarted && game.aliveCount <= 1 && game.type == "ffa") {
         game.gameStarted = false;
         game.timerStarted = false;
@@ -975,6 +971,11 @@ function updateGame(game) {
         game.cooldownRef = setInterval(function(){
 			cooldown(game);
 		}, 1000);
+    }
+	for (var i = Object.keys(game.blocks).length; i > 2; i--) {
+		console.log(game.blocks[i]);
+        if (game.blocks[i].toBeDeleted)
+			delete game.blocks[i];
     }
 }
 
