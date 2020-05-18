@@ -261,7 +261,8 @@ function chooseGame(player, gameType){
 		    height: 400,
 		    gravity: false,
 			speed: 0,
-			color: "a"
+			color: "a",
+			stopped: true
 		};
 		newGame.blocks[1] = {
 		    object: "block",
@@ -272,7 +273,8 @@ function chooseGame(player, gameType){
 		    height: 1000600,
 		    gravity: false,
 			speed: 0,
-			color: "a"
+			color: "a",
+			stopped: true
 		};
 		newGame.blocks[2] = {
 		    object: "block",
@@ -283,7 +285,8 @@ function chooseGame(player, gameType){
 		    height: 1000600,
 		    gravity: false,
 			speed: 0,
-			color: "a"
+			color: "a",
+			stopped: true
 		};
 		newGame.originalBlocks[0] = newGame.blocks[0];
 		newGame.originalBlocks[1] = newGame.blocks[1];
@@ -409,7 +412,8 @@ function createNewBlock(game) {
         height: size,
         speed: 2 + Math.floor(Math.random() * 4),
         gravity: true,
-		color: randomLetter()
+		color: randomLetter(),
+		stopped: false
     };
     game.blocks[Object.keys(game.blocks).length + 1] = newBlock;
 }
@@ -874,8 +878,10 @@ function updateBlocks(game) {
             }
             if (blockUnderneath === null)
                 game.blocks[block].y += game.blocks[block].speed;
-            else
+            else{
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
+				game.blocks[block].stopped = true;
+			}
         }
     }
 }
@@ -888,6 +894,10 @@ function updateLava(game) {
 }
 
 function updateGame(game) {
+	for (var block in game.blocks){
+		if (block.stopped && block.y > lava.y + 500)
+			delete game.blocks[block];
+	}
     if (game.gameStarted && game.aliveCount <= 1 && game.type == "ffa") {
         game.gameStarted = false;
         game.timerStarted = false;
