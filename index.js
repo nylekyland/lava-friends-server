@@ -78,7 +78,8 @@ wss.on("connection", function(ws) {
 		punchLeftRight: "right",
 		stunned: false,
 		stunnedCounter: 50,
-		cameraObj: ''
+		cameraObj: '',
+		highest: 0
     };
 
     var updateRef = setInterval(function() {
@@ -108,6 +109,7 @@ wss.on("connection", function(ws) {
 						inQueue: players[obj].inQueue ? 1 : 0,
 						anim: getAnimNumber(players[obj].anim),
 						cam: players[obj].cameraObj,
+						height: game.type == "single" ? getHighest(players[obj]) : ""
 		            };
 	            	condensedPlayers.push(playerObj);
 				}
@@ -291,6 +293,7 @@ function chooseGame(player, gameType){
 		    height: 500
 		};
 		if (newGame.type == "single"){
+			newGame.timer = 5;
 			newGame.timerStarted = true;
 			newGame.timerRef = setInterval(function(){
 				countdown(newGame);
@@ -1105,4 +1108,12 @@ function findPlayersGame(value){
 			return i;
 	}
 	return -1;
+}
+
+function getHighest(player){
+	if (player.y < player.highest)
+	{
+		player.highest = player.y;
+	}
+	return -1 * (player.highest - 500);
 }
