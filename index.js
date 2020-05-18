@@ -198,7 +198,7 @@ wss.on("connection", function(ws) {
 		}
 		//If there's only one player left in the room (or it's a team battle
 		//and there's no players on one of the teams), we need to stop the countdown.
-        if ((games[index].totalCount < 2 || (games[index].type == "team" && (games[index].redTotalCount < 1 || games[index].blueTotalCount < 1))) 
+        if (games[index].type == "single" || (games[index].totalCount < 2 || (games[index].type == "team" && (games[index].redTotalCount < 1 || games[index].blueTotalCount < 1))) 
 			&& (games[index].timerStarted || games[index].gameStarted)) {
             games[index].gameStarted = false;
             games[index].timerStarted = false;
@@ -428,7 +428,7 @@ function getHighestBlockY(game) {
                 highest = game.blocks[block].y;
         }
     }
-    return highest > -1600 ? -1600 : highest;
+    return highest > -1600 ? -1600 : highest - 1000;
 }
 
 function getHighestPlayer(game){
@@ -1116,5 +1116,5 @@ function getHighest(player){
 	{
 		player.highest = player.y;
 	}
-	return -1 * Math.floor(player.highest) - 500;
+	return -1 * (Math.floor(player.highest) - 500);
 }
