@@ -262,7 +262,8 @@ function chooseGame(player, gameType){
 		    gravity: false,
 			speed: 0,
 			color: "a",
-			stopped: true
+			stopped: true,
+			toBeDeleted: false
 		};
 		newGame.blocks[1] = {
 		    object: "block",
@@ -274,7 +275,8 @@ function chooseGame(player, gameType){
 		    gravity: false,
 			speed: 0,
 			color: "a",
-			stopped: true
+			stopped: true,
+			toBeDeleted: false
 		};
 		newGame.blocks[2] = {
 		    object: "block",
@@ -286,7 +288,8 @@ function chooseGame(player, gameType){
 		    gravity: false,
 			speed: 0,
 			color: "a",
-			stopped: true
+			stopped: true,
+			toBeDeleted: false
 		};
 		newGame.originalBlocks[0] = newGame.blocks[0];
 		newGame.originalBlocks[1] = newGame.blocks[1];
@@ -413,7 +416,8 @@ function createNewBlock(game) {
         speed: 2 + Math.floor(Math.random() * 4),
         gravity: true,
 		color: randomLetter(),
-		stopped: false
+		stopped: false,
+		toBeDeleted: false
     };
     game.blocks[Object.keys(game.blocks).length + 1] = newBlock;
 }
@@ -863,7 +867,7 @@ function updateBlocks(game) {
     */
     for (var block in game.blocks) {
         var blockUnderneath = null;
-        if (game.blocks[block].gravity) {
+        if (game.blocks[block].gravity && !game.blocks[block].stopped) {
             var newObj = {
                 x: game.blocks[block].x,
                 y: game.blocks[block].y + game.blocks[block].speed,
@@ -876,13 +880,15 @@ function updateBlocks(game) {
                     break;
                 }
             }
-            if (blockUnderneath === null && !game.blocks[block].stopped)
+            if (blockUnderneath === null)
                 game.blocks[block].y += game.blocks[block].speed;
             else{
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
 				game.blocks[block].stopped = true;
 			}
         }
+		if (game.blocks[block].stopped && game.lava.y < game.blocks[block].y - 250)
+			game.blocks[block].toBeDeleted = true;
     }
 }
 
