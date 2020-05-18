@@ -290,6 +290,12 @@ function chooseGame(player, gameType){
 		    y: 1000,
 		    height: 500
 		};
+		if (newGame.type == "single"){
+			newGame.timerStarted = true;
+			newGame.timerRef = setInterval(function(){
+				countdown(newGame);
+			}, 1000);
+		}
 		if (newGame.type == "team"){
 			if (determineRed(player)){
 				newGame.redTotalCount = 1;
