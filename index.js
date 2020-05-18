@@ -1115,5 +1115,5 @@ function getHighest(player){
 	{
 		player.highest = player.y;
 	}
-	return -1 * (player.highest - 500);
+	return player.highest;
 }
