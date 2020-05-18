@@ -884,10 +884,9 @@ function updateBlocks(game) {
                 game.blocks[block].y += game.blocks[block].speed;
             else{
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
-				game.blocks[block].stopped = true;
 			}
         }
-		if (game.blocks[block].stopped && game.lava.y < game.blocks[block].y - 250)
+		if (game.lava.y < game.blocks[block].y - 250)
 			game.blocks[block].toBeDeleted = true;
     }
 }
