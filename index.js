@@ -889,12 +889,9 @@ function updateBlocks(game) {
 		if (game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
-	console.log(game.blocks.length);
-	for (var i = Object.keys(game.blocks).length; i >= 0; i--){
-		if (game.blocks[i].toBeDeleted)
-			console.log(game.blocks[i]);
-			game.blocks.splice(i, 1);
-	}
+	game.blocks = game.blocks.filter(function(g){
+		g.toBeDeleted = false;
+	});
 }
 
 function updateLava(game) {
