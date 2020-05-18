@@ -942,7 +942,7 @@ function updateGame(game) {
 			}, 1000);
 		}
 	}
-	if (game.gameStarted && game.aliveCount <= 1 && game.type == "single") {
+	if (game.gameStarted && game.aliveCount < 1 && game.type == "single") {
         game.gameStarted = false;
         game.timerStarted = false;
         game.timer = 5;
