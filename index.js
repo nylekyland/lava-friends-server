@@ -79,7 +79,7 @@ wss.on("connection", function(ws) {
 		stunned: false,
 		stunnedCounter: 50,
 		cameraObj: '',
-		highest: 0
+		highest: 500
     };
 
     var updateRef = setInterval(function() {
@@ -478,6 +478,7 @@ function countdown(game) {
 			if (players[obj].gameId == game.id){
 				players[obj].rank = "";
 				players[obj].resetPosition = true;
+				players[obj].highest = 500;
 			}
         }
         game.updateBlocksRef = setInterval(function(){
@@ -1115,5 +1116,5 @@ function getHighest(player){
 	{
 		player.highest = player.y;
 	}
-	return Math.floor(player.highest);
+	return -1 * Math.floor(player.highest) - 500;
 }
