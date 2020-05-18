@@ -891,7 +891,7 @@ function updateBlocks(game) {
     }
 	for (var i = Object.keys(game.blocks).length - 1; i > 2; i--) {
 		if (game.blocks[i].toBeDeleted)
-			game.blocks.splice(i, 1);
+			delete game.blocks[i];
     }
 }
 
