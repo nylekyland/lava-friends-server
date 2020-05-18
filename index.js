@@ -886,7 +886,7 @@ function updateBlocks(game) {
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
 			}
         }
-		if (game.lava.y < game.blocks[block].y - 250)
+		if (game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
 }
@@ -971,7 +971,7 @@ function updateGame(game) {
 			cooldown(game);
 		}, 1000);
     }
-	if (game.blocks && game.blocks.length >= 3){
+	if (game.blocks && Object.keys(game.blocks).length >= 3){
 		for (var i = Object.keys(game.blocks).length; i > 2; i--) {
 			console.log(game.blocks[i]);
 	        if (game.blocks[i].toBeDeleted)
