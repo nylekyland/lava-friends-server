@@ -981,6 +981,7 @@ function updateGame(game) {
 }
 
 function resetPlayerPosition(player) {
+	console.log("resetting player position");
     if (player.x <= 50)
         player.x = 55;
     if (player.x + player.width >= 950)
