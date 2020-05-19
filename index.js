@@ -883,13 +883,13 @@ function updateBlocks(game) {
             if (blockUnderneath === null)
                 game.blocks[block].y += game.blocks[block].speed;
             else{
+				game.blocks[block].stopped = true;
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
 			}
         }
 		if (game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
-	//TODO
 	for (var block in game.blocks){
 		if (game.blocks[block].toBeDeleted)
 			delete game.blocks[block];
