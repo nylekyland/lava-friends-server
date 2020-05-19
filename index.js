@@ -867,7 +867,7 @@ function updateBlocks(game) {
     */
     for (var block in game.blocks) {
         var blockUnderneath = null;
-        if (game.blocks[block].gravity) {
+        if (game.blocks[block].gravity && !game.blocks[block].stopped) {
             var newObj = {
                 x: game.blocks[block].x,
                 y: game.blocks[block].y + game.blocks[block].speed,
@@ -1000,9 +1000,10 @@ function cooldown(game) {
     if (game.cooldownTimer === 0) {
         game.cooldownStarted = false;
         game.cooldownTimer = 6;
-        for (var i = Object.keys(game.blocks).length; i > 2; i--) {
-            delete game.blocks[i];
-        }
+        for (var block in game.blocks){
+			if (blocks[block].id > 2)
+				delete game.blocks[block];
+		}
         for (var obj in players) {
 			if (players[obj].gameId == game.id){
 				players[obj].dead = false;
