@@ -114,11 +114,16 @@ wss.on("connection", function(ws) {
 	            	condensedPlayers.push(playerObj);
 				}
 	        }
+			var condensedBlocks = [];
+			for (var block in game.blocks){
+				if (!game.blocks[block].toBeDeleted)
+					condensedBlocks.push(game.blocks[block]);
+			}
 	        var sendObject = {
 				"status": getGameStatus(game),
 	            "timer": game.timerStarted ? game.timer : "",
 	            "players": JSON.stringify(condensedPlayers),
-	            "blocks": JSON.stringify(game.blocks),
+	            "blocks": JSON.stringify(condensedBlocks),
 	            "lavaY": game.lava.y,
 	            "lavaH": game.lava.height
 	        };
@@ -891,10 +896,6 @@ function updateBlocks(game) {
 		if (game.blocks[block].stopped && game.blocks[block].gravity && game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
-	for (var block in game.blocks){
-		if (game.blocks[block].stopped && game.blocks[block].gravity && game.lava.y < game.blocks[block].y - 100 && game.blocks[block].toBeDeleted)
-			delete game.blocks[block];
-	}
 }
 
 function updateLava(game) {
