@@ -526,7 +526,6 @@ function updatePositions(player) {
 		var punchPressed = player.punchPressed;
         if (!player.dead && !player.inQueue) {
 			if (player.resetPosition){
-				console.log("resetting player position");
 				player.resetPosition = false;
 				resetPlayerPosition(player);
 			}
@@ -892,10 +891,10 @@ function updateBlocks(game) {
 		if (game.blocks[block].stopped && game.blocks[block].gravity && game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
-	//for (var block in game.blocks){
-		//if (game.blocks[block].toBeDeleted)
-			//delete game.blocks[block];
-	//}
+	for (var block in game.blocks){
+		if (game.blocks[block].stopped && game.blocks[block].gravity && game.lava.y < game.blocks[block].y - 100 && game.blocks[block].toBeDeleted)
+			delete game.blocks[block];
+	}
 }
 
 function updateLava(game) {
