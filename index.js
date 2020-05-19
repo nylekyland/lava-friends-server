@@ -867,7 +867,7 @@ function updateBlocks(game) {
     */
     for (var block in game.blocks) {
         var blockUnderneath = null;
-        if (game.blocks[block].gravity && !game.blocks[block].stopped) {
+        if (game.blocks[block].gravity) {
             var newObj = {
                 x: game.blocks[block].x,
                 y: game.blocks[block].y + game.blocks[block].speed,
@@ -883,11 +883,12 @@ function updateBlocks(game) {
             if (blockUnderneath === null)
                 game.blocks[block].y += game.blocks[block].speed;
             else{
-				game.blocks[block].stopped = true;
+				if (blockUnderneath.stopped)
+					game.blocks[block].stopped = true;
                 game.blocks[block].y = blockUnderneath.y - game.blocks[block].height;
 			}
         }
-		if (game.lava.y < game.blocks[block].y - 100)
+		if (game.blocks[block].stopped && game.blocks[block].gravity && game.lava.y < game.blocks[block].y - 100)
 			game.blocks[block].toBeDeleted = true;
     }
 	for (var block in game.blocks){
