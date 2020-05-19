@@ -1001,7 +1001,7 @@ function cooldown(game) {
         game.cooldownStarted = false;
         game.cooldownTimer = 6;
         for (var block in game.blocks){
-			if (blocks[block].id > 2)
+			if (game.blocks[block].id > 2)
 				delete game.blocks[block];
 		}
         for (var obj in players) {
