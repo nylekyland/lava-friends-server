@@ -469,7 +469,7 @@ function countdown(game) {
 		}, 1800);
         game.aliveCount = game.totalCount;
         game.rankTotal = game.totalCount;
-		if (game.type == "team"){
+		if (game.type == "team") {
 			game.redAliveCount = 0;
 			game.blueAliveCount = 0;
 			game.rankTotal = 2;
@@ -1019,7 +1019,7 @@ function cooldown(game) {
         game.lava.y = 1000;
         game.lava.height = 500;
         clearInterval(game.cooldownRef);
-        if (game.type == "single" || (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redTotalCount > 0 && game.blueTotalCount > 0)))) {
+        if ((game.type == "single" && !game.timerStarted) || (game.totalCount >= 2 && !game.timerStarted && (game.type == "ffa" || (game.type == "team" && game.redTotalCount > 0 && game.blueTotalCount > 0)))) {
             game.timerStarted = true;
             game.timerRef = setInterval(function(){
 				countdown(game);
