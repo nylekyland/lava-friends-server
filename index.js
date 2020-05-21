@@ -474,12 +474,6 @@ function countdown(game) {
 			game.blueAliveCount = 0;
 			game.rankTotal = 2;
 			for (var obj in players){
-				if (players[obj].gameId == game.id){
-					//Determine the color of the player and set the alive count.
-					//Character 1 (Dog): Red = 1, Blue = 3
-					//Character 2 (Robot): Red = 1, Blue = 0
-					//Character 3 (Yokon): Red = 0, Blue = 1
-					//Character 4 (Cat): Red = 0, Blue = 1
 					if (determineRed(players[obj]))
 						game.redAliveCount++;
 					else if (determineBlue(players[obj]))
@@ -502,9 +496,15 @@ function countdown(game) {
 		}, 14);
     } else {
         game.timer--;
+		console.log("countdown active: " + game.timer)
     }
 }
 
+//Determine the color of the player and set the alive count.
+//Character 1 (Dog): Red = 1, Blue = 3
+//Character 2 (Robot): Red = 1, Blue = 0
+//Character 3 (Yokon): Red = 0, Blue = 1
+//Character 4 (Cat): Red = 0, Blue = 1
 function determineRed(player){
 	return ((player.character == 1 && player.color == 0) ||
 			(player.character == 2 && player.color == 1) ||
