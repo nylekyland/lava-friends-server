@@ -474,6 +474,7 @@ function countdown(game) {
 			game.blueAliveCount = 0;
 			game.rankTotal = 2;
 			for (var obj in players){
+				if (players[obj].gameId == game.id){
 					if (determineRed(players[obj]))
 						game.redAliveCount++;
 					else if (determineBlue(players[obj]))
@@ -496,7 +497,7 @@ function countdown(game) {
 		}, 14);
     } else {
         game.timer--;
-		console.log("countdown active: " + game.timer)
+		console.log("countdown active: " + game.timer);
     }
 }
 
