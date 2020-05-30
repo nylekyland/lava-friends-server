@@ -467,8 +467,15 @@ function countdown(game) {
         game.newBlockRef = setInterval(function(){
 			createNewBlock(game);
 		}, 1800);
-        game.aliveCount = game.totalCount;
-        game.rankTotal = game.totalCount;
+		if (game.type == "single")
+		{
+			game.aliveCount = 1;
+			game.totalCount = 1;
+		}
+		else{
+			game.aliveCount = game.totalCount;
+        	game.rankTotal = game.totalCount;	
+		}
 		if (game.type == "team") {
 			game.redAliveCount = 0;
 			game.blueAliveCount = 0;
